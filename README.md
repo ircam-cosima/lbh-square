@@ -1,15 +1,4 @@
-# Soundworks Intramuros - Cosima Workshop Maison de la radio
+# Soundworks Square - Cosima Residence with L. Bianchi
 
-> Part of the Maison de la radio project (workshop Cosima October 2016): A Proxomix like experience with ambisonic soundscapes. 
+> Part of L. Bianchi residence in IRCAM (Cosima project, December 2016): GPS driven soundscapes. 
 > See [soundworks-template repository](https://github.com/collective-soundworks/soundworks-template) for detail on how to use the Soundworks framework.
-
-## Creating a New Soundworks Experience
-
-see [MASTER README](https://github.com/collective-soundworks/soundworks-template/blob/master/README.md)
-
-## Build Cordova application
-
-see apps/README
-
-
-
