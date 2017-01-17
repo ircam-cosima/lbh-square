@@ -5,6 +5,7 @@ const audioContext = soundworks.audioContext;
 
 // list of Ambisonic files to load
 const hoaAudioFiles = [
+// 'sounds/Boucle_FranceInfo_Regie_Ambi_01.wav',
     'sounds/Boucle_Hall_Ambi_01.mp3',
     'sounds/Orchestre_Ambi_Montage10Cordes.mp3',    
 ];

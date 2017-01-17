@@ -20,7 +20,17 @@ const viewTemplate = `
     </div>
 
     <div class="section-center flex-center">
-      <p id="instructions" class="small"> <%= instructions %> </p>
+      <button type="button" onclick="
+      window.experience.onPlayClick();
+      " >Click Me!</button>
+    </div>
+
+
+    <audio controls id="audioElmt">
+    </audio>
+
+    <div class="section-center flex-center">
+      <p id="instructions" class="button"> Test </p>
     </div>
 
     <div class="section-bottom flex-middle">
@@ -62,6 +72,7 @@ export default class PlayerExperience extends soundworks.Experience {
   }
 
   init() {
+    console.log('hjd')
     // initialize the view
     this.viewTemplate = viewTemplate;
     this.viewContent = { title: 'In the Square <br />' + client.index, 
@@ -80,7 +91,6 @@ export default class PlayerExperience extends soundworks.Experience {
       // this.initBeacon();
       this.init();
     }
-
     this.show();
 
     // init HOA player
@@ -89,20 +99,29 @@ export default class PlayerExperience extends soundworks.Experience {
     this.audioPlayer = new AudioPlayer(this.audioBufferManager.audioBuffers.default);
 
     // this.ambisonicPlayer.startSource( this.ambiFileId );
+    // setTimeout( () => {
+    //   this.ambisonicPlayer.startSource( 0 );}, 4000);    
+  
+    this.azimIncr = 0;
+    setInterval( () => {
+      this.ambisonicPlayer.setListenerAim(this.azimIncr, 0);
+      this.azimIncr += 2;
+      if (this.azimIncr >= 360) this.azimIncr = 0;
+    }, 100);  
 
-    window.addEventListener('deviceorientation', function(e) { console.log(e); }, true);
+    // window.addEventListener('deviceorientation', function(e) { console.log(e); }, true);
 
     // setup motion input listener (update audio listener aim based on device orientation)
-    console.log(this.motionInput.isAvailable('deviceorientation'), this.motionInput)
+    // console.log(this.motionInput.isAvailable('deviceorientation'), this.motionInput)
     if (this.motionInput.isAvailable('deviceorientation')) {
       this.motionInput.addListener('deviceorientation', (data) => {
-        console.log(data)
+        // console.log(data)
         // display orientation info on screen
         document.getElementById("value0").innerHTML = Math.round(data[0]*10)/10;
         document.getElementById("value1").innerHTML = Math.round(data[1]*10)/10;
         document.getElementById("value2").innerHTML = Math.round(data[2]*10)/10;
         // set audio source position
-        this.ambisonicPlayer.setListenerAim(data[0], data[1]);
+        // this.ambisonicPlayer.setListenerAim(data[0], data[1]);
       });
     }
 
@@ -140,7 +159,7 @@ export default class PlayerExperience extends soundworks.Experience {
 
                 // update player
                 this.ambisonicPlayer.stop(-1, 1.0);
-                this.ambisonicPlayer.startSource( this.ambiFileId, true, 1.0 );
+                // this.ambisonicPlayer.startSource( this.ambiFileId, true, 1.0 );
 
                 // update bkg color
                 this.renderer.setBkgColor(bkgColor);
@@ -215,11 +234,104 @@ export default class PlayerExperience extends soundworks.Experience {
         src.buffer = this.audioBufferManager.audioBuffers.default[0];
         src.connect(audioContext.destination);
         src.start(audioContext.currentTime);
+
+        // DEBUG
+        this.audio.pause();
+        this.streamSource = audioContext.createMediaElementSource(this.audio2);
+        this.streamSource.connect(audioContext.destination);
+        console.log('click');
+
         }
         // update last touch time
         this.doubleTouchWatcher.lastTouchTime = audioContext.currentTime;
     });
 
+
+    // Create an <audio> element dynamically.
+    // this.audio = new Audio();
+    this.audio = document.getElementById("audioElmt");
+
+    // this.audio.oncanplaythrough = () => {
+    //   console.log('finished loading');
+    //   // alert("Can play through audio without stopping");
+    //   this.audio.play();
+    //   };   
+
+    // this.audio.src = 'sounds/Boucle_FranceInfo_Regie_Ambi_01_01-04ch.wav';
+    this.audio.src = 'sounds/Orchestre_Ambi_Montage10Cordes_01-04ch.mp3';
+    this.audio.controls = true;
+    this.audio.autoplay = true;
+    this.audio.loop = true;
+    this.audio.muted = false;
+    document.body.appendChild(this.audio);
+    console.log(this.audio);
+    console.log(window)
+
+    // setTimeout( () => {
+    //   this.audio.src = 'sounds/Boucle_Hall_Ambi_01_01-04ch.mp3';
+    //   console.log('timeout');}, 20000);
+
+    // example how to pause / stop source
+    // audio.pause();
+    // audio.currentTime = 10000;
+    // audio.play(); 
+    // this.audio.play();
+
+    // Wait for window.onload to fire. See crbug.com/112368
+    
+
+    // var gainOut = audioContext.createGain();
+    // gainOut.gain.value = 1.0;
+    // gainOut.connect(this.ambisonicPlayer.rotator.in);
+    // gainOut.connect(audioContext.destination);
+    // Our <audio> element will be the audio source.
+    this.streamSource = audioContext.createMediaElementSource(this.audio);
+    // this.streamSource.channelCountMode = 'explicit';
+    // this.streamSource.channelCount = 4;
+
+    var inA = audioContext.createChannelSplitter(4);
+    var outA = audioContext.createChannelMerger(4);
+
+    // inA.channelCountMode = 'explicit';
+    // inA.channelCount = 4;
+
+    // outA.channelCountMode = 'explicit';
+    // outA.channelCount = 4;    
+
+    // this.out.channelCount = 1;
+
+    this.streamSource.connect(inA);
+    // inA.connect(outA, 0,0);
+    // inA.connect(outA, 1,1);
+    // inA.connect(outA, 2,2);
+    // inA.connect(outA, 3,3);
+    for (let i = 0; i < 4; i++) {
+      inA.connect(outA, i, i);
+      // outA.connect(this.ambisonicPlayer.rotator.in, i, i);
+    }
+    
+    console.log(inA)
+    console.log(outA)
+    console.log(this.ambisonicPlayer.rotator.in)
+    
+
+    // inA.connect(outA);
+
+    outA.connect(this.ambisonicPlayer.rotator.in);
+
+    // this.streamSource.connect(inA);
+
+
+    // this.streamSource.connect(this.ambisonicPlayer.rotator.in);
+
+    console.log(this.streamSource);
+
+
+  }
+
+  onPlayClick(){
+    console.log('hfods')
+    document.getElementById('audioElmt').play();
   }
 
   // -------------------------------------------------------------------------------------------

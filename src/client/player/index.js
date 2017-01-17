@@ -22,6 +22,7 @@ window.addEventListener('load', () => {
 
   // create client side (player) experience
   const experience = new PlayerExperience(config.assetsDomain, files);
+  window.experience = experience;
 
   // start the client
   soundworks.client.start();
