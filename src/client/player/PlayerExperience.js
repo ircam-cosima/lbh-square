@@ -2,6 +2,7 @@ import * as soundworks from 'soundworks/client';
 import * as soundworksCordova from 'soundworks-cordova/client';
 
 import AudioPlayer from './AudioPlayer';
+import AudioStreamPlayer from './AudioStreamPlayer';
 import AmbisonicPlayer from './AmbisonicPlayer';
 import PlayerRenderer from './PlayerRenderer';
 
@@ -42,28 +43,50 @@ const viewTemplate = `
   </div>
 `;
 
+// Define audio-tag platform object -------------------
+const NUMBER_OF_SIMULTANEOUS_STREAMED_AUDIOSOURCES = 2;
+const audioTagArray = [];
+
+const audioTag = {
+  id: 'audio-tag',
+  check: function() {
+    return !!audioContext;
+  },
+  interactionHook: function() {
+    // if( !client.platform.isMobile ){ return; }
+
+    // create audio tag and start them to avoid requiring user input to start them latter
+    for( let i = 0; i < NUMBER_OF_SIMULTANEOUS_STREAMED_AUDIOSOURCES; i++ ){
+      let audioElmt = new Audio();
+      audioElmt.play();        
+      audioTagArray.push(audioElmt);
+    }
+  }
+}
+// -----------------------------------------------------
+
 // this experience plays a sound when it starts, and plays another sound when
 // other clients join the experience
 export default class PlayerExperience extends soundworks.Experience {
   constructor(assetsDomain, audioFiles) {
     super();
     
-
     // services
     this.platform = this.require('platform', { features: ['web-audio'] });
+    this.platform.addFeatureDefinition( audioTag );
+    this.platform = this.require('platform', { features: ['web-audio', 'audio-tag'] });
+
     this.checkin = this.require('checkin', { showDialog: false });
     this.audioBufferManager = this.require('audio-buffer-manager', { files: audioFiles });
     this.motionInput = this.require('motion-input', { descriptors: ['deviceorientation', 'accelerationIncludingGravity'] });
-    // // beacon only work in cordova mode since it needs access right to BLE
-    // if (window.cordova) {
-    //   this.beacon = this.require('beacon', { uuid: beaconUUID });
-    //   this.beaconCallback = this.beaconCallback.bind(this);
-    // }
+    
 
     // bind
     // this.initBeacon = this.initBeacon.bind(this);
 
     // local attributes
+    this.audioStreamPlayer = new AudioStreamPlayer(audioTagArray);
+
     this.ambiFileId = -1;
     this.lastPos = [0,0,0]; // lat, long, time
     this.bonusBeaconActivated = false;
@@ -72,7 +95,7 @@ export default class PlayerExperience extends soundworks.Experience {
   }
 
   init() {
-    console.log('hjd')
+    
     // initialize the view
     this.viewTemplate = viewTemplate;
     this.viewContent = { title: 'In the Square <br />' + client.index, 
@@ -86,6 +109,14 @@ export default class PlayerExperience extends soundworks.Experience {
 
   start() {
     super.start();
+
+    // audioTagArray[0].src = 'sounds/13_Misconceptions_About_Global_Warming_Cut.wav';
+    // audioTagArray[0].play();
+    // audioTagArray[1].src = 'sounds/click-loop-square-120bpm.wav';
+    // audioTagArray[1].play();
+
+    this.audioStreamPlayer.start('sounds/13_Misconceptions_About_Global_Warming_Cut.wav', true, 5, false)
+
 
     if (!this.hasStarted){
       // this.initBeacon();
