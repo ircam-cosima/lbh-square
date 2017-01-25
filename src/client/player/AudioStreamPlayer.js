@@ -1,96 +1,260 @@
 import * as soundworks from 'soundworks/client';
 
 const audioContext = soundworks.audioContext;
-const CALLBACK_TIME_MS = 100;
+const IS_SAFARI = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+function urlToFileName(url){
+  let fileName = url.substring(url.lastIndexOf("/") + 1, url.length);
+  return fileName;
+ }
+
+
 
 export default class AudioStreamPlayer {
-    constructor(audioTagArray) {
+    constructor(audioTagArray, sync) {
         
         // local attributes
-        this.sourceMap = new Map();
-        this.audioTagArray = audioTagArray;
+        this.sync = sync;
+        this.sourceArray = [];
+        this._syncRefTime = 0.0;
 
         // master gain out
         this.gainOut = audioContext.createGain();
         this.gainOut.gain.value = 1.0;
         this.gainOut.connect(audioContext.destination);
+
+        // if( IS_SAFARI ){ alert( 'you are using Safari ain t you?'); }
+
+        // pre-init of source nodes (can be created only once)
+        audioTagArray.forEach( (item, index) => {
+          // mute audioTag for safari: else the overwrite of audioTag output by the createMediaElmt does not 
+          // happend fast enought and one can hear the volume 1.0 at startup. Note: Safari will automatically 
+          // bypass the mute when using the createMediaElmt, Chrome won't.
+          if( IS_SAFARI ){ item.muted = true; }
+          // create source
+          let src = new AudioStreamSource( item, this.sync);
+          src.out.connect( audioContext.destination );
+          // store local
+          this.sourceArray.push( src );
+        });
+
     }
 
-    start(soundFileName, loop = true, fadeInDuration = 0.0, sync = false){
+    start(soundFileName, fadeDuration = 0.1, loop = true, isSynchronized = false){
 
-      // check if there's still room (audio tag available) for new source
-      if( this.sourceMap.size >= this.audioTagArray.length ){ 
-        warn('reached maximum of audio stream sources:', this.audioTagArray.length, 
-          'not playing audio file:', soundFileName);
-      }
+      // check if source with given file already exists
+      let src = this.getSourceFromFileName(soundFileName);
 
-      // search for a source already defined for sound file (alas, forces unique source per sound file)
-      for (let el of this.sourceMap) {
-        if( el[1].soundFileName === soundFileName ){ 
-          var src = el[1];
-          break; 
+      // if src already associated with sound file, simply re-start it
+      if( src ){
+        // discard if source is currently playing
+        if( src.isPlaying ){ 
+          console.warn('source already started:', soundFileName); 
+          return;
         }
-      }
+        // // restart source if paused
+        // else{
+        //   src.audioTag.loop = loop;
+        //   // handle fade mechanism
+        //   src.out.gain.value = 0.0;
+        //   src.linearRampToValueInTime( 1.0, fadeInDuration );
+        //   // sync mechanism
+        //   src.enableSync( isSynchronized );
+        //   // start source
+        //   src.play();
+        // }
 
-      // if did not find already defined source, create new and connect it to unused audio tag
-      if( src === undefined){
-        // get list of occupied audio tag indices
-        let usedIndices = Array.from( this.sourceMap ).map( (x) => { return x[1].id; } );
-        // find unoccupied index
-        for( let i = 0; i < this.audioTagArray.length; i++ ){
-          // discard if occupied index
-          if( usedIndices.indexOf(i) !== -1 ){ continue; }
-          // create audio node (more complex, but will allow ambisonic playback eventually)
-          let node = audioContext.createMediaElementSource(this.audioTagArray[i]);
-          node.connect( this.gainOut );
-          // create new source with unoccupied audio tag
-          var src = {
-            id: i,
-            soundFileName: soundFileName,
-            node: node,
-            tag: this.audioTagArray[i],
-            fadeCallback: undefined,
-            fadeIncr: 0.01
+      }
+      else{
+        // search for a source unoccupied
+        for (let el of this.sourceArray) {
+          console.log('search fo free source', el);
+          if( !el.isPlaying ){ 
+            src = el;
+            break; 
           }
-          // store source in local map
-          this.sourceMap.set(soundFileName, src);
         }
       }
 
-      // init audio tag
-      src.tag.src = soundFileName;
-      src.tag.loop = loop;
-
-      // fade in
-      if( fadeInDuration > 0 ){
-        // define increment to fit required fade time
-        src.fadeIncr = ( CALLBACK_TIME_MS / 1000 ) / fadeInDuration;
-        // set initial volume to 0
-        src.tag.volume = 0.0;
-        // trigger fade callback
-        src.tag.fadeCallback = setInterval( () => { 
-          let volume = src.tag.volume;
-          volume = Math.min( volume += src.fadeIncr, 1);
-          src.tag.volume = volume;
-          // console.log(src.fadeIncr , volume)
-          // kill fade callback
-          if( src.tag.volume === 1){ clearInterval( src.tag.fadeCallback )}
-        }, CALLBACK_TIME_MS);
+      // discard if no available source
+      if( src === undefined ){
+        console.warn('reached maximum of audio stream sources:', this.sourceArray.length, 
+          'not playing audio file:', soundFileName);
+        return;        
       }
-      
-      // sync mecanism
 
-      src.tag.play();
-  
+      // handle fade mechanism
+      // src.out.gain.value = 0.0;
+      const now = audioContext.currentTime;
+      src.out.gain.cancelScheduledValues(now);
+      src.out.gain.setValueAtTime(src.out.gain.value, now);
+      // src.out.gain.linearRampToValueAtTime(0.0, now);
+      src.out.gain.linearRampToValueAtTime(1.0, now + fadeDuration);
+      
+      // init audio tag
+      if( urlToFileName( src.audioTag.src ) !== urlToFileName( soundFileName ) ){
+        src.audioTag.src = soundFileName;
+        console.log('changing sound URL')
+      }
+      src.audioTag.loop = loop;
+
+      // sync mechanism
+      src.enableSync( isSynchronized );
+      // start source
+      src.play();
+
+    }
+
+    stop( soundFileName, fadeDuration = 0.1){
+      // check if source with given file already exists
+      let src = this.getSourceFromFileName(soundFileName);
+
+      // discard otherwise
+      if( src === undefined ){ 
+        console.warn('trying to stop un-started source:', soundFileName)
+        return; 
+      }
+
+      // fade out
+      const now = audioContext.currentTime;
+      src.out.gain.cancelScheduledValues(now);
+      src.out.gain.setValueAtTime(src.out.gain.value, now);
+      // src.out.gain.linearRampToValueAtTime(1.0, now);
+      src.out.gain.linearRampToValueAtTime(0.0, now + fadeDuration);
+
+      // setup stop source
+      setTimeout( () => {
+        src.stop();
+      }, Math.ceil( fadeDuration * 1000 ) + 100 );
+
+    }
+
+    set syncRefTime( time ){
+      this.sourceArray.forEach( (item, index) => {
+        item.syncRefTime = time;
+      });
+    }
+
+    getSourceFromFileName(soundFileName){
+      // search for a source already defined for that sound file (alas, forces unique source per sound file)
+      // WARNING: supposes there is no "/" in file name (not in path, e.g. soundFileName, but in file name as displayed in explorer)
+      for (let el of this.sourceArray) {
+        // from stored url to comparable file name
+        let currentUrl = el.audioTag.src;
+        let currentName = urlToFileName( currentUrl );
+        let futureName = urlToFileName( soundFileName );
+        // break if match
+        if( currentName === futureName ){ return el }
+      }
     }
 
    
 }
 
 class AudioStreamSource {
-  constructor() {
+  constructor(audioTag, sync) {
+    // local attributes
+    this.audioTag = audioTag;
+    this.sync = sync;
+    this.CALLBACK_TIME_MS = 100; // general callback refresh rate, in ms
+    this.isPlaying = false; // determine is source is occupied or can be used to play new audio file
+
+    // create audio node (more complex, but will allow ambisonic playback eventually)
+    this.audioNode = audioContext.createMediaElementSource( audioTag );
+
+    // gain out (needed for fade mechanism as safari doesn't let us change audioTag.volume)
+    this.out = audioContext.createGain();
+    this.out.gain.value = 0.0;
+
+    // fade mechanism
+    this.fadeCallback = undefined;
+    this.fadeIncr = 0.01;
+
+    // sync. mecanism
+    this.syncCallback = undefined;
+    this.syncRefTime = 0.0;
+    this.MAX_OFFSYNC_TIME_S = 0.5; // max time accepted by the system before forcing sync., in sec
+
+    // connect graph
+    this.audioNode.connect( this.out );
+    
+  }
+
+  play(){
+    this.isPlaying = true;
+    this.audioTag.play();
+  }
+
+  stop(){
+    this.isPlaying = false;
+    this.audioTag.pause();
+    this.enableSync( false );
+    // reset play position
+    this.audioTag.currentTime = 0.0;
+    console.log('I STOPPED THE SOURCE')
+  }
+
+  // linearRampToValueInTime( value, duration ){
+
+  //   let now = audioContext.currentTime;
+  //   let g = this.out.gain;
+  //   g.cancelScheduledValues(now);
+  //   g.setValueAtTime(g.value, now);
+  //   g.linearRampToValueAtTime(value, now + duration);
+
+  //   // // to short: discard ramp mechanism
+  //   // if( duration <= 0.01 ){ 
+  //   //   this.audioTagId.volume = value;
+  //   //   return;
+  //   // }
+    
+  //   // // remove (eventual) previous callback
+  //   // clearInterval( this.fadeCallback );
+
+  //   // // define increment to fit required fade time
+  //   // this.fadeIncr = ( this.CALLBACK_TIME_MS / 1000 ) / duration;
+
+  //   // // trigger fade callback
+  //   // console.log('setInterval')
+  //   // this.fadeCallback = setInterval( () => { 
+  //   //   let volume = this.audioTag.volume;
+  //   //   volume = Math.min( volume += this.fadeIncr, 1.0 );
+  //   //   this.audioTag.volume = volume;
+  //   //   console.log(this.audioTag.volume)
+  //   //   // kill fade callback
+  //   //   if( this.audioTag.volume === 1){ clearInterval( this.fadeCallback )}
+  //   // }, this.CALLBACK_TIME_MS);
+    
+  // }
+
+  enableSync( isSynchronized ){
+    // simply remove callback if requires no sync
+    if( isSynchronized === false ){  
+      if( this.syncCallback !== undefined ){
+        clearInterval( this.syncCallback );
+        this.syncCallback = undefined;
+        console.log('CLEAR CALLBACK')
+      }
+      return;
+    }
+
+    // trigger sync callback
+    this.syncCallback = setInterval( () => { 
+      // get current sync time
+      let now = this.sync.getSyncTime();
+      let timeIn = ( now  - this.syncRefTime ) % this.audioTag.duration;
+      // console.log( 'running sync. callback, offset:', this.audioTag.currentTime - timeIn )
+      // sync. if large enought offset
+      if( Math.abs( this.audioTag.currentTime - timeIn ) > this.MAX_OFFSYNC_TIME_S ){
+        console.log('forced sync.', this.audioTag.currentTime,  timeIn);
+        this.audioTag.currentTime = timeIn;
+      }
+
+    }, this.CALLBACK_TIME_MS);
 
   }
+
+
 }
 
 

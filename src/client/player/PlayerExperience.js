@@ -27,7 +27,7 @@ const viewTemplate = `
     </div>
 
 
-    <audio controls id="audioElmt">
+    <audio hidden id="audioElmt">
     </audio>
 
     <div class="section-center flex-center">
@@ -58,7 +58,8 @@ const audioTag = {
     // create audio tag and start them to avoid requiring user input to start them latter
     for( let i = 0; i < NUMBER_OF_SIMULTANEOUS_STREAMED_AUDIOSOURCES; i++ ){
       let audioElmt = new Audio();
-      audioElmt.play();        
+      audioElmt.play();      
+      // audioElmt.play = () => { audioElmt.pause(); audioElmt.play = undefined; };
       audioTagArray.push(audioElmt);
     }
   }
@@ -76,6 +77,7 @@ export default class PlayerExperience extends soundworks.Experience {
     this.platform.addFeatureDefinition( audioTag );
     this.platform = this.require('platform', { features: ['web-audio', 'audio-tag'] });
 
+    this.sync = this.require('sync');
     this.checkin = this.require('checkin', { showDialog: false });
     this.audioBufferManager = this.require('audio-buffer-manager', { files: audioFiles });
     this.motionInput = this.require('motion-input', { descriptors: ['deviceorientation', 'accelerationIncludingGravity'] });
@@ -85,8 +87,6 @@ export default class PlayerExperience extends soundworks.Experience {
     // this.initBeacon = this.initBeacon.bind(this);
 
     // local attributes
-    this.audioStreamPlayer = new AudioStreamPlayer(audioTagArray);
-
     this.ambiFileId = -1;
     this.lastPos = [0,0,0]; // lat, long, time
     this.bonusBeaconActivated = false;
@@ -115,7 +115,38 @@ export default class PlayerExperience extends soundworks.Experience {
     // audioTagArray[1].src = 'sounds/click-loop-square-120bpm.wav';
     // audioTagArray[1].play();
 
-    this.audioStreamPlayer.start('sounds/13_Misconceptions_About_Global_Warming_Cut.wav', true, 5, false)
+    // mute audio elmt in safari, to avoid weird audio at start (when source node has not yet replaced audioTag)
+    this.audioStreamPlayer = new AudioStreamPlayer(audioTagArray, this.sync);
+
+    // this.audioStreamPlayer.start('sounds/13_Misconceptions_About_Global_Warming_Cut.wav', 10.0, true, false);
+    // this.audioStreamPlayer.start('sounds/click_loop_square_120bpm.wav', 10.0, true, false);
+
+    // start audio automatically (debug)
+    this.counter = 0;
+    setInterval(()=>{
+      let state = (this.counter % 4);
+      this.counter += 1;
+      console.log('debug state:', state);
+
+      if( state == 0 ){
+        this.audioStreamPlayer.start('sounds/13_Misconceptions_About_Global_Warming_Cut.wav', 2.0, true, false);
+      }
+
+      if( state == 1 ){
+        this.audioStreamPlayer.stop('sounds/13_Misconceptions_About_Global_Warming_Cut.wav', 2.0);
+      }
+      
+      if( state == 2 ){
+        this.audioStreamPlayer.start('sounds/click_loop_square_120bpm.wav', 2.0, true, false);
+      }
+
+      if( state == 3 ){
+        this.audioStreamPlayer.stop('sounds/click_loop_square_120bpm.wav', 2.0);
+      }
+
+    }, 3000);
+
+    
 
 
     if (!this.hasStarted){
@@ -278,90 +309,10 @@ export default class PlayerExperience extends soundworks.Experience {
     });
 
 
-    // Create an <audio> element dynamically.
-    // this.audio = new Audio();
-    this.audio = document.getElementById("audioElmt");
-
-    // this.audio.oncanplaythrough = () => {
-    //   console.log('finished loading');
-    //   // alert("Can play through audio without stopping");
-    //   this.audio.play();
-    //   };   
-
-    // this.audio.src = 'sounds/Boucle_FranceInfo_Regie_Ambi_01_01-04ch.wav';
-    this.audio.src = 'sounds/Orchestre_Ambi_Montage10Cordes_01-04ch.mp3';
-    this.audio.controls = true;
-    this.audio.autoplay = true;
-    this.audio.loop = true;
-    this.audio.muted = false;
-    document.body.appendChild(this.audio);
-    console.log(this.audio);
-    console.log(window)
-
-    // setTimeout( () => {
-    //   this.audio.src = 'sounds/Boucle_Hall_Ambi_01_01-04ch.mp3';
-    //   console.log('timeout');}, 20000);
-
-    // example how to pause / stop source
-    // audio.pause();
-    // audio.currentTime = 10000;
-    // audio.play(); 
-    // this.audio.play();
-
-    // Wait for window.onload to fire. See crbug.com/112368
-    
-
-    // var gainOut = audioContext.createGain();
-    // gainOut.gain.value = 1.0;
-    // gainOut.connect(this.ambisonicPlayer.rotator.in);
-    // gainOut.connect(audioContext.destination);
-    // Our <audio> element will be the audio source.
-    this.streamSource = audioContext.createMediaElementSource(this.audio);
-    // this.streamSource.channelCountMode = 'explicit';
-    // this.streamSource.channelCount = 4;
-
-    var inA = audioContext.createChannelSplitter(4);
-    var outA = audioContext.createChannelMerger(4);
-
-    // inA.channelCountMode = 'explicit';
-    // inA.channelCount = 4;
-
-    // outA.channelCountMode = 'explicit';
-    // outA.channelCount = 4;    
-
-    // this.out.channelCount = 1;
-
-    this.streamSource.connect(inA);
-    // inA.connect(outA, 0,0);
-    // inA.connect(outA, 1,1);
-    // inA.connect(outA, 2,2);
-    // inA.connect(outA, 3,3);
-    for (let i = 0; i < 4; i++) {
-      inA.connect(outA, i, i);
-      // outA.connect(this.ambisonicPlayer.rotator.in, i, i);
-    }
-    
-    console.log(inA)
-    console.log(outA)
-    console.log(this.ambisonicPlayer.rotator.in)
-    
-
-    // inA.connect(outA);
-
-    outA.connect(this.ambisonicPlayer.rotator.in);
-
-    // this.streamSource.connect(inA);
-
-
-    // this.streamSource.connect(this.ambisonicPlayer.rotator.in);
-
-    console.log(this.streamSource);
-
-
   }
 
   onPlayClick(){
-    console.log('hfods')
+    console.log('click button')
     document.getElementById('audioElmt').play();
   }
 
