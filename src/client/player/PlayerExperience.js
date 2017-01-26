@@ -131,9 +131,13 @@ export default class PlayerExperience extends soundworks.Experience {
       callback: this.gpsCallback,
     };
 
-    // debug: enable / disable GPS monitoring
-    this.geoloc.refToIntervalFunction = setInterval( () => { this.geoloc.callback(); }, this.geoloc.refreshRateMs );
-    window.clearInterval( this.geoloc.refToIntervalFunction );
+    // simple example of state machine controlled from OSC
+    this.receive('enableGps', (onOff) => {
+      if( onOff )
+        this.geoloc.refToIntervalFunction = setInterval( () => { this.geoloc.callback(); }, this.geoloc.refreshRateMs );
+      else
+        window.clearInterval( this.geoloc.refToIntervalFunction );
+    });
     
     // start audio automatically (debug)
     this.counter = 0;
@@ -220,9 +224,10 @@ export default class PlayerExperience extends soundworks.Experience {
 
 
   gpsCallback(){
+    console.log('running gps callback');
     // discard if service not available
     if (!navigator.geolocation) { return; }
-    
+    // store current gps output to local attr
     navigator.geolocation.getCurrentPosition( (position) => {
       this.geoloc.coords = [position.coords.latitude, position.coords.longitude];
       document.getElementById("instructions").innerHTML =
