@@ -52,23 +52,10 @@ export default class AudioStreamPlayer {
           console.warn('source already started:', soundFileName); 
           return;
         }
-        // // restart source if paused
-        // else{
-        //   src.audioTag.loop = loop;
-        //   // handle fade mechanism
-        //   src.out.gain.value = 0.0;
-        //   src.linearRampToValueInTime( 1.0, fadeInDuration );
-        //   // sync mechanism
-        //   src.enableSync( isSynchronized );
-        //   // start source
-        //   src.play();
-        // }
-
       }
       else{
         // search for a source unoccupied
         for (let el of this.sourceArray) {
-          console.log('search fo free source', el);
           if( !el.isPlaying ){ 
             src = el;
             break; 
@@ -93,8 +80,7 @@ export default class AudioStreamPlayer {
       
       // init audio tag
       if( urlToFileName( src.audioTag.src ) !== urlToFileName( soundFileName ) ){
-        src.audioTag.src = soundFileName;
-        console.log('changing sound URL')
+        src.audioTag.src = soundFileName; // if Safari crashes when sound URL changes, see // https://bugs.webkit.org/show_bug.cgi?id=153593 (i.e. update Safari)
       }
       src.audioTag.loop = loop;
 
@@ -191,41 +177,7 @@ class AudioStreamSource {
     this.enableSync( false );
     // reset play position
     this.audioTag.currentTime = 0.0;
-    console.log('I STOPPED THE SOURCE')
   }
-
-  // linearRampToValueInTime( value, duration ){
-
-  //   let now = audioContext.currentTime;
-  //   let g = this.out.gain;
-  //   g.cancelScheduledValues(now);
-  //   g.setValueAtTime(g.value, now);
-  //   g.linearRampToValueAtTime(value, now + duration);
-
-  //   // // to short: discard ramp mechanism
-  //   // if( duration <= 0.01 ){ 
-  //   //   this.audioTagId.volume = value;
-  //   //   return;
-  //   // }
-    
-  //   // // remove (eventual) previous callback
-  //   // clearInterval( this.fadeCallback );
-
-  //   // // define increment to fit required fade time
-  //   // this.fadeIncr = ( this.CALLBACK_TIME_MS / 1000 ) / duration;
-
-  //   // // trigger fade callback
-  //   // console.log('setInterval')
-  //   // this.fadeCallback = setInterval( () => { 
-  //   //   let volume = this.audioTag.volume;
-  //   //   volume = Math.min( volume += this.fadeIncr, 1.0 );
-  //   //   this.audioTag.volume = volume;
-  //   //   console.log(this.audioTag.volume)
-  //   //   // kill fade callback
-  //   //   if( this.audioTag.volume === 1){ clearInterval( this.fadeCallback )}
-  //   // }, this.CALLBACK_TIME_MS);
-    
-  // }
 
   enableSync( isSynchronized ){
     // simply remove callback if requires no sync
@@ -233,7 +185,6 @@ class AudioStreamSource {
       if( this.syncCallback !== undefined ){
         clearInterval( this.syncCallback );
         this.syncCallback = undefined;
-        console.log('CLEAR CALLBACK')
       }
       return;
     }
