@@ -197,7 +197,7 @@ class AudioStreamSource {
       // console.log( 'running sync. callback, offset:', this.audioTag.currentTime - timeIn )
       // sync. if large enought offset
       if( Math.abs( this.audioTag.currentTime - timeIn ) > this.MAX_OFFSYNC_TIME_S ){
-        console.log('forced sync.', this.audioTag.currentTime,  timeIn);
+        // console.log('forced sync.', this.audioTag.currentTime,  timeIn);
         this.audioTag.currentTime = timeIn;
       }
 

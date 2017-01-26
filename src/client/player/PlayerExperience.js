@@ -86,6 +86,7 @@ export default class PlayerExperience extends soundworks.Experience {
     // bind
     // this.initBeacon = this.initBeacon.bind(this);
     this.gpsCallback = this.gpsCallback.bind(this);
+    this.soundGridCallback = this.soundGridCallback.bind(this);
 
     // local attributes
     this.ambiFileId = -1;
@@ -127,42 +128,69 @@ export default class PlayerExperience extends soundworks.Experience {
     this.geoloc = {
       refreshRateMs: 2000, 
       refToIntervalFunction: undefined, 
-      coords: [0,0],
+      coords: [NaN, NaN],
       callback: this.gpsCallback,
     };
 
-    // simple example of state machine controlled from OSC
+    // callback: example of state machine controlled from OSC
     this.receive('enableGps', (onOff) => {
       if( onOff )
         this.geoloc.refToIntervalFunction = setInterval( () => { this.geoloc.callback(); }, this.geoloc.refreshRateMs );
       else
         window.clearInterval( this.geoloc.refToIntervalFunction );
     });
+
+    // debug: fake GPS position
+    this.receive('fakeGps', (coords) => { this.geoloc.coords = coords; });
+
+    // init GPS zone based sounds
+    this.soundGrid = {
+      hysteresisTime: 1.0, // in sec
+      hysteresisDistance: 1.0, // in m ... or lat / long deg value?
+      refreshRateMs: 2000,
+      refToIntervalFunction: undefined,
+      callback: this.soundGridCallback,
+      areaCenters: [ // longitude, latitude pairs
+        // [ 2.3517, ? ]
+        [1, 1],
+        [1, 2],
+        [2, 1],
+        [2, 2],
+      ]
+    }
     
-    // start audio automatically (debug)
-    this.counter = 0;
-    setInterval(()=>{
-      let state = (this.counter % 4);
-      this.counter += 1;
-      console.log('debug state:', state);
+    // callback: example of state machine controlled from OSC
+    this.receive('enableSoundGrid', (onOff) => {
+      if( onOff )
+        this.soundGrid.refToIntervalFunction = setInterval( () => { this.soundGrid.callback(); }, this.soundGrid.refreshRateMs );
+      else
+        window.clearInterval( this.soundGrid.refToIntervalFunction );
+    });
 
-      if( state == 0 ){
-        this.audioStreamPlayer.start('sounds/13_Misconceptions_About_Global_Warming_Cut.wav', 2.0, true, true);
-      }
+    // // start audio automatically (debug)
+    // this.counter = 0;
+    // setInterval(()=>{
+    //   let state = (this.counter % 4);
+    //   this.counter += 1;
+    //   console.log('debug state:', state);
 
-      if( state == 1 ){
-        this.audioStreamPlayer.stop('sounds/13_Misconceptions_About_Global_Warming_Cut.wav', 2.0);
-      }
+    //   if( state == 0 ){
+    //     this.audioStreamPlayer.start('sounds/13_Misconceptions_About_Global_Warming_Cut.wav', 2.0, true, true);
+    //   }
+
+    //   if( state == 1 ){
+    //     this.audioStreamPlayer.stop('sounds/13_Misconceptions_About_Global_Warming_Cut.wav', 2.0);
+    //   }
       
-      if( state == 2 ){
-        this.audioStreamPlayer.start('sounds/click_loop_square_120bpm.wav', 2.0, true, true);
-      }
+    //   if( state == 2 ){
+    //     this.audioStreamPlayer.start('sounds/click_loop_square_120bpm.wav', 2.0, true, true);
+    //   }
 
-      if( state == 3 ){
-        this.audioStreamPlayer.stop('sounds/click_loop_square_120bpm.wav', 2.0);
-      }
+    //   if( state == 3 ){
+    //     this.audioStreamPlayer.stop('sounds/click_loop_square_120bpm.wav', 2.0);
+    //   }
 
-    }, 3000);
+    // }, 3000);
 
   
     this.azimIncr = 0;
@@ -216,13 +244,6 @@ export default class PlayerExperience extends soundworks.Experience {
 
   }
 
-  onPlayClick(){
-    console.log('click button')
-    document.getElementById('audioElmt').play();
-  }
-
-
-
   gpsCallback(){
     console.log('running gps callback');
     // discard if service not available
@@ -241,6 +262,57 @@ export default class PlayerExperience extends soundworks.Experience {
     },
     { enableHighAccuracy: true, timeout: 10000, maximumAge: 10000 }
     );
+  }
+
+
+
+  onPlayClick(){ console.log('click button'); }
+
+  soundGridCallback() {
+
+    // define current zone
+    let zoneId = -1;
+    let dist = Infinity; 
+    let distTmp = 0;
+    this.soundGrid.areaCenters.forEach( (item, index) => {
+      distTmp = Math.sqrt( Math.pow( item[0] - this.geoloc.coords[0], 2)
+                      + Math.pow( item[1] - this.geoloc.coords[1], 2) );
+      if( distTmp < dist ){
+        dist = distTmp;
+        zoneId = index;
+      }
+    });
+
+    console.log('current zone id:', zoneId, 'dist:', dist);
+
+    // // get current zone (dummy for now)
+    // let bkgColor = [0,0,0];
+    // let newAmbiFileId = -1;
+    // // if( position.coords.latitude > 48.8596 ){ // android
+    // if( position.coords.longitude > 2.3517 ){ // ios
+    //   newAmbiFileId = 0;
+    //   bkgColor = [0,100,0];
+    // } 
+    // else{
+    //   newAmbiFileId = 1;
+    //   bkgColor = [0,0,100];            
+    // }
+
+    // if( newAmbiFileId != this.ambiFileId ){
+    //   // update local
+    //   // this.lastDistHysteresisTime = audioContext.currentTime;
+    //   this.ambiFileId = newAmbiFileId;
+
+    //   // update player
+    //   this.ambisonicPlayer.stop(-1, 1.0);
+    //   // this.ambisonicPlayer.startSource( this.ambiFileId, true, 1.0 );
+
+    //   // update bkg color
+    //   this.renderer.setBkgColor(bkgColor);
+    // }
+    // // debug: check callback still running
+    // // this.renderer.setBkgColor([0, Math.round(200 * Math.random()), Math.round(200 * Math.random()) ]);
+
   }
 
   // enableGpsMode(){
