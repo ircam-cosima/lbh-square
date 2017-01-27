@@ -33,7 +33,7 @@ export default class AudioStreamPlayer {
           if( IS_SAFARI ){ item.muted = true; }
           // create source
           let src = new AudioStreamSource( item, this.sync);
-          src.out.connect( audioContext.destination );
+          src.out.connect( this.gainOut );
           // store local
           this.sourceArray.push( src );
         });
@@ -71,7 +71,6 @@ export default class AudioStreamPlayer {
       }
 
       // handle fade mechanism
-      // src.out.gain.value = 0.0;
       const now = audioContext.currentTime;
       src.out.gain.cancelScheduledValues(now);
       src.out.gain.setValueAtTime(src.out.gain.value, now);

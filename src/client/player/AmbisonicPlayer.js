@@ -133,6 +133,12 @@ export default class AmbisonicPlayer {
         // get source
         let srcObj = this.srcMap.get(fileId);
 
+        // discard if src not started
+        if( srcObj === undefined ){ 
+            console.warn('trying to stop void source (not started), id:', fileId); 
+            return;
+        }
+
         // fade out
         const param = srcObj.gain.gain;
         const now = audioContext.currentTime;
