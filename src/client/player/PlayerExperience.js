@@ -17,18 +17,13 @@ const viewTemplate = `
   <div class="foreground">
 
     <div class="section-top flex-middle">
-      <p class="big"> <%= title %> </p>
+      <p id="title" class="big"> <%= title %> </p>
     </div>
 
-    <!--
-    <div class="section-center flex-center">
-      <button type="button" style="font-size:7pt;color:white;background-color:green;"
-      onclick="window.experience.onPlayClick();" >Click Me!</button>
+    <div class="section-top flex-center">
+      <button type="button" style="font-size:17pt;color:white;background-color:grey;"
+      onclick="window.experience.onPlayClick();" > <br> Enable <br> <br> </button>
     </div>
-    -->
-
-    <audio hidden id="audioElmt">
-    </audio>
 
     <div class="section-center flex-center">
       <p id="instructions"> ••• </p>
@@ -112,7 +107,7 @@ export default class PlayerExperience extends soundworks.Experience {
     
     // initialize the view
     this.viewTemplate = viewTemplate;
-    this.viewContent = { title: 'In the Square <br />' + client.index, 
+    this.viewContent = { title: 'Square, id: ' + client.index, 
                          instructions: 'browse paris soundscape' };
     this.viewCtor = soundworks.CanvasView;
     this.viewOptions = { preservePixelRatio: true };
@@ -138,7 +133,7 @@ export default class PlayerExperience extends soundworks.Experience {
 
     // init gps service
     this.geoloc = {
-      refreshRateMs: 2000, 
+      refreshRateMs: 750, 
       refToIntervalFunction: undefined, 
       coords: [NaN, NaN],
       callback: this.gpsCallback,
@@ -158,15 +153,15 @@ export default class PlayerExperience extends soundworks.Experience {
     // init GPS zone based sounds
     this.soundGrid = {
       // hysTime: 1.0, // in sec
-      hysDistRatio: 3, // ratio of distNew / distOld must be above to change zone
-      refreshRateMs: 2000,
+      hysDistRatio: 1, // ratio of distNew / distOld must be above to change zone (one is no hyst., > 1 is conservative hyst.)
+      refreshRateMs: 750,
       refToIntervalFunction: undefined,
       callback: this.soundGridCallback,
-      zoneCenters: [ // longitude, latitude pairs
+      zoneCenters: [ // latitude longitude pairs
         // equi distant points along stravinsky's length:
-        [ 2.351621, 48.859811 ],
-        [ 2.351399, 48.859511 ],
-        [ 2.351235, 48.859326 ]
+        [ 48.859830, 2.351469 ],
+        [ 48.859586, 2.351277 ],
+        [ 48.859286, 2.351059 ]
       ], 
       zoneColors: [
         [100, 0, 0],
@@ -243,11 +238,12 @@ export default class PlayerExperience extends soundworks.Experience {
     // discard if service not available
     if (!navigator.geolocation) { return; }
     // store current gps output to local attr
-    navigator.geolocation.getCurrentPosition( (position) => {
+    navigator.geolocation.watchPosition( (position) => {
       this.geoloc.coords = [position.coords.latitude, position.coords.longitude];
-      document.getElementById("instructions").innerHTML =
-        "Latitude: " + position.coords.latitude +
-        "<br>Longitude: " + position.coords.longitude;      
+      // document.getElementById("instructions").innerHTML =
+      //   "Latitude: " + position.coords.latitude +
+      //   "<br>Longitude: " + position.coords.longitude;      
+      document.getElementById("title").innerHTML = Math.round( position.coords.accuracy * 10 ) / 10;
     },
     (error) => {
       document.getElementById("instructions").innerHTML = 'GPS UNAVAILABLE <br /> <br /> reason: <br />' + error.message;
@@ -271,6 +267,19 @@ export default class PlayerExperience extends soundworks.Experience {
       }
     });
     console.log('raw zone estimate (curr / new)', this.soundGrid.currentZoneId, newZoneId );
+
+    // dbg zone detection
+    let dbgStr = '';
+    for( let i = 0; i < this.soundGrid.zoneCenters.length; i ++ ){
+      dbgStr += i + ': ' 
+      + Math.round( arrayDist( this.soundGrid.zoneCenters[i], this.geoloc.coords )  * 1000000 )
+      + '  ('
+      + Math.round((Math.abs( this.soundGrid.zoneCenters[i][0] - this.geoloc.coords[0] ) * 1000000)  )
+      + ', '
+      + Math.round((Math.abs( this.soundGrid.zoneCenters[i][1] - this.geoloc.coords[1] ) * 1000000)  )
+      + ") <br>";
+    }
+    document.getElementById("instructions").innerHTML = dbgStr;
 
     // discard if new zone meaningless
     if( newZoneId === -1 || newZoneId === this.soundGrid.currentZoneId ){ return; }
@@ -303,8 +312,13 @@ export default class PlayerExperience extends soundworks.Experience {
 
   onPlayClick(){ 
     console.log('button clicked'); 
-    let a = audioTagArray[0];
-    a.muted = !a.muted;
+    
+    this.geoloc.refToIntervalFunction = setInterval( () => { this.geoloc.callback(); }, this.geoloc.refreshRateMs );
+    this.soundGrid.refToIntervalFunction = setInterval( () => { this.soundGrid.callback(); }, this.soundGrid.refreshRateMs );
+
+    // let a = audioTagArray[0];
+    // a.muted = !a.muted;
+
     // let s = audioContext.createMediaElementSource( a );
     // s.connect(audioContext.destination);
     // a.src = 'sounds/13_Misconceptions_About_Global_Warming_Cut.wav';
