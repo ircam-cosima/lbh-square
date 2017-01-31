@@ -22,9 +22,8 @@ const viewTemplate = `
 
     <!--
     <div class="section-center flex-center">
-      <button type="button" onclick="
-      window.experience.onPlayClick();
-      " >Click Me!</button>
+      <button type="button" style="font-size:7pt;color:white;background-color:green;"
+      onclick="window.experience.onPlayClick();" >Click Me!</button>
     </div>
     -->
 
@@ -164,17 +163,15 @@ export default class PlayerExperience extends soundworks.Experience {
       refToIntervalFunction: undefined,
       callback: this.soundGridCallback,
       zoneCenters: [ // longitude, latitude pairs
-        // [ 2.3517, ? ]
-        [1, 1],
-        [1, 3],
-        [3, 1],
-        [3, 3],
+        // equi distant points along stravinsky's length:
+        [ 2.351621, 48.859811 ],
+        [ 2.351399, 48.859511 ],
+        [ 2.351235, 48.859326 ]
       ], 
       zoneColors: [
         [100, 0, 0],
         [0, 100, 0],
-        [0, 0, 100],
-        [0, 100, 100],
+        [0, 0, 100]
       ],
       currentZoneId: -1,
       zoneSoundFileName: [
@@ -233,10 +230,7 @@ export default class PlayerExperience extends soundworks.Experience {
         // reset listener orientation (azim only)
         this.ambisonicPlayer.resetListenerAim();
         // audio feedback
-        let src = audioContext.createBufferSource();
-        src.buffer = this.audioBufferManager.audioBuffers.default[0];
-        src.connect(audioContext.destination);
-        src.start(audioContext.currentTime);
+        this.audioPlayer.startSource(0, 0, false);
       }
       // update last touch time
       this.doubleTouchWatcher.lastTouchTime = audioContext.currentTime;
@@ -256,7 +250,7 @@ export default class PlayerExperience extends soundworks.Experience {
         "<br>Longitude: " + position.coords.longitude;      
     },
     (error) => {
-      document.getElementById("instructions").innerHTML = 'GPS UNAVAILABLE <br /> (application disabled) <br /> <br /> reason: <br />' + error.message;
+      document.getElementById("instructions").innerHTML = 'GPS UNAVAILABLE <br /> <br /> reason: <br />' + error.message;
       // this.renderer.setBkgColor([180, 40, 40]);
       // alert(error.message);
     },
@@ -307,6 +301,15 @@ export default class PlayerExperience extends soundworks.Experience {
     this.renderer.setBkgColor(this.soundGrid.zoneColors[zoneId]);
   }
 
-  onPlayClick(){ console.log('button clicked'); }
+  onPlayClick(){ 
+    console.log('button clicked'); 
+    let a = audioTagArray[0];
+    a.muted = !a.muted;
+    // let s = audioContext.createMediaElementSource( a );
+    // s.connect(audioContext.destination);
+    // a.src = 'sounds/13_Misconceptions_About_Global_Warming_Cut.wav';
+    // a.playbackRate = 0.6;
+    // a.play();
+  }
 
 }
