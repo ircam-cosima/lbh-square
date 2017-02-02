@@ -38,6 +38,21 @@ export default class AudioStreamPlayer {
           this.sourceArray.push( src );
         });
 
+        //   // debug: prove that safari ios doesn't send media elmt output to webaudio api graph afterall
+        // this.analyser = audioContext.createAnalyser();
+        // this.analyser.fftSize = 256;
+        // this.analyser.smoothingTimeConstant = 0.2;
+        // this.sourceArray[0].out.connect( this.analyser );
+        // this.streamData = new Uint8Array(128);
+        // setInterval( () => {
+        //   this.analyser.getByteFrequencyData(this.streamData);
+        //   var total = 0;
+        //   for (var i = 0; i < this.streamData.length; i++)
+        //       total += this.streamData[i];
+        //   console.log(total/1000);
+        // }, 200);
+
+
     }
 
     start(soundFileName, fadeDuration = 0.1, loop = true, isSynchronized = false){
@@ -141,11 +156,12 @@ class AudioStreamSource {
     // local attributes
     this.audioTag = audioTag;
     this.sync = sync;
-    this.CALLBACK_TIME_MS = 100; // general callback refresh rate, in ms
+    this.CALLBACK_TIME_MS = 1000; // general callback refresh rate, in ms
     this.isPlaying = false; // determine is source is occupied or can be used to play new audio file
 
     // create audio node (more complex, but will allow ambisonic playback eventually)
     this.audioNode = audioContext.createMediaElementSource( audioTag );
+    // this.audioNode = audioContext.createGain(); // debug
 
     // gain out (needed for fade mechanism as safari doesn't let us change audioTag.volume)
     this.out = audioContext.createGain();
@@ -158,7 +174,9 @@ class AudioStreamSource {
     // sync. mecanism
     this.syncCallback = undefined;
     this.syncRefTime = 0.0;
-    this.MAX_OFFSYNC_TIME_S = 0.5; // max time accepted by the system before forcing sync., in sec
+    this.MAX_OFFSYNC_TIME_S = 0.02; // max time accepted by the system before forcing sync., in sec
+    this.averageDelay = 0.0;
+    this.offsyncArray = new RingArray(12);
 
     // connect graph
     this.audioNode.connect( this.out );
@@ -193,20 +211,101 @@ class AudioStreamSource {
       // get current sync time
       let now = this.sync.getSyncTime();
       let timeIn = ( now  - this.syncRefTime ) % this.audioTag.duration;
-      // console.log( 'running sync. callback, offset:', this.audioTag.currentTime - timeIn )
-      // sync. if large enought offset
-      if( Math.abs( this.audioTag.currentTime - timeIn ) > this.MAX_OFFSYNC_TIME_S ){
-        // console.log('forced sync.', this.audioTag.currentTime,  timeIn);
-        this.audioTag.currentTime = timeIn;
+      // console.log( 'sync. offset:', Math.round( (this.audioTag.currentTime - timeIn)*1000 ) / 1000 )
+      // estimate offsync
+      let offsetSync = this.audioTag.currentTime - timeIn;
+      this.offsyncArray.push( offsetSync );
+
+      // console.log(this.offsyncArray.array);
+      // console.log(this.offsyncArray.getMean());
+
+      if( this.offsyncArray.array.length === this.offsyncArray.length ){
+        // get average mean
+        let meanOffset = this.offsyncArray.getMean();
+        if( Math.abs( meanOffset ) > this.MAX_OFFSYNC_TIME_S ){
+          
+          // any offset: jump
+          // this.audioTag.currentTime = this.audioTag.currentTime - meanOffset;
+          this.rectifyOffset( meanOffset );
+
+          // // big offset: jump
+          // if( Math.abs( meanOffset ) > 20 * this.MAX_OFFSYNC_TIME_S ){
+          //   this.audioTag.currentTime = this.audioTag.currentTime - meanOffset;
+          //   // this.rectifyOffset( meanOffset );
+          //   this.audioTag.playbackRate = 1.0; // reset playback rate
+          // }
+
+          // // small offset: adjust playback rate 
+          // else{
+          //   let timeUntilNextCall = this.offsyncArray.length * ( this.CALLBACK_TIME_MS / 1000 );
+          //   let newPlaybackRate = 1.0 - meanOffset / timeUntilNextCall;
+          //   this.audioTag.playbackRate = newPlaybackRate;
+          //   console.log('rate', this.audioTag.playbackRate, 'delay', meanOffset, 'ttcover', timeUntilNextCall);
+          // }
+          console.log(this.audioTag.currentTime, timeIn);
+        }
+        this.offsyncArray.flush();
       }
 
+      // // sync. if large enought offset
+      // if( Math.abs( this.audioTag.currentTime - timeIn ) > this.MAX_OFFSYNC_TIME_S ){
+      //   console.log('!!forced sync.', this.audioTag.currentTime - timeIn, this.averageDelay);
+      //   if( Math.abs(this.audioTag.currentTime - timeIn) <= 0.4 ){
+      //     this.averageDelay = (this.averageDelay + (this.audioTag.currentTime - timeIn))/ 2;
+      //     this.estimateDelayArray.push( this.audioTag.currentTime - timeIn );
+      //   }
+      //   // this.audioTag.currentTime = timeIn - (2*this.averageDelay);
+      //   this.audioTag.currentTime = timeIn;
+      // }
+
     }, this.CALLBACK_TIME_MS);
+
+  }
+
+  rectifyOffset(timeOffset){
+      var fadeDuration = 0.1;
+      // fade out
+      const now = audioContext.currentTime;
+      this.out.gain.cancelScheduledValues(now);
+      this.out.gain.setValueAtTime(this.out.gain.value, now);
+      this.out.gain.linearRampToValueAtTime(0.0, now + fadeDuration);
+      setTimeout( () => { 
+        this.audioTag.currentTime = this.audioTag.currentTime - timeOffset; 
+        // fade in
+        const now = audioContext.currentTime;
+        this.out.gain.cancelScheduledValues(now);
+        this.out.gain.setValueAtTime(this.out.gain.value, now);
+        this.out.gain.linearRampToValueAtTime(1.0, now + fadeDuration);        
+      }, fadeDuration * 3000);
 
   }
 
 
 }
 
+class RingArray{ 
+  constructor( arraySize ){
+    this.array = [];
+    this.length = arraySize;
+  }
+
+  push( val ){
+    this.array.push(val);
+    if( this.array.length > this.length ){
+      this.array.shift(); 
+    }
+  }
+
+  getMean(){
+    let sum = 0;
+    this.array.forEach( (item, index) => { sum += item });
+    return sum / this.array.length;
+  }
+
+  flush(){ 
+    this.array = [];
+  }
+}
 
 
 

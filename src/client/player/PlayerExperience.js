@@ -3,14 +3,12 @@ import * as soundworksCordova from 'soundworks-cordova/client';
 
 import AudioPlayer from './AudioPlayer';
 import AudioStreamPlayer from './AudioStreamPlayer';
+import AudioStreamHandler from './AudioStreamHandler';
 import AmbisonicPlayer from './AmbisonicPlayer';
 import PlayerRenderer from './PlayerRenderer';
 
 const audioContext = soundworks.audioContext;
 const client = soundworks.client;
-
-const HYSTERESIS_DIST = 1.0; // in m
-const HYSTERESIS_TIME = 1.0; // in sec
 
 const viewTemplate = `
   <canvas class="background"></canvas>
@@ -87,7 +85,8 @@ export default class PlayerExperience extends soundworks.Experience {
     this.checkin = this.require('checkin', { showDialog: false });
     this.audioBufferManager = this.require('audio-buffer-manager', { files: audioFiles });
     this.motionInput = this.require('motion-input', { descriptors: ['deviceorientation', 'accelerationIncludingGravity'] });
-    
+    this.rawSocket = this.require('raw-socket');
+    this.sharedConfig = this.require('shared-config', { items: ['streamedAudioFileNames'] });
 
     // bind
     // this.initBeacon = this.initBeacon.bind(this);
@@ -130,6 +129,8 @@ export default class PlayerExperience extends soundworks.Experience {
     this.ambisonicPlayer = new AmbisonicPlayer(roomReverb);
     this.audioPlayer = new AudioPlayer(this.audioBufferManager.audioBuffers.default);
     this.audioStreamPlayer = new AudioStreamPlayer(audioTagArray, this.sync);
+    this.streamableAudioFiles = client.config.streamedAudioFileNames.map( (x) => { return x.replace(/^.*[\\\/]/, ''); });
+    this.audioStreamHandler = new AudioStreamHandler( this, this.streamableAudioFiles );
 
     // init gps service
     this.geoloc = {
@@ -202,6 +203,14 @@ export default class PlayerExperience extends soundworks.Experience {
       // this.ambisonicPlayer.stop(-1, 1.0); // stop all
       if( onOff ){ this.audioStreamPlayer.start(this.soundGrid.zoneSoundFileName[fileId], 2.0, true, true); }
       else{ this.audioStreamPlayer.stop(this.soundGrid.zoneSoundFileName[fileId], 2.0); }
+    });
+
+    // callback: debug audioStreamHandler player
+    this.receive('debugStreamHandlerPlay', (args) => {
+      console.log('debug stream handler', args);
+      let onOff = args.shift(); let fileId = args.shift();  let startTime = args.shift();
+      if( onOff ){ this.audioStreamHandler.start(this.streamableAudioFiles[fileId], startTime); }
+      else{ this.audioStreamHandler.stop(this.streamableAudioFiles[fileId]); }
     });
 
     // setup motion input listener (update audio listener aim based on device orientation)

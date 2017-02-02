@@ -1,6 +1,7 @@
 import path from 'path';
 const cwd = process.cwd();
 
+var audioFilePath = __dirname + '/../../public/sounds/';
 
 // Configuration of the application.
 // Other entries can be added (as long as their name doesn't conflict with
@@ -90,6 +91,17 @@ export default {
     // port where the remote application is listening for messages
     sendPort: 57120,
   },
+
+  // configuration of the `raw-socket` service
+  rawSocket: {
+    // port
+    port: 8080,
+  },
+
+  streamedAudioFileNames: [
+    audioFilePath + 'click.wav',
+    audioFilePath + '13_Misconceptions_About_Global_Warming_Cut.wav'
+  ],
 
   // define if the server should use gzip compression for static files
   enableGZipCompression: true,

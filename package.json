@@ -21,12 +21,14 @@
     "url": "https://github.com/collective-soundworks/soundworks-template"
   },
   "dependencies": {
+    "ambisonics": "polarch/JSAmbisonics#bundle-or-not-bundle",
     "babel-runtime": "^6.6.1",
     "debug": "^2.1.2",
+    "fs": "0.0.1-security",
     "soundworks": "git://github.com/collective-soundworks/soundworks.git#develop",
     "soundworks-cordova": "collective-soundworks/soundworks-cordova#v1.0.0",
     "source-map-support": "^0.4.0",
-    "ambisonics": "polarch/JSAmbisonics#bundle-or-not-bundle"
+    "web-audio-api": "^0.2.2"
   },
   "devDependencies": {
     "babel-core": "^6.6.5",

@@ -1,4 +1,5 @@
 import { Experience } from 'soundworks/server';
+import AudioStreamHandler from './AudioStreamHandler'
 
 // convert "stringified numbers" (e.g. '10.100') element of arayIn to Numbers
 Array.prototype.numberify = function() {
@@ -8,15 +9,27 @@ Array.prototype.numberify = function() {
     });
 };
 
+// setup audio streaming (files to be pre-loaded for later access by clients)
+// var pre = __dirname + '/../public/sounds/';
+// const audioFiles = [
+//   pre + 'click.wav',
+//   pre + '13_Misconceptions_About_Global_Warming_Cut.wav'
+// ]
+
 // server-side 'player' experience.
 export default class PlayerExperience extends Experience {
   constructor(clientType) {
     super(clientType);
 
+    // services
     this.checkin = this.require('checkin');
     this.sync = this.require('sync');
     this.osc = this.require('osc');
     this.sharedConfig = this.require('shared-config');
+
+    // locals
+    let audioFiles = this.sharedConfig.get('streamedAudioFileNames');
+    this.audioStreamHandler = new AudioStreamHandler( this, audioFiles );
   }
 
   // if anything needs to append when the experience starts
@@ -24,6 +37,7 @@ export default class PlayerExperience extends Experience {
 
     // send update msg to OSC client (e.g. if connected after some of the players / conductor)
     this.osc.receive('/updateRequest', (values) => { console.log('OSC client connected'); });
+
 
     // sync. OSS client clock with server's (delayed in setTimeout for now because OSC not init at start.)
     setTimeout( () => {
@@ -50,8 +64,14 @@ export default class PlayerExperience extends Experience {
   // starts the experience on the client side), write it in the `enter` method
   enter(client) {
     super.enter(client);
+    // console.log(this.audioBuffersMap.get('click.wav'))
+    this.receive( client, 'audioStreamRequest', (soundFile, startTime, duration) => {
+      this.audioStreamHandler.seek( client, soundFile, startTime, duration);  
+    });
+    
+
     // send a message to all the other clients of the same type
-    this.broadcast(client.type, client, 'play');
+    // this.broadcast(client.type, client, 'play');
   }
 
   exit(client) {
