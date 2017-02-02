@@ -9,13 +9,6 @@ Array.prototype.numberify = function() {
     });
 };
 
-// setup audio streaming (files to be pre-loaded for later access by clients)
-// var pre = __dirname + '/../public/sounds/';
-// const audioFiles = [
-//   pre + 'click.wav',
-//   pre + '13_Misconceptions_About_Global_Warming_Cut.wav'
-// ]
-
 // server-side 'player' experience.
 export default class PlayerExperience extends Experience {
   constructor(clientType) {
@@ -37,7 +30,6 @@ export default class PlayerExperience extends Experience {
 
     // send update msg to OSC client (e.g. if connected after some of the players / conductor)
     this.osc.receive('/updateRequest', (values) => { console.log('OSC client connected'); });
-
 
     // sync. OSS client clock with server's (delayed in setTimeout for now because OSC not init at start.)
     setTimeout( () => {
@@ -64,14 +56,7 @@ export default class PlayerExperience extends Experience {
   // starts the experience on the client side), write it in the `enter` method
   enter(client) {
     super.enter(client);
-    // console.log(this.audioBuffersMap.get('click.wav'))
-    this.receive( client, 'audioStreamRequest', (soundFile, startTime, duration) => {
-      this.audioStreamHandler.seek( client, soundFile, startTime, duration);  
-    });
-    
-
-    // send a message to all the other clients of the same type
-    // this.broadcast(client.type, client, 'play');
+    this.audioStreamHandler.enter( client );
   }
 
   exit(client) {
