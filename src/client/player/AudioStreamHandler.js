@@ -14,7 +14,7 @@ export default class AudioStreamHandler {
     // init stream sources for each potential streamed audio file (i.e. raw socket "channel")
     audioFileNames.forEach( (fileName) => {
       // create stream source
-      let streamSrc = new StreamSource();
+      let streamSrc = new StreamSource( fileName );
       // store stream source
       this.streamSrcMap.set( fileName, streamSrc );
       // setup socket reveive callbacks (receiving raw audio data)
@@ -25,7 +25,13 @@ export default class AudioStreamHandler {
 
     // define callback for receiving metadata
     this.soundworksClient.receive('audioMeta', (fileName, metaData) => {
-      this.streamSrcMap.get( fileName ).metaData = metaData;
+      let streamSrc = this.streamSrcMap.get( fileName );
+      streamSrc.metaData = metaData;
+      // check for too short sources (did not want to bother with that..)
+      if( (metaData.length / metaData.sampleRate) < streamSrc.BUFFER_DURATION ){
+        console.warn('WARNING: too short audio file, will not work for:', fileName, 
+          '\n consider reducing BUFFER_DURATION');
+      }
     });
     // request meta data from server for each source
     audioFileNames.forEach( (fileName) => {
@@ -46,8 +52,11 @@ export default class AudioStreamHandler {
     streamSrc.nextSystemStartTime = this.soundworksClient.sync.getSyncTime();
     streamSrc.nextBufferStartTime = startTime;
     streamSrc.fadeDuration = fadeDuration;
-    streamSrc.loop = true;
+    streamSrc.loop = loop;
     
+    // check if loop mechanism required
+    this.handleLoop( streamSrc );
+
     // require first buffer from server
     this.soundworksClient.send('audioStreamRequest', fileName, startTime, streamSrc.BUFFER_DURATION);
 
@@ -68,9 +77,9 @@ export default class AudioStreamHandler {
 
     // estimate system time at which received data (hence audio buffer, hence audio source) is due to play
     let relativeSystemStartTime = this.soundworksClient.sync.getSyncTime() - streamSrc.nextSystemStartTime;
-    console.log('start chunck', streamSrc.nextBufferStartTime, 'in', relativeSystemStartTime, 'sec')
+    console.log('start chunk', streamSrc.nextBufferStartTime, 'in', relativeSystemStartTime, 'sec')
 
-    // start stream source chunck
+    // start stream source chunk
     streamSrc.startNextBuffer( relativeSystemStartTime );
   }
 
@@ -88,11 +97,17 @@ export default class AudioStreamHandler {
     // do nothing if enought buffered data for now
     if( timeBeforeLastBufferOver > streamSrc.CACHE_TIME_THRESHOLD ){ return; }
 
-    // otherwise, request new data chunck + update time values
+    // get next time stamps
     streamSrc.nextBufferStartTime += streamSrc.BUFFER_DURATION;
     streamSrc.nextSystemStartTime = now + timeBeforeLastBufferOver;
+
+    // check if loop mechanism required
+    this.handleLoop( streamSrc );
+    
+    // request for next data chunk
     this.soundworksClient.send('audioStreamRequest', fileName, streamSrc.nextBufferStartTime, streamSrc.BUFFER_DURATION);
     console.log('request new buffer starting at', streamSrc.nextBufferStartTime, 'sec');
+
   }
 
   stop( fileName, fadeDuration = 0.3 ){
@@ -124,11 +139,28 @@ export default class AudioStreamHandler {
     streamSrc.hasFadedIn = false;
   }
 
+  handleLoop( streamSrc ){
+    // check if reached end of file
+    let duration = streamSrc.metaData.length / streamSrc.metaData.sampleRate;
+    if( streamSrc.nextBufferStartTime > duration ){
+      // stop source (and skip next data request)
+      if( !streamSrc.loop ){ 
+        this.stop( streamSrc.fileName );
+        return;
+      }
+      // fire loop mechanism (the server does all the ring buffer work here)
+      console.log('loop reached');
+      streamSrc.nextBufferStartTime -= duration;
+    }    
+  }
+
 }
 
 
 class StreamSource {
-  constructor( ) {
+  constructor( fileName ) {
+
+    this.fileName = fileName;
     // metadata defining file associated with the streamSource
     this.metaData = { sampleRate: 44100, numberOfChannels:1, length:0 };
     // system time at which nex buffer will be played
