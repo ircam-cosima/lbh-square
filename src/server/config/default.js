@@ -99,8 +99,8 @@ export default {
   },
 
   streamedAudioFileNames: [
-    audioFilePath + 'click.wav',
-    audioFilePath + '13_Misconceptions_About_Global_Warming_Cut.wav'
+    audioFilePath + 'click_loop_square_120bpm.wav',
+    audioFilePath + 'virtual-barber-shop.wav'
   ],
 
   // define if the server should use gzip compression for static files

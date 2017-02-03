@@ -4,6 +4,18 @@ const audioContext = soundworks.audioContext;
 // same as audiostreamplayer but with manual streaming. 
 // Not relying on html audio tag element: to achieve inter-device synchronization
 
+// fix for safari that doesn't implement Float32Array.slice yet
+if (!Float32Array.prototype.slice) {
+  Float32Array.prototype.slice = function(begin, end) {
+    var target = new Float32Array(end - begin);
+
+    for (var i = 0; i < begin + end; ++i) {
+      target[i] = this[begin + i];
+    }
+    return target;
+  };
+}
+
 export default class AudioStreamHandler {
   constructor( soundworksClient, audioFileNames ) {
     
@@ -53,6 +65,7 @@ export default class AudioStreamHandler {
     streamSrc.nextBufferStartTime = startTime;
     streamSrc.fadeDuration = fadeDuration;
     streamSrc.loop = loop;
+    streamSrc.hasFadedIn = false; 
     
     // check if loop mechanism required
     this.handleLoop( streamSrc );
@@ -69,7 +82,7 @@ export default class AudioStreamHandler {
 
   // handle data received from raw socket channel "channelName"
   rawSocketCallback( channelName, data ){
-    console.log('received data for', channelName, 'of length', data.length);
+    // console.log('received data for', channelName, 'of length', data.length);
 
     // get stream source
     let streamSrc = this.streamSrcMap.get(channelName);
@@ -77,7 +90,7 @@ export default class AudioStreamHandler {
 
     // estimate system time at which received data (hence audio buffer, hence audio source) is due to play
     let relativeSystemStartTime = this.soundworksClient.sync.getSyncTime() - streamSrc.nextSystemStartTime;
-    console.log('start chunk', streamSrc.nextBufferStartTime, 'in', relativeSystemStartTime, 'sec')
+    // console.log('start chunk', streamSrc.nextBufferStartTime, 'in', relativeSystemStartTime, 'sec')
 
     // start stream source chunk
     streamSrc.startNextBuffer( relativeSystemStartTime );
@@ -92,7 +105,7 @@ export default class AudioStreamHandler {
     // check how long remains with current buffer
     let now = this.soundworksClient.sync.getSyncTime();
     let timeBeforeLastBufferOver = streamSrc.nextSystemStartTime + streamSrc.BUFFER_DURATION - now;
-    console.log('remains', timeBeforeLastBufferOver, 'sec of current buffer');
+    // console.log('remains', Math.round(timeBeforeLastBufferOver*10)/10, 'sec in cache');
     
     // do nothing if enought buffered data for now
     if( timeBeforeLastBufferOver > streamSrc.CACHE_TIME_THRESHOLD ){ return; }
@@ -106,7 +119,8 @@ export default class AudioStreamHandler {
     
     // request for next data chunk
     this.soundworksClient.send('audioStreamRequest', fileName, streamSrc.nextBufferStartTime, streamSrc.BUFFER_DURATION);
-    console.log('request new buffer starting at', streamSrc.nextBufferStartTime, 'sec');
+    streamSrc.numberOfBufferRequested += 1;
+    // console.log('request new buffer starting at', streamSrc.nextBufferStartTime, 'sec');
 
   }
 
@@ -135,8 +149,7 @@ export default class AudioStreamHandler {
     // plan source stop
     streamSrc.refToCurrentAudioSource.stop( now + fadeDuration );
     // reset source 
-    streamSrc.refToCurrentAudioSource = undefined;
-    streamSrc.hasFadedIn = false;
+    streamSrc.reset();
   }
 
   handleLoop( streamSrc ){
@@ -149,7 +162,7 @@ export default class AudioStreamHandler {
         return;
       }
       // fire loop mechanism (the server does all the ring buffer work here)
-      console.log('loop reached');
+      // console.log('loop reached');
       streamSrc.nextBufferStartTime -= duration;
     }    
   }
@@ -169,10 +182,10 @@ class StreamSource {
     // and its "setInterval" rate
     this.callback = { handle: undefined, REFRESH_RATE_IN_MS: 1000 };
     // duration of requested data blocks, in seconds
-    this.BUFFER_DURATION = 4.0;
+    this.BUFFER_DURATION = 10.0;
     // time threshold, in sec, below which a data request will be sent:
     // when only .. sec remain in current buffer, go fetch another
-    this.CACHE_TIME_THRESHOLD = 2.0;
+    this.CACHE_TIME_THRESHOLD = 8.0;
     // start time, wrt the audio file timeframe, of the last audio buffer received
     this.nextBufferStartTime = -1;
     // reference to current audio source node (e.g. handle for stop)
@@ -187,24 +200,25 @@ class StreamSource {
     this.out.connect( audioContext.destination );
     // loop 
     this.loop = false;
-
+    // counter to handle scenario where two or more buffers are requested before the first arrives
+    this.numberOfBufferRequested = 0;
   }
 
   // create audio source from received audio data
   fillNextBuffer( data ){ 
     // create audio buffer
-    console.log('received data', data.length,  this.metaData.numberOfChannels)
     let bufferLength = data.length / this.metaData.numberOfChannels; // anticipate potentially interleaved data
-    console.log('create buffer', this.metaData.numberOfChannels, bufferLength, this.metaData.sampleRate)
     let audioBuffer = audioContext.createBuffer(this.metaData.numberOfChannels, bufferLength, this.metaData.sampleRate);
     
     // for each audio channel ...
     for( let nCh = 0; nCh < audioBuffer.numberOfChannels; nCh++ ){
       let audioBufferDataArray = audioBuffer.getChannelData( nCh );
       // ... copy data to audio buffer
-      for( let i = 0; i < bufferLength; i++ ){
-        audioBufferDataArray[i] = data[ i * audioBuffer.numberOfChannels + nCh ];
-      }
+      let startIndex = nCh * bufferLength;
+      audioBufferDataArray.set(data.slice( startIndex, startIndex + bufferLength - 1 ));
+      // for( let i = 0; i < bufferLength; i++ ){
+      //   audioBufferDataArray[i] = data[ i * audioBuffer.numberOfChannels + nCh ];
+      // }
     }
 
     // create audio source
@@ -215,14 +229,17 @@ class StreamSource {
     // store reference
     this.refToCurrentAudioSource = src;
     
-    return src;
+    // mark buffer as resolved
+    this.numberOfBufferRequested -= 1;
   }
 
   startNextBuffer( relativeSystemStartTime ){
-    // discard if required start time is after current buffer duration 
-    // (i.e. buffer was received so late it's deprecated)
-    if( relativeSystemStartTime > ( this.nextBufferStartTime + this.BUFFER_DURATION ) ){
-      console.log('skipping deprecated (received too late) buffer');
+    // discard if buffer received is so late that it's deprecated
+    // the "this.numberOfBufferRequested" here allows to also handle scenarios where two buffer where requested
+    // and only arrive now (while the this.nextBufferStartTime would then have been update to fit the value of the 
+    // last requested buffer)
+    if( relativeSystemStartTime > ( this.nextBufferStartTime + this.BUFFER_DURATION - this.BUFFER_DURATION*(this.numberOfBufferRequested-1) ) ){
+      console.log('skipping deprecated (received too late) buffer', this.numberOfBufferRequested);
       return;
     }
 
@@ -249,6 +266,11 @@ class StreamSource {
     }
     // start source delayed (from beginning in abs(relativeSystemStartTime) seconds)
     else{ this.refToCurrentAudioSource.start(now - relativeSystemStartTime, 0); }
+  }
+
+  reset(){
+    this.refToCurrentAudioSource = undefined;
+    this.numberOfBufferRequested = 0;
   }
 
 }

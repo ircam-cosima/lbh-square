@@ -207,10 +207,22 @@ export default class PlayerExperience extends soundworks.Experience {
 
     // callback: debug audioStreamHandler player
     this.receive('debugStreamHandlerPlay', (args) => {
-      console.log('debug stream handler', args);
       let onOff = args.shift(); let fileId = args.shift();  let startTime = args.shift();
       if( onOff ){ this.audioStreamHandler.start(this.streamableAudioFiles[fileId], startTime, 2.0, true); }
       else{ this.audioStreamHandler.stop(this.streamableAudioFiles[fileId], 1.0); }
+    });
+
+    // callback: debug audioStreamHandler player
+    this.receive('debugSyncStream', (args) => {
+      let onOff = args.shift(); let rendezVousTime = args.shift();
+      if( onOff ){ 
+        let delayedStartTime = rendezVousTime - this.sync.getSyncTime();
+        if( delayedStartTime <= 0){ alert('too late to play; discard'); return; }
+        console.log('rdv time:', rendezVousTime, 'i.e. start in:', delayedStartTime)
+        this.audioStreamHandler.start(this.streamableAudioFiles[0], 2.0 - delayedStartTime, 0.2, true);
+        
+      }
+      else{ this.audioStreamHandler.stop(this.streamableAudioFiles[0], 1.0); }
     });
 
     // setup motion input listener (update audio listener aim based on device orientation)
