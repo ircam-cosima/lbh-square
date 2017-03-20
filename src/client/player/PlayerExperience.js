@@ -79,7 +79,8 @@ export default class PlayerExperience extends soundworks.Experience {
     // services
     this.platform = this.require('platform', { features: ['web-audio'] });
     this.platform.addFeatureDefinition( audioTag );
-    this.platform = this.require('platform', { features: ['web-audio', 'audio-tag'] });
+    this.platform.configure({ features: ['web-audio', 'audio-tag'] });    
+    // this.platform = this.require('platform', { features: ['web-audio', 'audio-tag'] });
 
     this.sync = this.require('sync');
     this.checkin = this.require('checkin', { showDialog: false });
