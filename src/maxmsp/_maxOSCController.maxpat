@@ -9,7 +9,7 @@
 			"modernui" : 1
 		}
 ,
-		"rect" : [ 926.0, 229.0, 730.0, 973.0 ],
+		"rect" : [ 1792.0, 214.0, 730.0, 973.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -37,6 +37,89 @@
 		"style" : "",
 		"subpatcher_template" : "",
 		"boxes" : [ 			{
+				"box" : 				{
+					"fontface" : 1,
+					"fontsize" : 16.0,
+					"id" : "obj-27",
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 347.5, 341.0, 26.0, 24.0 ],
+					"style" : "",
+					"text" : "5"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"fontface" : 1,
+					"fontsize" : 16.0,
+					"id" : "obj-25",
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 270.0, 514.0, 26.0, 24.0 ],
+					"style" : "",
+					"text" : "4"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"fontface" : 1,
+					"fontsize" : 16.0,
+					"id" : "obj-24",
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 489.0, 625.0, 26.0, 24.0 ],
+					"style" : "",
+					"text" : "6"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"fontface" : 1,
+					"fontsize" : 16.0,
+					"id" : "obj-22",
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 579.0, 445.0, 26.0, 24.0 ],
+					"style" : "",
+					"text" : "7"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"fontface" : 1,
+					"fontsize" : 16.0,
+					"id" : "obj-19",
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 407.5, 774.5, 26.0, 24.0 ],
+					"style" : "",
+					"text" : "3"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-15",
+					"maxclass" : "message",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 517.0, 780.5, 152.0, 22.0 ],
+					"style" : "",
+					"text" : "48.85936 2.351061"
+				}
+
+			}
+, 			{
 				"box" : 				{
 					"id" : "obj-103",
 					"maxclass" : "newobj",
@@ -638,10 +721,9 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 281.0, 581.0, 26.0, 24.0 ],
+					"patching_rect" : [ 185.0, 658.0, 26.0, 24.0 ],
 					"style" : "",
-					"text" : "2",
-					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
+					"text" : "2"
 				}
 
 			}
@@ -653,10 +735,9 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 454.5, 259.0, 26.0, 24.0 ],
+					"patching_rect" : [ 454.5, 176.0, 26.0, 24.0 ],
 					"style" : "",
-					"text" : "0",
-					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
+					"text" : "0"
 				}
 
 			}
@@ -668,10 +749,9 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 350.125, 453.0, 26.0, 24.0 ],
+					"patching_rect" : [ 650.0, 275.0, 26.0, 24.0 ],
 					"style" : "",
-					"text" : "1",
-					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ]
+					"text" : "1"
 				}
 
 			}
@@ -710,24 +790,6 @@
 					"patching_rect" : [ 176.0, 890.5, 63.0, 22.0 ],
 					"style" : "",
 					"text" : "pack 0. 0."
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"bkgndpict" : "stravinsky-plan.png",
-					"bkgndsize" : 1,
-					"id" : "obj-9",
-					"inactiveimage" : 0,
-					"maxclass" : "pictslider",
-					"numinlets" : 2,
-					"numoutlets" : 2,
-					"outlettype" : [ "int", "int" ],
-					"parameter_enable" : 0,
-					"patching_rect" : [ 176.0, 151.916748, 500.0, 658.0 ],
-					"rightvalue" : 100,
-					"style" : "",
-					"topvalue" : 100
 				}
 
 			}
@@ -1720,7 +1782,7 @@
 					"numoutlets" : 0,
 					"patching_rect" : [ 16.75, 396.5, 31.0, 20.0 ],
 					"style" : "",
-					"text" : "3 s",
+					"text" : "7 s",
 					"textcolor" : [ 1.0, 1.0, 1.0, 1.0 ],
 					"textjustification" : 2
 				}
@@ -2316,6 +2378,50 @@
 			}
 , 			{
 				"box" : 				{
+					"bkgndpict" : "stravinsky-plan.jpg",
+					"bkgndsize" : 1,
+					"id" : "obj-9",
+					"inactiveimage" : 0,
+					"maxclass" : "pictslider",
+					"numinlets" : 2,
+					"numoutlets" : 2,
+					"outlettype" : [ "int", "int" ],
+					"parameter_enable" : 0,
+					"patching_rect" : [ 176.0, 151.916748, 500.0, 658.0 ],
+					"rightvalue" : 100,
+					"style" : "",
+					"topvalue" : 100
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-13",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 517.0, 168.5, 72.0, 22.0 ],
+					"style" : "",
+					"text" : "loadmess 0"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"attr" : "inactiveimage",
+					"id" : "obj-12",
+					"maxclass" : "attrui",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 517.0, 198.416748, 150.0, 22.0 ],
+					"style" : ""
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"background" : 1,
 					"fontface" : 1,
 					"fontname" : "Arial",
@@ -2356,6 +2462,24 @@
 					"disabled" : 0,
 					"hidden" : 0,
 					"source" : [ "obj-103", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-9", 0 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-12", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-12", 0 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-13", 0 ]
 				}
 
 			}
@@ -2410,6 +2534,15 @@
 					"disabled" : 0,
 					"hidden" : 0,
 					"source" : [ "obj-20", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-15", 1 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-21", 0 ]
 				}
 
 			}
@@ -2820,15 +2953,15 @@
 			}
  ],
 		"dependency_cache" : [ 			{
-				"name" : "thru.maxpat",
-				"bootpath" : "C74:/patchers/m4l/Pluggo for Live resources/patches",
-				"type" : "JSON",
+				"name" : "stravinsky-plan.jpg",
+				"bootpath" : "~/Projects/Cosima/lbianchi-residence/soundworks-square/src/maxmsp",
+				"type" : "JPEG",
 				"implicit" : 1
 			}
 , 			{
-				"name" : "stravinsky-plan.png",
-				"bootpath" : "~/Projects/Cosima/residences/lbianchi/soundworks-square/src/maxmsp",
-				"type" : "PNG ",
+				"name" : "thru.maxpat",
+				"bootpath" : "C74:/patchers/m4l/Pluggo for Live resources/patches",
+				"type" : "JSON",
 				"implicit" : 1
 			}
  ],
