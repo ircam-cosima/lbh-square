@@ -24,7 +24,7 @@ const viewTemplate = `
     </div>
 
     <div class="section-center flex-center">
-      <p id="instructions"> ••• </p>
+      <p id="instructions" class"small"> ••• </p>
     </div>
 
     <div class="section-bottom flex-middle">
@@ -86,7 +86,7 @@ export default class PlayerExperience extends soundworks.Experience {
     this.checkin = this.require('checkin', { showDialog: false });
     this.audioBufferManager = this.require('audio-buffer-manager', { files: audioFiles });
     this.motionInput = this.require('motion-input', { descriptors: ['deviceorientation', 'accelerationIncludingGravity'] });
-    this.rawSocket = this.require('raw-socket');
+    // this.rawSocket = this.require('raw-socket');
     this.sharedConfig = this.require('shared-config', { items: ['streamedAudioFileNames'] });
 
     // bind
@@ -131,13 +131,14 @@ export default class PlayerExperience extends soundworks.Experience {
     this.audioPlayer = new AudioPlayer(this.audioBufferManager.audioBuffers.default);
     this.audioStreamPlayer = new AudioStreamPlayer(audioTagArray, this.sync);
     this.streamableAudioFiles = client.config.streamedAudioFileNames.map( (x) => { return x.replace(/^.*[\\\/]/, ''); });
-    this.audioStreamHandler = new AudioStreamHandler( this, this.streamableAudioFiles );
+    // this.audioStreamHandler = new AudioStreamHandler( this, this.streamableAudioFiles );
 
     // init gps service
     this.geoloc = {
       refreshRateMs: 750, 
       refToIntervalFunction: undefined, 
       coords: [NaN, NaN],
+      accuracy: NaN,
       callback: this.gpsCallback,
     };
 
@@ -161,14 +162,24 @@ export default class PlayerExperience extends soundworks.Experience {
       callback: this.soundGridCallback,
       zoneCenters: [ // latitude longitude pairs
         // equi distant points along stravinsky's length:
-        [ 48.859830, 2.351469 ],
-        [ 48.859586, 2.351277 ],
-        [ 48.859286, 2.351059 ]
+        [ 48.859928, 2.351483 ], 
+        [ 48.859784, 2.351896 ], 
+        [ 48.859244, 2.350892 ], 
+        [ 48.859063, 2.351415 ], 
+        [ 48.859472, 2.351089 ], 
+        [ 48.859700, 2.351286 ], 
+        [ 48.859303, 2.351575 ], 
+        [ 48.859544, 2.351736 ]
       ], 
       zoneColors: [
         [100, 0, 0],
         [0, 100, 0],
-        [0, 0, 100]
+        [0, 0, 100],
+        [20, 20, 20],
+        [100, 100, 0],
+        [100, 0, 100],
+        [100, 100, 0],
+        [100, 100, 100]
       ],
       currentZoneId: -1,
       zoneSoundFileName: [
@@ -262,10 +273,10 @@ export default class PlayerExperience extends soundworks.Experience {
     // store current gps output to local attr
     navigator.geolocation.watchPosition( (position) => {
       this.geoloc.coords = [position.coords.latitude, position.coords.longitude];
+      this.geoloc.accuracy = position.coords.accuracy;
       // document.getElementById("instructions").innerHTML =
       //   "Latitude: " + position.coords.latitude +
-      //   "<br>Longitude: " + position.coords.longitude;      
-      document.getElementById("title").innerHTML = Math.round( position.coords.accuracy * 10 ) / 10;
+      //   "<br>Longitude: " + position.coords.longitude;
     },
     (error) => {
       document.getElementById("instructions").innerHTML = 'GPS UNAVAILABLE <br /> <br /> reason: <br />' + error.message;
@@ -293,6 +304,7 @@ export default class PlayerExperience extends soundworks.Experience {
     // dbg zone detection
     let dbgStr = '';
     for( let i = 0; i < this.soundGrid.zoneCenters.length; i ++ ){
+      if( i === newZoneId ){ dbgStr += '<b>'; }
       dbgStr += i + ': ' 
       + Math.round( arrayDist( this.soundGrid.zoneCenters[i], this.geoloc.coords )  * 1000000 )
       + '  ('
@@ -300,8 +312,12 @@ export default class PlayerExperience extends soundworks.Experience {
       + ', '
       + Math.round((Math.abs( this.soundGrid.zoneCenters[i][1] - this.geoloc.coords[1] ) * 1000000)  )
       + ") <br>";
+      if( i === newZoneId ){ dbgStr += '</b>'; }
     }
     document.getElementById("instructions").innerHTML = dbgStr;
+
+    // dbg accuracy
+    document.getElementById("title").innerHTML = 'acc: ' + Math.round( this.geoloc.accuracy * 10 ) / 10 + 'm';
 
     // discard if new zone meaningless
     if( newZoneId === -1 || newZoneId === this.soundGrid.currentZoneId ){ return; }
