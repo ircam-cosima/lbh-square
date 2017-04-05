@@ -106,7 +106,8 @@ export default {
     streamPath + 'count8-120bpm-5.mp3',
     streamPath + 'count8-120bpm-6.mp3',
     streamPath + 'count8-120bpm-7.mp3',
-    streamPath + 'count8-120bpm-8.mp3'
+    streamPath + 'count8-120bpm-8.mp3',
+    streamPath + 'virtual-barber-shop.wav',
   ],
 
   // define if the server should use gzip compression for static files

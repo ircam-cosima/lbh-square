@@ -75,6 +75,7 @@ export default class AudioStreamHandler {
         sampleRate: audioBuffer.sampleRate,
         length: audioBuffer.length,
       }
+      console.log('thus sent:', data)
       // send data
       this.soundworksServer.send( client, 'audioMeta', fileName, data );
     });
@@ -86,6 +87,7 @@ export default class AudioStreamHandler {
   }
 
   seek( client, fileName, startTime, duration){
+    console.log('client', client.index, 'request', fileName, 'startTime', startTime, 'dur', duration);
     // get audio buffer
     let audioBuffer = this.audioBuffersMap.get(fileName);
     // discard if wrong name

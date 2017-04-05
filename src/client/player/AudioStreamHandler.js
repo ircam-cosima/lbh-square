@@ -17,11 +17,12 @@ if (!Float32Array.prototype.slice) {
 }
 
 export default class AudioStreamHandler {
-  constructor( soundworksClient, audioFileNames ) {
+  constructor( soundworksClient, audioFileNames, callbackWhenReady ) {
     
     // locals
     this.soundworksClient = soundworksClient;
     this.streamSrcMap = new Map();
+    this.numMetaReceived = 0;
 
     // init stream sources for each potential streamed audio file (i.e. raw socket "channel")
     audioFileNames.forEach( (fileName) => {
@@ -44,7 +45,12 @@ export default class AudioStreamHandler {
         console.warn('WARNING: too short audio file, will not work for:', fileName, 
           '\n consider reducing BUFFER_DURATION');
       }
+
+      // count metadata received, run input callback whenever finished and ready to "seek"
+      this.numMetaReceived += 1;
+      if( this.numMetaReceived === audioFileNames.length ){ callbackWhenReady(); }
     });
+
     // request meta data from server for each source
     audioFileNames.forEach( (fileName) => {
       this.soundworksClient.send('audioMetaRequest', fileName );
@@ -57,16 +63,13 @@ export default class AudioStreamHandler {
   start( fileName, startTime, fadeDuration = 0.3, loop = false ){
     // get stream source
     let streamSrc = this.streamSrcMap.get( fileName );
-    console.log(fileName, this.streamSrcMap)
+
     // discard if undefined source
     if( streamSrc === undefined ){ console.warn('attempt to play undefined file', fileName); return; }
 
     // modulo of start time if loop required
     if( loop ){ 
-      console.log('old start time', startTime)
-      startTime = this.soundworksClient.sync.getSyncTime() % 
-                  (streamSrc.metaData.length / streamSrc.metaData.sampleRate);
-      console.log('new start time', startTime)
+      startTime = startTime % (streamSrc.metaData.length / streamSrc.metaData.sampleRate);
     }
 
     // update stream source parameters

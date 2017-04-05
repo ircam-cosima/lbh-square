@@ -56,7 +56,7 @@ export default class PlayerExperience extends soundworks.Experience {
     this.geolocation = this.require('geolocation', { debug:false, state:'start', enableHighAccuracy: true, timeout: 10000, maximumAge: 10000 } );
 
     // bind
-    // this.gpsCallback = this.gpsCallback.bind(this);
+    this.runWhenAudioStreamHandlerIsReady = this.runWhenAudioStreamHandlerIsReady.bind(this);
     
   }
 
@@ -81,34 +81,9 @@ export default class PlayerExperience extends soundworks.Experience {
     // init audio players
     this.audioPlayer = new AudioPlayer(this.audioBufferManager.data);
     this.streamableAudioFiles = client.config.streamedAudioFileNames.map( (x) => { return x.replace(/^.*[\\\/]/, ''); });
-    this.audioStreamHandler = new AudioStreamHandler( this, this.streamableAudioFiles );
+    this.audioStreamHandler = new AudioStreamHandler( this, this.streamableAudioFiles, this.runWhenAudioStreamHandlerIsReady );
     
-    // init audio zones handler
-    this.audioZonesHandler = new AudioZonesHandler(this);
-    // debug: fake GPS position
-    this.receive('fakeGps', (coords) => { client.coordinates = coords; });
-
-
-    // callback: debug audioStreamHandler player
-    this.receive('debugStreamHandlerPlay', (args) => {
-      let onOff = args.shift(); let fileId = args.shift();  let startTime = args.shift();
-      if( onOff ){ this.audioStreamHandler.start(this.streamableAudioFiles[fileId], startTime, 2.0, true); }
-      else{ this.audioStreamHandler.stop(this.streamableAudioFiles[fileId], 1.0); }
-    });
-
-    // callback: debug audioStreamHandler player
-    this.receive('debugSyncStream', (args) => {
-      let onOff = args.shift(); let rendezVousTime = args.shift();
-      if( onOff ){ 
-        let delayedStartTime = rendezVousTime - this.sync.getSyncTime();
-        if( delayedStartTime <= 0){ alert('too late to play; discard'); return; }
-        console.log('rdv time:', rendezVousTime, 'i.e. start in:', delayedStartTime)
-        this.audioStreamHandler.start(this.streamableAudioFiles[0], 2.0 - delayedStartTime, 0.2, true);
-        
-      }
-      else{ this.audioStreamHandler.stop(this.streamableAudioFiles[0], 1.0); }
-    });
-
+    
     // // setup motion input listener (update audio listener aim based on device orientation)
     // if (this.motionInput.isAvailable('deviceorientation')) {
     //   this.motionInput.addListener('deviceorientation', (data) => {});
@@ -118,6 +93,17 @@ export default class PlayerExperience extends soundworks.Experience {
     // const surface = new soundworks.TouchSurface(this.view.$el);
     // surface.addListener('touchstart', (id, normX, normY) => {});
 
+  }
+
+  // run only when audio stream is ready to stream (i.e. received all metadata for all stream files)
+  runWhenAudioStreamHandlerIsReady(){
+    // init audio zones handler
+    this.audioZonesHandler = new AudioZonesHandler(this);
+    // debug: fake GPS position
+    this.receive('fakeGps', (coords) => { client.coordinates = coords; });
+
+    // start main audio (red line)
+    this.audioStreamHandler.start('virtual-barber-shop.wav', 0.0, 1.0, true);
   }
 
 }
