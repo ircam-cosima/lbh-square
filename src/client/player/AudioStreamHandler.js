@@ -60,7 +60,7 @@ export default class AudioStreamHandler {
 
   // start (streamed) audio source: startTime is the start position in buffer
   // ("start now, at startTime in buffer")
-  start( fileName, startTime, fadeDuration = 0.3, loop = false ){
+  start( fileName, startTime, fadeDuration = 0.3, loop = false, volume = 1.0 ){
     // get stream source
     let streamSrc = this.streamSrcMap.get( fileName );
 
@@ -77,7 +77,10 @@ export default class AudioStreamHandler {
     streamSrc.nextBufferStartTime = startTime;
     streamSrc.fadeDuration = fadeDuration;
     streamSrc.loop = loop;
-    streamSrc.hasFadedIn = false; 
+    streamSrc.hasFadedIn = false;
+
+    // set stream source volume (that one is not concerned with fade in)
+    streamSrc.volume.gain.value = volume;
 
     // check if loop mechanism required
     this.handleLoop( streamSrc );
@@ -174,9 +177,9 @@ export default class AudioStreamHandler {
     }
     // set volume
     const now = audioContext.currentTime;
-    streamSrc.out.gain.cancelScheduledValues(now);
-    streamSrc.out.gain.setValueAtTime(streamSrc.out.gain.value, now);
-    streamSrc.out.gain.linearRampToValueAtTime(volume, now + fadeDuration);
+    streamSrc.volume.gain.cancelScheduledValues(now);
+    streamSrc.volume.gain.setValueAtTime(streamSrc.volume.gain.value, now);
+    streamSrc.volume.gain.linearRampToValueAtTime(volume, now + fadeDuration);
   }
 
   handleLoop( streamSrc ){
@@ -225,6 +228,9 @@ class StreamSource {
     // output gain
     this.out = audioContext.createGain();
     this.out.connect( audioContext.destination );
+    // volume gain
+    this.volume = audioContext.createGain();
+    this.volume.connect( this.out );
     // loop 
     this.loop = false;
     // counter to handle scenario where two or more buffers are requested before the first arrives
@@ -252,7 +258,7 @@ class StreamSource {
     let src = audioContext.createBufferSource();
     src.buffer = audioBuffer;
     // connect graph
-    src.connect( this.out );
+    src.connect( this.volume );
     // store reference
     this.refToCurrentAudioSource = src;
     

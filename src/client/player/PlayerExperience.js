@@ -103,7 +103,7 @@ export default class PlayerExperience extends soundworks.Experience {
     this.receive('fakeGps', (coords) => { client.coordinates = coords; });
 
     // start main audio (red line)
-    this.audioStreamHandler.start('virtual-barber-shop.wav', 0.0, 1.0, true);
+    this.audioStreamHandler.start('virtual-barber-shop.wav', 0.0, 1.0, true, 1.0);
   }
 
 }
@@ -178,8 +178,8 @@ class AudioZonesHandler{
         console.log('++ start streaming for zone', index);
         // get running time
         const startTime = this.e.sync.getSyncTime();
-        // start sound (fade time long here to make sure volume is actually controlled by distance from zone center below)
-        this.e.audioStreamHandler.start(this.zoneSoundFileName[index], startTime, 4.0, true);
+        // start sound (at volume zero, volume being controlled by distance from zone associated to soundfile, see below)
+        this.e.audioStreamHandler.start(this.zoneSoundFileName[index], startTime, 0.1, true, 0.0);
         this.zoneStatus[index] = 1;
       }
       // de-activate zone streaming if gain below...
@@ -190,6 +190,7 @@ class AudioZonesHandler{
       }
       // set volume of all active zones
       if( this.zoneStatus[index] === 1 ){
+        g *= 0.3; // arbitrary scale volume
         this.e.audioStreamHandler.volume(this.zoneSoundFileName[index], g, 0.1);
       }
 
