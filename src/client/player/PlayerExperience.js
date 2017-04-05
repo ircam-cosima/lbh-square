@@ -55,6 +55,7 @@ const audioTag = {
       // audioElmt.play = () => { audioElmt.pause(); audioElmt.play = undefined; };
       audioTagArray.push(audioElmt);
     }
+    return Promise.resolve(true);
   }
 }
 // -----------------------------------------------------
@@ -86,7 +87,7 @@ export default class PlayerExperience extends soundworks.Experience {
     this.checkin = this.require('checkin', { showDialog: false });
     this.audioBufferManager = this.require('audio-buffer-manager', { files: audioFiles });
     this.motionInput = this.require('motion-input', { descriptors: ['deviceorientation', 'accelerationIncludingGravity'] });
-    // this.rawSocket = this.require('raw-socket');
+    this.rawSocket = this.require('raw-socket');
     this.sharedConfig = this.require('shared-config', { items: ['streamedAudioFileNames'] });
 
     // bind
@@ -128,11 +129,11 @@ export default class PlayerExperience extends soundworks.Experience {
     // init audio players
     let roomReverb = false;
     this.ambisonicPlayer = new AmbisonicPlayer(roomReverb);
-    this.audioPlayer = new AudioPlayer(this.audioBufferManager.audioBuffers.default);
+    this.audioPlayer = new AudioPlayer(this.audioBufferManager.data);
     this.audioStreamPlayer = new AudioStreamPlayer(audioTagArray, this.sync);
     this.streamableAudioFiles = client.config.streamedAudioFileNames.map( (x) => { return x.replace(/^.*[\\\/]/, ''); });
-    // this.audioStreamHandler = new AudioStreamHandler( this, this.streamableAudioFiles );
-
+    this.audioStreamHandler = new AudioStreamHandler( this, this.streamableAudioFiles );
+    
     // init gps service
     this.geoloc = {
       refreshRateMs: 750, 
