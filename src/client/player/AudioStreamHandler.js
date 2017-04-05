@@ -57,8 +57,17 @@ export default class AudioStreamHandler {
   start( fileName, startTime, fadeDuration = 0.3, loop = false ){
     // get stream source
     let streamSrc = this.streamSrcMap.get( fileName );
+    console.log(fileName, this.streamSrcMap)
     // discard if undefined source
     if( streamSrc === undefined ){ console.warn('attempt to play undefined file', fileName); return; }
+
+    // modulo of start time if loop required
+    if( loop ){ 
+      console.log('old start time', startTime)
+      startTime = this.soundworksClient.sync.getSyncTime() % 
+                  (streamSrc.metaData.length / streamSrc.metaData.sampleRate);
+      console.log('new start time', startTime)
+    }
 
     // update stream source parameters
     streamSrc.nextSystemStartTime = this.soundworksClient.sync.getSyncTime();
@@ -66,7 +75,7 @@ export default class AudioStreamHandler {
     streamSrc.fadeDuration = fadeDuration;
     streamSrc.loop = loop;
     streamSrc.hasFadedIn = false; 
-    
+
     // check if loop mechanism required
     this.handleLoop( streamSrc );
 
@@ -150,6 +159,21 @@ export default class AudioStreamHandler {
     streamSrc.refToCurrentAudioSource.stop( now + fadeDuration );
     // reset source 
     streamSrc.reset();
+  }
+
+  volume( fileName, volume, fadeDuration = 0.1 ){
+    // get src
+    let streamSrc = this.streamSrcMap.get( fileName );
+    // discard if doesn't exist
+    if( streamSrc === undefined ){ 
+      console.warn('attempt to set volume of unknown source:', fileName ); 
+      return;
+    }
+    // set volume
+    const now = audioContext.currentTime;
+    streamSrc.out.gain.cancelScheduledValues(now);
+    streamSrc.out.gain.setValueAtTime(streamSrc.out.gain.value, now);
+    streamSrc.out.gain.linearRampToValueAtTime(volume, now + fadeDuration);
   }
 
   handleLoop( streamSrc ){

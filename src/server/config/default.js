@@ -1,7 +1,7 @@
 import path from 'path';
 const cwd = process.cwd();
 
-var audioFilePath = __dirname + '/../../public/sounds/';
+var streamPath = __dirname + '/../../public/streams/';
 
 // Configuration of the application.
 // Other entries can be added (as long as their name doesn't conflict with
@@ -99,8 +99,14 @@ export default {
   },
 
   streamedAudioFileNames: [
-    audioFilePath + 'click_loop_square_120bpm.wav',
-    audioFilePath + 'virtual-barber-shop.wav'
+    streamPath + 'count8-120bpm-1.mp3',
+    streamPath + 'count8-120bpm-2.mp3',
+    streamPath + 'count8-120bpm-3.mp3',
+    streamPath + 'count8-120bpm-4.mp3',
+    streamPath + 'count8-120bpm-5.mp3',
+    streamPath + 'count8-120bpm-6.mp3',
+    streamPath + 'count8-120bpm-7.mp3',
+    streamPath + 'count8-120bpm-8.mp3'
   ],
 
   // define if the server should use gzip compression for static files

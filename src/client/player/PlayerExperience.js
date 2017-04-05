@@ -1,10 +1,7 @@
 import * as soundworks from 'soundworks/client';
-import * as soundworksCordova from 'soundworks-cordova/client';
 
 import AudioPlayer from './AudioPlayer';
-import AudioStreamPlayer from './AudioStreamPlayer';
 import AudioStreamHandler from './AudioStreamHandler';
-import AmbisonicPlayer from './AmbisonicPlayer';
 import PlayerRenderer from './PlayerRenderer';
 
 const audioContext = soundworks.audioContext;
@@ -16,11 +13,6 @@ const viewTemplate = `
 
     <div class="section-top flex-middle">
       <p id="title" class="big"> <%= title %> </p>
-    </div>
-
-    <div class="section-top flex-center">
-      <button type="button" style="font-size:17pt;color:white;background-color:grey;"
-      onclick="window.experience.onPlayClick();" > <br> Enable <br> <br> </button>
     </div>
 
     <div class="section-center flex-center">
@@ -35,30 +27,6 @@ const viewTemplate = `
 
   </div>
 `;
-
-// Define audio-tag platform object -------------------
-const NUMBER_OF_SIMULTANEOUS_STREAMED_AUDIOSOURCES = 2;
-const audioTagArray = [];
-
-const audioTag = {
-  id: 'audio-tag',
-  check: function() {
-    return !!audioContext;
-  },
-  interactionHook: function() {
-    // if( !client.platform.isMobile ){ return; }
-
-    // create audio tag and start them to avoid requiring user input to start them latter
-    for( let i = 0; i < NUMBER_OF_SIMULTANEOUS_STREAMED_AUDIOSOURCES; i++ ){
-      let audioElmt = new Audio();
-      audioElmt.play();      
-      // audioElmt.play = () => { audioElmt.pause(); audioElmt.play = undefined; };
-      audioTagArray.push(audioElmt);
-    }
-    return Promise.resolve(true);
-  }
-}
-// -----------------------------------------------------
 
 var arrayDist = function( a1, a2 ){
   if( a1.length !== a2.length ){ console.error('array must be the same length'); }
@@ -79,29 +47,17 @@ export default class PlayerExperience extends soundworks.Experience {
     
     // services
     this.platform = this.require('platform', { features: ['web-audio'] });
-    this.platform.addFeatureDefinition( audioTag );
-    this.platform.configure({ features: ['web-audio', 'audio-tag'] });    
-    // this.platform = this.require('platform', { features: ['web-audio', 'audio-tag'] });
-
     this.sync = this.require('sync');
     this.checkin = this.require('checkin', { showDialog: false });
     this.audioBufferManager = this.require('audio-buffer-manager', { files: audioFiles });
     this.motionInput = this.require('motion-input', { descriptors: ['deviceorientation', 'accelerationIncludingGravity'] });
     this.rawSocket = this.require('raw-socket');
     this.sharedConfig = this.require('shared-config', { items: ['streamedAudioFileNames'] });
+    this.geolocation = this.require('geolocation', { debug:false, state:'start', enableHighAccuracy: true, timeout: 10000, maximumAge: 10000 } );
 
     // bind
-    // this.initBeacon = this.initBeacon.bind(this);
-    this.gpsCallback = this.gpsCallback.bind(this);
-    this.soundGridCallback = this.soundGridCallback.bind(this);
-    this.setNewZone = this.setNewZone.bind(this);
-
-    // local attributes
-    this.ambiFileId = -1;
-    this.lastPos = [0,0,0]; // lat, long, time
-    this.bonusBeaconActivated = false;
+    // this.gpsCallback = this.gpsCallback.bind(this);
     
-    this.doubleTouchWatcher = {lastTouchTime: 0, timeThreshold: 0.4} // in sec
   }
 
   init() {
@@ -119,104 +75,19 @@ export default class PlayerExperience extends soundworks.Experience {
 
   start() {
     super.start();
-
-    if (!this.hasStarted){
-      // this.initBeacon();
-      this.init();
-    }
+    if (!this.hasStarted){  this.init(); }
     this.show();
 
     // init audio players
-    let roomReverb = false;
-    this.ambisonicPlayer = new AmbisonicPlayer(roomReverb);
     this.audioPlayer = new AudioPlayer(this.audioBufferManager.data);
-    this.audioStreamPlayer = new AudioStreamPlayer(audioTagArray, this.sync);
     this.streamableAudioFiles = client.config.streamedAudioFileNames.map( (x) => { return x.replace(/^.*[\\\/]/, ''); });
     this.audioStreamHandler = new AudioStreamHandler( this, this.streamableAudioFiles );
     
-    // init gps service
-    this.geoloc = {
-      refreshRateMs: 750, 
-      refToIntervalFunction: undefined, 
-      coords: [NaN, NaN],
-      accuracy: NaN,
-      callback: this.gpsCallback,
-    };
-
-    // callback: example of state machine controlled from OSC
-    this.receive('enableGps', (onOff) => {
-      if( onOff )
-        this.geoloc.refToIntervalFunction = setInterval( () => { this.geoloc.callback(); }, this.geoloc.refreshRateMs );
-      else
-        window.clearInterval( this.geoloc.refToIntervalFunction );
-    });
-
+    // init audio zones handler
+    this.audioZonesHandler = new AudioZonesHandler(this);
     // debug: fake GPS position
-    this.receive('fakeGps', (coords) => { this.geoloc.coords = coords; });
+    this.receive('fakeGps', (coords) => { client.coordinates = coords; });
 
-    // init GPS zone based sounds
-    this.soundGrid = {
-      // hysTime: 1.0, // in sec
-      hysDistRatio: 1, // ratio of distNew / distOld must be above to change zone (one is no hyst., > 1 is conservative hyst.)
-      refreshRateMs: 750,
-      refToIntervalFunction: undefined,
-      callback: this.soundGridCallback,
-      zoneCenters: [ // latitude longitude pairs
-        // equi distant points along stravinsky's length:
-        [ 48.859928, 2.351483 ], 
-        [ 48.859784, 2.351896 ], 
-        [ 48.859244, 2.350892 ], 
-        [ 48.859063, 2.351415 ], 
-        [ 48.859472, 2.351089 ], 
-        [ 48.859700, 2.351286 ], 
-        [ 48.859303, 2.351575 ], 
-        [ 48.859544, 2.351736 ]
-      ], 
-      zoneColors: [
-        [100, 0, 0],
-        [0, 100, 0],
-        [0, 0, 100],
-        [20, 20, 20],
-        [100, 100, 0],
-        [100, 0, 100],
-        [100, 100, 0],
-        [100, 100, 100]
-      ],
-      currentZoneId: -1,
-      zoneSoundFileName: [
-       'sounds/13_Misconceptions_About_Global_Warming_Cut.wav',
-       'sounds/click_loop_square_120bpm.wav'
-      ]
-    }
-    
-    // callback: example of state machine controlled from OSC
-    this.receive('enableSoundGrid', (onOff) => {
-      if( onOff )
-        this.soundGrid.refToIntervalFunction = setInterval( () => { this.soundGrid.callback(); }, this.soundGrid.refreshRateMs );
-      else
-        window.clearInterval( this.soundGrid.refToIntervalFunction );
-    });
-
-    // callback: debug ambisonic player
-    this.receive('debugAmbisonicPlay', (args) => {
-      let onOff = args.shift(); let fileId = args.shift();
-      // this.ambisonicPlayer.stop(-1, 1.0); // stop all
-      if( onOff ){ this.ambisonicPlayer.startSource( fileId, true, 1.0 ); }
-      else{ this.ambisonicPlayer.stopSource( fileId, 1.0 ); }
-    });
-
-    // callback: debug ambisonic player
-    this.receive('debugAmbisonicOri', (azimElev) => {
-      this.ambisonicPlayer.setListenerAim(azimElev[0], azimElev[1]);
-    });
-
-    // callback: debug audioStream player
-    this.receive('debugStreamPlay', (args) => {
-      let onOff = args.shift(); let fileId = args.shift();
-      // this.ambisonicPlayer.stop(-1, 1.0); // stop all
-      if( onOff ){ this.audioStreamPlayer.start(this.soundGrid.zoneSoundFileName[fileId], 2.0, true, true); }
-      else{ this.audioStreamPlayer.stop(this.soundGrid.zoneSoundFileName[fileId], 2.0); }
-    });
 
     // callback: debug audioStreamHandler player
     this.receive('debugStreamHandlerPlay', (args) => {
@@ -238,131 +109,164 @@ export default class PlayerExperience extends soundworks.Experience {
       else{ this.audioStreamHandler.stop(this.streamableAudioFiles[0], 1.0); }
     });
 
-    // setup motion input listener (update audio listener aim based on device orientation)
-    if (this.motionInput.isAvailable('deviceorientation')) {
-      this.motionInput.addListener('deviceorientation', (data) => {
-        // console.log(data)
-        // display orientation info on screen
-        document.getElementById("value0").innerHTML = Math.round(data[0]*10)/10;
-        document.getElementById("value1").innerHTML = Math.round(data[1]*10)/10;
-        document.getElementById("value2").innerHTML = Math.round(data[2]*10)/10;
-        // set audio source position
-        // this.ambisonicPlayer.setListenerAim(data[0], data[1]);
-      });
-    }
+    // // setup motion input listener (update audio listener aim based on device orientation)
+    // if (this.motionInput.isAvailable('deviceorientation')) {
+    //   this.motionInput.addListener('deviceorientation', (data) => {});
+    // }
 
-    // setup touch listeners (reset listener orientation on double touch)
-    const surface = new soundworks.TouchSurface(this.view.$el);
-    surface.addListener('touchstart', (id, normX, normY) => {
-      // check if fast enough
-      if( (audioContext.currentTime - this.doubleTouchWatcher.lastTouchTime) <= this.doubleTouchWatcher.timeThreshold ) {
-        // reset listener orientation (azim only)
-        this.ambisonicPlayer.resetListenerAim();
-        // audio feedback
-        this.audioPlayer.startSource(0, 0, false);
-      }
-      // update last touch time
-      this.doubleTouchWatcher.lastTouchTime = audioContext.currentTime;
-    });
+    // // setup touch listeners (reset listener orientation on double touch)
+    // const surface = new soundworks.TouchSurface(this.view.$el);
+    // surface.addListener('touchstart', (id, normX, normY) => {});
 
-  }
-
-  gpsCallback(){
-    console.log('running gps callback');
-    // discard if service not available
-    if (!navigator.geolocation) { return; }
-    // store current gps output to local attr
-    navigator.geolocation.watchPosition( (position) => {
-      this.geoloc.coords = [position.coords.latitude, position.coords.longitude];
-      this.geoloc.accuracy = position.coords.accuracy;
-      // document.getElementById("instructions").innerHTML =
-      //   "Latitude: " + position.coords.latitude +
-      //   "<br>Longitude: " + position.coords.longitude;
-    },
-    (error) => {
-      document.getElementById("instructions").innerHTML = 'GPS UNAVAILABLE <br /> <br /> reason: <br />' + error.message;
-      // this.renderer.setBkgColor([180, 40, 40]);
-      // alert(error.message);
-    },
-    { enableHighAccuracy: true, timeout: 10000, maximumAge: 10000 }
-    );
-  }
-
-  soundGridCallback() {
-    // define current zone
-    let newZoneId = -1;
-    let dist = Infinity; 
-    let distTmp = 0;
-    this.soundGrid.zoneCenters.forEach( (item, index) => {
-      distTmp = arrayDist( item, this.geoloc.coords );
-      if( distTmp < dist ){
-        dist = distTmp;
-        newZoneId = index;
-      }
-    });
-    console.log('raw zone estimate (curr / new)', this.soundGrid.currentZoneId, newZoneId );
-
-    // dbg zone detection
-    let dbgStr = '';
-    for( let i = 0; i < this.soundGrid.zoneCenters.length; i ++ ){
-      if( i === newZoneId ){ dbgStr += '<b>'; }
-      dbgStr += i + ': ' 
-      + Math.round( arrayDist( this.soundGrid.zoneCenters[i], this.geoloc.coords )  * 1000000 )
-      + '  ('
-      + Math.round((Math.abs( this.soundGrid.zoneCenters[i][0] - this.geoloc.coords[0] ) * 1000000)  )
-      + ', '
-      + Math.round((Math.abs( this.soundGrid.zoneCenters[i][1] - this.geoloc.coords[1] ) * 1000000)  )
-      + ") <br>";
-      if( i === newZoneId ){ dbgStr += '</b>'; }
-    }
-    document.getElementById("instructions").innerHTML = dbgStr;
-
-    // dbg accuracy
-    document.getElementById("title").innerHTML = 'acc: ' + Math.round( this.geoloc.accuracy * 10 ) / 10 + 'm';
-
-    // discard if new zone meaningless
-    if( newZoneId === -1 || newZoneId === this.soundGrid.currentZoneId ){ return; }
-
-    // new zone detected for the first time
-    if( this.soundGrid.currentZoneId === -1 ){
-      this.setNewZone( newZoneId ) ;
-    }
-    // new zone detected: apply hysteresis to check if dist is enough to trigger zone change
-    else{
-      // get dist from current and new zone
-      let distFromCurrent = arrayDist( this.geoloc.coords, this.soundGrid.zoneCenters[this.soundGrid.currentZoneId] );
-      let distFromNew = arrayDist( this.geoloc.coords, this.soundGrid.zoneCenters[newZoneId] );
-      let distRatio = distFromCurrent / distFromNew;
-      console.log( 'current dist ratio:', Math.round(distRatio*100)/100 );
-      // discard if ratio not above threshold
-      if( distRatio <= this.soundGrid.hysDistRatio ){ return; }
-      // change zone otherwise
-      this.setNewZone( newZoneId );
-      console.log('!! Changed zone: new zone id:', newZoneId);
-    }     
-  }
-
-  setNewZone(zoneId){
-    // update local
-    this.soundGrid.currentZoneId = zoneId;
-    // update visual
-    this.renderer.setBkgColor(this.soundGrid.zoneColors[zoneId]);
-  }
-
-  onPlayClick(){ 
-    console.log('button clicked'); 
-    
-    this.geoloc.refToIntervalFunction = setInterval( () => { this.geoloc.callback(); }, this.geoloc.refreshRateMs );
-    this.soundGrid.refToIntervalFunction = setInterval( () => { this.soundGrid.callback(); }, this.soundGrid.refreshRateMs );
-
-    // let a = audioTagArray[0];
-    // a.muted = !a.muted;
-
-    // let s = audioContext.createMediaElementSource( a );
-    // s.connect(audioContext.destination);
-    // a.src = 'sounds/13_Misconceptions_About_Global_Warming_Cut.wav';
-    // a.playbackRate = 0.6;
-    // a.play();
   }
 
 }
+
+class AudioZonesHandler{
+  constructor(clientExperience) {
+    this.e = clientExperience;
+
+    // hysTime: 1.0, // in sec
+    this.hysDistRatio = 1; // ratio of distNew / distOld must be above to change zone (one is no hyst., > 1 is conservative hyst.)
+    this.refreshRateMs= 750;
+    this.refToRunningCallback = undefined;
+
+    this.zoneCenters = [ // latitude longitude pairs
+      // equi distant points along stravinsky's length:
+      [ 48.859928, 2.351483 ], 
+      [ 48.859784, 2.351896 ], 
+      [ 48.859244, 2.350892 ], 
+      [ 48.859063, 2.351415 ], 
+      [ 48.859472, 2.351089 ], 
+      [ 48.859700, 2.351286 ], 
+      [ 48.859303, 2.351575 ], 
+      [ 48.859544, 2.351736 ]
+    ];
+
+    this.zoneColors = [
+      [100, 0, 0],
+      [0, 100, 0],
+      [0, 0, 100],
+      [20, 20, 20],
+      [100, 100, 0],
+      [100, 0, 100],
+      [100, 100, 0],
+      [100, 100, 100]
+    ];
+
+    this.currentZoneId = -1;
+    this.zoneSoundFileName = [
+      'count8-120bpm-1.mp3',
+      'count8-120bpm-2.mp3',
+      'count8-120bpm-3.mp3',
+      'count8-120bpm-4.mp3',
+      'count8-120bpm-5.mp3',
+      'count8-120bpm-6.mp3',
+      'count8-120bpm-7.mp3',
+      'count8-120bpm-8.mp3'
+    ];
+
+    this.zoneStatus = [];
+    this.zoneSoundFileName.forEach( () => { this.zoneStatus.push(0); });
+
+    this.activateZoneThresholdGain = 0.01;
+
+    // bind
+    this.runningCallback = this.runningCallback.bind(this);
+    this.setNewZone = this.setNewZone.bind(this);
+
+    // start zones check callback
+    this.refToRunningCallback = setInterval(() => { this.runningCallback(); }, this.refreshRateMs);
+  }
+
+  runningCallback(){
+
+    // loop over zone coords
+    let dbgStr = '';
+    this.zoneCenters.forEach( (coords, index) => {
+      // get gain = f(client distance from zone center)
+      let g = this.getZoneGain(index);
+      dbgStr += index + ': ' + Math.round(g * 1000)/1000 + '<br>';
+      // activate zone streaming if above gain threshold
+      if( g >= this.activateZoneThresholdGain && this.zoneStatus[index] === 0 ){
+        console.log('++ start streaming for zone', index);
+        // get running time
+        const startTime = this.e.sync.getSyncTime();
+        // start sound (fade time long here to make sure volume is actually controlled by distance from zone center below)
+        this.e.audioStreamHandler.start(this.zoneSoundFileName[index], startTime, 4.0, true);
+        this.zoneStatus[index] = 1;
+      }
+      // de-activate zone streaming if gain below...
+      else if( g < this.activateZoneThresholdGain && this.zoneStatus[index] === 1 ){
+        console.log('-- stop streaming for zone', index);
+        this.e.audioStreamHandler.stop(this.zoneSoundFileName[index], 0.1);
+        this.zoneStatus[index] = 0;
+      }
+      // set volume of all active zones
+      if( this.zoneStatus[index] === 1 ){
+        this.e.audioStreamHandler.volume(this.zoneSoundFileName[index], g, 0.1);
+      }
+
+    });
+    document.getElementById("instructions").innerHTML = dbgStr;
+    document.getElementById("title").innerHTML = client.coordinates[0] + '<br>' + client.coordinates[1]
+
+    // console.log('raw zone estimate (curr / new)', this.currentZoneId, newZoneId );
+
+    // // discard if new zone meaningless
+    // if( newZoneId === -1 || newZoneId === this.currentZoneId ){ return; }
+
+    // // new zone detected for the first time
+    // if( this.currentZoneId === -1 ){
+    //   this.setNewZone( newZoneId ) ;
+    // }
+    // // new zone detected: apply hysteresis to check if dist is enough to trigger zone change
+    // else{
+    //   // get dist from current and new zone
+    //   let distFromCurrent = arrayDist( client.coordinates, this.zoneCenters[this.currentZoneId] );
+    //   let distFromNew = arrayDist( client.coordinates, this.zoneCenters[newZoneId] );
+    //   let distRatio = distFromCurrent / distFromNew;
+    //   console.log( 'current dist ratio:', Math.round(distRatio*100)/100 );
+    //   // discard if ratio not above threshold
+    //   if( distRatio <= this.hysDistRatio ){ return; }
+    //   // change zone otherwise
+    //   this.setNewZone( newZoneId );
+    //   console.log('!! Changed zone: new zone id:', newZoneId);
+    // }
+
+ 
+  }
+
+  getZoneGain(id){
+    let x = this.zoneCenters[id][0] - client.coordinates[0];
+    let y = this.zoneCenters[id][1] - client.coordinates[1];
+    let gain = Math.min( 1.0, 2 * 
+                  Math.exp( -Math.pow(x,2) / 2e-8 ) *
+                  Math.exp( -Math.pow(y,2) / 2e-8 ));
+    return gain;
+  }
+
+  setNewZone(zoneId){
+    // update audio
+    this.e.audioStreamHandler.start(this.zoneSoundFileName[zoneId], 0.0, 0.1, true);
+    this.e.audioStreamHandler.stop(this.zoneSoundFileName[this.currentZoneId], 0.1);    
+    // update local
+    this.currentZoneId = zoneId;
+    // update visual
+    this.e.renderer.setBkgColor(this.zoneColors[zoneId]);
+  }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
