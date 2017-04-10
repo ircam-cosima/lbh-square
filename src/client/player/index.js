@@ -6,7 +6,14 @@ import viewContent from '../shared/viewContent';
 
 // list of files to load (passed to the experience)
 const files = [
-  'sounds/click.wav',
+  'sounds/count8-120bpm-1.mp3',
+  'sounds/count8-120bpm-2.mp3',
+  'sounds/count8-120bpm-3.mp3',
+  'sounds/count8-120bpm-4.mp3',
+  'sounds/count8-120bpm-5.mp3',
+  'sounds/count8-120bpm-6.mp3',
+  'sounds/count8-120bpm-7.mp3',
+  'sounds/count8-120bpm-8.mp3'
 ];
 
 // launch application when document is fully loaded

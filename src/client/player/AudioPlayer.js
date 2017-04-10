@@ -4,7 +4,7 @@ const audioContext = soundworks.audioContext;
 
 
 export default class AudioPlayer {
-    constructor(bufferSources) {
+    constructor(clientExperience) {
         
         // master gain out
         this.gainOut = audioContext.createGain();
@@ -15,10 +15,11 @@ export default class AudioPlayer {
 
         // local attributes
         this.sourceMap = new Map();
-        this.buffers = bufferSources;
+        this.e = clientExperience;
+        this.buffers = this.e.audioBufferManager.data;
     }
 
-    stopSource(id, fadeOutDuration = 0){
+    stop(id, fadeOutDuration = 0){
 
         if( !this.sourceMap.has(id) ){
             console.warn('failed to stop source', id, 'in AudioPlayer (source never started)');
@@ -44,11 +45,22 @@ export default class AudioPlayer {
     }
 
     // init and start spat source. id is audio buffer id in loader service
-    startSource(id, fadeInDuration = 0, loop = true) {
+    // ("start now, at startTime in buffer")
+    start(id, startTime, fadeInDuration = 0.1, loop = false, volume = 1.0) {
         
         if( this.buffers[id] == undefined ){
             console.warn('wrong file index', id, 'in AudioPlayer');
             return
+        }
+
+        // modulo of start time if loop required
+        let buffer = this.buffers[id];
+        if( loop ){ 
+          startTime = startTime % (buffer.length / buffer.sampleRate);
+        }
+        else if( startTime >= buffer.length / buffer.sampleRate ){
+            console.warn('source', id, 'start time greater than total time', startTime, buffer.length / buffer.sampleRate, 'discard starting source (consider setting loop to true)');
+            return;
         }
 
         // create audio source
@@ -60,7 +72,7 @@ export default class AudioPlayer {
         let gain = audioContext.createGain();
         gain.gain.value = 0.0;
         gain.gain.setValueAtTime(gain.gain.value, audioContext.currentTime);
-        gain.gain.linearRampToValueAtTime(1.0, audioContext.currentTime + fadeInDuration);
+        gain.gain.linearRampToValueAtTime(volume, audioContext.currentTime + fadeInDuration);
 
         // connect graph
         src.connect(gain);
@@ -68,10 +80,27 @@ export default class AudioPlayer {
 
         console.log('start', id)
         
-        // play source
-        src.start(0);
+        // start source at correct time
+        src.start(audioContext.currentTime, startTime);
 
         // store new spat source
         this.sourceMap.set(id, {src:src, gain:gain});
     }
+
+    // init and start spat source. id is audio buffer id in loader service
+    volume(id, volume, fadeDuration = 0.1) {
+        
+        // get source
+        let srcObj = this.sourceMap.get(id);
+        // discard if doesn't exist
+        if( srcObj === undefined ){ 
+          console.warn('attempt to set volume of unknown source:', id); 
+          return;
+        }
+        // set volume
+        const now = audioContext.currentTime;
+        srcObj.gain.gain.cancelScheduledValues(now);
+        srcObj.gain.gain.setValueAtTime(srcObj.gain.gain.value, now);
+        srcObj.gain.gain.linearRampToValueAtTime(volume, now + fadeDuration);
+    }    
 }
