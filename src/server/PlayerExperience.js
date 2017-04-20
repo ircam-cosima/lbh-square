@@ -19,8 +19,8 @@ export default class PlayerExperience extends Experience {
     this.sync = this.require('sync');
     this.osc = this.require('osc');
     this.sharedConfig = this.require('shared-config');
-    this.audioBufferManager = this.require('audio-buffer-manager');
-    this.geolocation = this.require('geolocation');
+    // this.audioBufferManager = this.require('audio-buffer-manager');
+    
 
     // locals
     let audioFiles = this.sharedConfig.get('streamedAudioFileNames');
