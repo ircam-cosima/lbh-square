@@ -2,10 +2,14 @@ import 'source-map-support/register'; // enable sourcemaps in node
 import * as soundworks from 'soundworks/server';
 import PlayerExperience from './PlayerExperience';
 import defaultConfig from './config/default';
+import cosimaAppsConfig from './config/cosima-apps';
 
 let config = null;
 
 switch(process.env.ENV) {
+  case 'cosima-apps':
+    config = cosimaAppsConfig;
+    break;
   default:
     config = defaultConfig;
     break;
