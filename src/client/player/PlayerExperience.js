@@ -2,6 +2,7 @@ import * as soundworks from 'soundworks/client';
 
 import AudioPlayer from './AudioPlayer';
 import AudioStreamHandler from './AudioStreamHandler';
+import UglyAudioStream from './UglyAudioStream';
 
 const audioContext = soundworks.audioContext;
 const client = soundworks.client;
@@ -40,7 +41,7 @@ export default class PlayerExperience extends soundworks.Experience {
     this.checkin = this.require('checkin', { showDialog: false });
     // this.audioBufferManager = this.require('audio-buffer-manager', { files: audioFiles });
     // this.motionInput = this.require('motion-input', { descriptors: ['deviceorientation', 'accelerationIncludingGravity'] });
-    this.rawSocket = this.require('raw-socket');
+    // this.rawSocket = this.require('raw-socket');
     this.sharedConfig = this.require('shared-config', { items: ['streamedAudioFileNames'] });
     // this.geolocation = this.require('geolocation', { debug:false, state:'start', enableHighAccuracy: true, timeout: 10000, maximumAge: 10000 } );
 
@@ -66,16 +67,18 @@ export default class PlayerExperience extends soundworks.Experience {
 
     // init audio players
     this.streamableAudioFiles = client.config.streamedAudioFileNames.map( (x) => { return x.replace(/^.*[\\\/]/, ''); });
-    this.audioStreamHandler = new AudioStreamHandler( this, this.streamableAudioFiles, () => {
+    // this.audioStreamHandler = new AudioStreamHandler( this, this.streamableAudioFiles, () => {
+    //   // stream audio file
+    //   const startTime = this.sync.getSyncTime();
+    //   let fileName = 'virtual-barber-shop.wav'; 
+    //   // start sound
+    //   this.audioStreamHandler.start(fileName, startTime, 0.1, true, 1.0);
+    // });
 
-      // stream audio file
-      const startTime = this.sync.getSyncTime();
-      let fileName = 'virtual-barber-shop.wav'; 
-      // start sound
-      this.audioStreamHandler.start(fileName, startTime, 0.1, true, 1.0);
-      
-    });
-
+    this.uglyAudioStream = new UglyAudioStream();
+    this.uglyAudioStream.url = {file:'virtual-barber-shop', duration: 270};
+    this.uglyAudioStream.connect(audioContext.destination);
+    this.uglyAudioStream.start();
   }
 
 

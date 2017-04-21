@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-echo $1
+segmentDuration=4
 
 # get file without extension
 filename=$(basename "$1")
@@ -24,7 +24,7 @@ fi
 mkdir $foldername
 
 # cut file in segments
-ffmpeg -i "${filename}" -f segment -segment_time 10 -c copy "${foldername}"/%03d.wav
+ffmpeg -i "${filename}" -f segment -segment_time $segmentDuration -c copy "${foldername}"/%03d.wav
 
 # convert segments in .mp3
 for i in "${foldername}"/*.wav;

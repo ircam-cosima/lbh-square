@@ -24,7 +24,7 @@ export default class PlayerExperience extends Experience {
 
     // locals
     let audioFiles = this.sharedConfig.get('streamedAudioFileNames');
-    this.audioStreamHandler = new AudioStreamHandler( this, audioFiles );
+    // this.audioStreamHandler = new AudioStreamHandler( this, audioFiles );
   }
 
   // if anything needs to append when the experience starts
@@ -58,7 +58,7 @@ export default class PlayerExperience extends Experience {
   // starts the experience on the client side), write it in the `enter` method
   enter(client) {
     super.enter(client);
-    this.audioStreamHandler.enter( client );
+    // this.audioStreamHandler.enter( client );
   }
 
   exit(client) {
