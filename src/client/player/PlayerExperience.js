@@ -36,7 +36,7 @@ export default class PlayerExperience extends soundworks.Experience {
     super();
     
     // services
-    this.platform = this.require('platform', { features: ['web-audio'] });
+    this.platform = this.require('platform', { features: ['web-audio', 'wake-lock'] });
     this.sync = this.require('sync');
     this.checkin = this.require('checkin', { showDialog: false });
     // this.audioBufferManager = this.require('audio-buffer-manager', { files: audioFiles });
