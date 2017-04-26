@@ -1,8 +1,6 @@
 import path from 'path';
 const cwd = process.cwd();
 
-var streamPath = __dirname + '/../../public/streams/';
-
 // Configuration of the application.
 // Other entries can be added (as long as their name doesn't conflict with
 // existing ones) to define global parameters of the application (e.g. BPM,
@@ -97,18 +95,6 @@ export default {
     // port
     port: 8080,
   },
-
-  streamedAudioFileNames: [
-    streamPath + 'count8-120bpm-1.mp3',
-    streamPath + 'count8-120bpm-2.mp3',
-    streamPath + 'count8-120bpm-3.mp3',
-    streamPath + 'count8-120bpm-4.mp3',
-    streamPath + 'count8-120bpm-5.mp3',
-    streamPath + 'count8-120bpm-6.mp3',
-    streamPath + 'count8-120bpm-7.mp3',
-    streamPath + 'count8-120bpm-8.mp3',
-    streamPath + 'virtual-barber-shop.wav',
-  ],
 
   // define if the server should use gzip compression for static files
   enableGZipCompression: true,
