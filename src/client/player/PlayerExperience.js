@@ -76,7 +76,7 @@ export default class PlayerExperience extends soundworks.Experience {
     // });
 
     this.uglyAudioStream = new UglyAudioStream();
-    this.uglyAudioStream.url = {file:'virtual-barber-shop', duration: 270};
+    this.uglyAudioStream.url = {file:'aphex-twin-vordhosbn', duration: 278};
     this.uglyAudioStream.connect(audioContext.destination);
     this.uglyAudioStream.start();
   }
