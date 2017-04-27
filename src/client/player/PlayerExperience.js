@@ -9,8 +9,10 @@ const audioContext = soundworks.audioContext;
 const client = soundworks.client;
 
 const viewTemplate = `
-  <canvas class="background"></canvas>
-  <div class="foreground">
+  <canvas class="background" id="background">
+  </canvas>
+
+  <div class="foreground" id="foreground">
 
     <div class="section-top flex-middle">
       <p id="title" class="big"> <%= title %> </p>
@@ -47,7 +49,7 @@ export default class PlayerExperience extends soundworks.Experience {
 
     // locals
     this.bufferInfos = new Map();
-
+    this.displayManager = new DisplayManager();
     // bind
     // this.method = this.method.bind(this);
     
@@ -66,6 +68,7 @@ export default class PlayerExperience extends soundworks.Experience {
     super.start();
     if (!this.hasStarted){  this.init(); }
     this.show();
+    this.displayManager.start();
 
     this.receive('stream:infos', ( bufferInfos ) => {
       // shape buffer infos
@@ -77,31 +80,27 @@ export default class PlayerExperience extends soundworks.Experience {
         this.bufferInfos.set(fileName, item);
       });
 
-      // debug: init audio stream
+      // debug: audio stream
       this.audioStream = new AudioStream(this, this.bufferInfos);
-      // this.audioStream.url = 'aphex-twin-vordhosbn-shortened';
-      // this.audioStream.url = 'virtual_barber_shop-shortened';
-      this.audioStream.url = 'virtual_barber_shop-shortened';
+      this.audioStream.url = 'aphex-twin-vordhosbn-shortened';
       this.audioStream.loop = true;
-      this.audioStream.sync = true;
+      this.audioStream.sync = false;
       this.audioStream.connect(audioContext.destination);
       this.audioStream.start(0);
-      setTimeout( () => {
-        this.audioStream.stop(5);
-        this.audioStream.url = 'aphex-twin-vordhosbn-shortened';
-        this.audioStream.sync = false;
-        this.audioStream.start(6);
-      }, 5000);
       
-    });
+      // debug: display manager
+      this.displayManager.setOpaque(1, 0.1);
 
-    // this.audioStreamHandler = new AudioStreamHandler( this, this.streamableAudioFiles, () => {
-    //   // stream audio file
-    //   const startTime = this.sync.getSyncTime();
-    //   let fileName = 'virtual-barber-shop.wav'; 
-    //   // start sound
-    //   this.audioStreamHandler.start(fileName, startTime, 0.1, true, 1.0);
-    // });
+      setInterval( () => {
+        let imgId = Math.floor(Math.random() * 8) + 1;
+        console.log('setImage', imgId)
+        this.displayManager.setImg(imgId);
+        this.displayManager.setOpaque(0, 1);
+        setTimeout( () => {this.displayManager.setOpaque(1, 0.5)}, 2000 );
+      }, 3000);
+      // x.backgroundImage = "url('../images/IMG_1092.JPG')";
+
+    });
 
     // this.uglyAudioStream = new UglyAudioStream();
     // this.uglyAudioStream.url = {file:'aphex-twin-vordhosbn', duration: 278};
@@ -111,3 +110,48 @@ export default class PlayerExperience extends soundworks.Experience {
 
 
 }
+
+class DisplayManager{
+  constructor(){
+    // init image files
+    this.images = []
+    for( let i = 1; i <=8; i++){ this.images.push('../images/' + i + '.JPG'); }
+    
+    // locals
+    this.refreshRate = 100; // in ms
+  }
+
+  start(){
+    // handle to foreground
+    this.foreground = document.getElementById("foreground");
+    this.foreground.style.background = '#000000';
+    this.background = document.getElementById("background");
+
+    this.setOpaque = this.setOpaque.bind(this)     
+  }
+
+  setImg(id){
+    this.background.style.backgroundImage = "url('" + this.images[id-1] + "')";
+  }
+
+  setOpaque(onOff, fadeDuration){
+    let oneMinusOne = onOff?1:-1
+    const step = (this.refreshRate / 1000 ) / fadeDuration;
+      
+    console.log('SET OPAQUE')
+    this.callback = setInterval( () => {
+      let val = Number(this.foreground.style.opacity) + oneMinusOne*step;
+      console.log('opacity', this.foreground.style.opacity)
+      if( val >= 1.0 || val <= 0 ){ 
+        this.foreground.style.opacity = (oneMinusOne === 1)? "1":"0";
+        clearInterval( this.callback );
+      }
+      else{ this.foreground.style.opacity = String(val); }
+    }, this.refreshRate);
+  }
+
+}
+
+
+
+

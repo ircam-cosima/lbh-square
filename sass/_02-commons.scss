@@ -61,10 +61,18 @@ p {
   z-index: 1;
 }
 
+img {
+    image-orientation: from-image;
+}
+
 .background {
   position: absolute;
   top: 0;
   left: 0;
+  background-repeat:no-repeat;
+  background-position:center center;
+  background-size: cover; 
+  image-orientation: 0deg;
 }
 
 .fit-container {
