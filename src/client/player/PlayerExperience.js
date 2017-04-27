@@ -91,13 +91,13 @@ export default class PlayerExperience extends soundworks.Experience {
       // debug: display manager
       this.displayManager.setOpaque(1, 0.1);
 
-      setInterval( () => {
-        let imgId = Math.floor(Math.random() * 8) + 1;
-        console.log('setImage', imgId)
-        this.displayManager.setImg(imgId);
-        this.displayManager.setOpaque(0, 1);
-        setTimeout( () => {this.displayManager.setOpaque(1, 0.5)}, 2000 );
-      }, 3000);
+      // setInterval( () => {
+      //   let imgId = Math.floor(Math.random() * 8) + 1;
+      //   console.log('setImage', imgId)
+      //   this.displayManager.setImg(imgId);
+      //   this.displayManager.setOpaque(0, 1);
+      //   setTimeout( () => {this.displayManager.setOpaque(1, 0.5)}, 2000 );
+      // }, 3000);
       // x.backgroundImage = "url('../images/IMG_1092.JPG')";
 
     });
