@@ -39,9 +39,9 @@ export default class PlayerExperience extends soundworks.Experience {
     super();
     
     // services
-    // this.platform = this.require('platform', { features: ['web-audio', 'wake-lock'] });
-    this.platform = this.require('platform', { features: ['web-audio'] });
-    console.warn('REMOVED PLATFORM WAVE-LOCK FOR DEBUG ON CHROME (100%CPU..)');
+    this.platform = this.require('platform', { features: ['web-audio', 'wake-lock'] });
+    // this.platform = this.require('platform', { features: ['web-audio'] });
+    // console.warn('REMOVED PLATFORM WAVE-LOCK FOR DEBUG ON CHROME (100%CPU..)');
     this.sync = this.require('sync');
     this.checkin = this.require('checkin', { showDialog: false });
     // this.audioBufferManager = this.require('audio-buffer-manager', { files: audioFiles });
@@ -81,35 +81,51 @@ export default class PlayerExperience extends soundworks.Experience {
       });
 
       // debug: audio stream
-      this.audioStream = new AudioStream(this, this.bufferInfos);
-      this.audioStream.url = 'aphex-twin-vordhosbn-shortened';
-      this.audioStream.loop = true;
-      this.audioStream.sync = false;
-      this.audioStream.connect(audioContext.destination);
-      this.audioStream.start(0);
-      
-      // debug: display manager
-      this.displayManager.setOpaque(1, 0.1);
-
-      // setInterval( () => {
-      //   let imgId = Math.floor(Math.random() * 8) + 1;
-      //   console.log('setImage', imgId)
-      //   this.displayManager.setImg(imgId);
-      //   this.displayManager.setOpaque(0, 1);
-      //   setTimeout( () => {this.displayManager.setOpaque(1, 0.5)}, 2000 );
-      // }, 3000);
-      // x.backgroundImage = "url('../images/IMG_1092.JPG')";
+      this.startAudioStream('aphex-twin-vordhosbn-shortened');
 
     });
+      
+    // debug: display manager
+    this.displayManager.setOpaque(1, 0.1);
+    // setInterval( () => {
+    //   let imgId = Math.floor(Math.random() * 8) + 1;
+    //   console.log('setImage', imgId)
+    //   this.displayManager.setImg(imgId);
+    //   this.displayManager.setOpaque(0, 1);
+    //   setTimeout( () => {this.displayManager.setOpaque(1, 0.5)}, 2000 );
+    // }, 3000);
+    // x.backgroundImage = "url('../images/IMG_1092.JPG')";
 
-    // this.uglyAudioStream = new UglyAudioStream();
-    // this.uglyAudioStream.url = {file:'aphex-twin-vordhosbn', duration: 278};
-    // this.uglyAudioStream.connect(audioContext.destination);
-    // this.uglyAudioStream.start();
+     // TODELETE
+    // debug: surface control -> double tap to add streaming
+    const surface = new soundworks.TouchSurface(this.view.$el);
+    this.lastTouchTime = 0;
+    this.didDoubleTap = 0;
+    surface.addListener('touchstart', (id, normX, normY) => {
+      if( (audioContext.currentTime - this.lastTouchTime) < 0.4 ){ // tap time in sec
+        if( this.didDoubleTap == 0 ){
+          this.startAudioStream('Poltergeist-Mike_Koenig-1605093045');
+          let foreground = document.getElementById("foreground");
+          foreground.style.background = '#ffa500';
+          this.didDoubleTap = 1;
+        }
+      }
+      this.lastTouchTime = audioContext.currentTime;
+    });  
+     // TODELETE  
   }
 
+  startAudioStream(fileName){
+    this.audioStream = new AudioStream(this, this.bufferInfos);
+    this.audioStream.url = fileName;
+    this.audioStream.loop = true;
+    this.audioStream.sync = true;
+    this.audioStream.connect(audioContext.destination);
+    this.audioStream.start(0);    
+  }
 
 }
+
 
 class DisplayManager{
   constructor(){

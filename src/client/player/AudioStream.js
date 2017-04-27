@@ -1,6 +1,8 @@
 // TODO:
 // - support streaming of files of total duration shorter than packet duration
 
+const client = soundworks.client; // TODELETE
+
 ////////////////////////////////////////////////////////
 // UTILS FUNCTIONS 
 ////////////////////////////////////////////////////////
@@ -160,7 +162,7 @@ export default class AudioStream {
     let index = 1;
     while( this._currentBufferIndex < 0 ){
       // if index corresponds to the buffer after the one we want || last index in buffer
-      if( offset < bufferInfo[index].start || index === bufferInfo.length ){ 
+      if( index === bufferInfo.length || offset < bufferInfo[index].start ){ 
         this._currentBufferIndex = index - 1;
         this._offsetInFirstBuffer = offset - bufferInfo[this._currentBufferIndex].start;
         // console.log('global offset:', offset, 'local offset:', this._offsetInFirstBuffer, 'file starts at:', bufferInfo[this._currentBufferIndex].start, 'total dur:', duration);
@@ -237,13 +239,14 @@ export default class AudioStream {
       if( this._unsyncStartOffset === undefined ){ 
         this._unsyncStartOffset = -1; // just so we don't come here again
         relStartTime -= this._offsetInFirstBuffer;
-        // if then relStartTime is above source buffer duration
-        if( Math.abs(relStartTime) >= buffer.duration ){
-          console.warn('audiostream: too long loading, discarding buffer');
-          // console.log('time since start request:', startTime - this.e.sync.getSyncTime(), 'offset in first buffer:', this._offsetInFirstBuffer)
-          return;
-        }
       }
+    }
+
+    // if then relStartTime is above source buffer duration
+    if( -relStartTime >= buffer.duration ){
+      console.warn('audiostream: too long loading, discarding buffer');
+      this.e.send('stream:drop', client.index, this._url); // TODELETE
+      return;
     }
 
     console.log( 'add buffer to queue starting at', startTime, 'i.e. in', relStartTime, 'sec' );

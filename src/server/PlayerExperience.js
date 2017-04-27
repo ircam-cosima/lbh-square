@@ -1,6 +1,8 @@
 import { Experience } from 'soundworks/server';
 
 const Slicer = require('node-audio-slicer').Slicer;
+const fs = require('fs');  // TODELETE
+const logFilePath = 'log-infos.txt'; // TODELETE
 
 // server-side 'player' experience.
 export default class PlayerExperience extends Experience {
@@ -15,9 +17,11 @@ export default class PlayerExperience extends Experience {
   start() {
     // init streaming
     let audioFiles = [ 
-      './public/streams/aphex-twin-vordhosbn-shortened.wav'
+      './public/streams/aphex-twin-vordhosbn-shortened.wav',
+      './public/streams/Poltergeist-Mike_Koenig-1605093045.wav', // TODELETE
     ];
     prepareStreamChunks( audioFiles, (infos) => { this.bufferInfos = infos; });
+    fs.exists(logFilePath, (exists) => { if(exists) { fs.unlink(logFilePath); } }); // TODELETE
   }
 
   enter(client) {
@@ -26,6 +30,16 @@ export default class PlayerExperience extends Experience {
     if( this.bufferInfos !== undefined ){
       this.send(client, 'stream:infos', this.bufferInfos);
     }
+     // TODELETE
+    this.receive(client, 'stream:drop', (id, url) => {
+      let s = id + ' ' + this.sync.getSyncTime() + ' ' + url;
+      console.log('->', s);
+      fs.appendFile(logFilePath, s + '\n', function (err) {
+        if (err) throw err;
+      });
+
+    });
+     // TODELETE
   }
 
   exit(client) {
