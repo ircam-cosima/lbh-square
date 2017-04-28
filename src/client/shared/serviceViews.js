@@ -610,13 +610,23 @@ const serviceViews = {
           </div>
           <div class="section-bottom"></div>
         <% } else { %>
-          <div class="section-top flex-middle"></div>
-          <div class="section-center flex-center">
+          <div class="section-top flex-middle">
               <p class="big">
                 <%= intro %>
                 <br />
                 <b><%= globals.appName %></b>
-              </p>
+              </p>          
+          </div>
+          <div class="section-center flex-center">
+              <p class="medium">
+                volume on
+                <br /> <br />
+                vibration off
+                <br /> <br />
+                veille off
+                <br /> <br />
+                ecouteurs
+              </p>          
           </div>
           <div class="section-bottom flex-middle">
             <% if (checking === true) { %>
@@ -632,7 +642,7 @@ const serviceViews = {
         isCompatible: null,
         hasAuthorizations: null,
         checking: false,
-        intro: 'Welcome to',
+        intro: '',
         instructions: 'Touch the screen to join!',
         checkingMessage: 'Please wait while checking compatiblity',
         errorCompatibleMessage: 'Sorry,<br />Your device is not compatible with the application.',

@@ -4,7 +4,7 @@ const audioContext = soundworks.audioContext;
 
 
 export default class AudioPlayer {
-    constructor(clientExperience) {
+    constructor(audioBuffers) {
         
         // master gain out
         this.gainOut = audioContext.createGain();
@@ -15,8 +15,7 @@ export default class AudioPlayer {
 
         // local attributes
         this.sourceMap = new Map();
-        this.e = clientExperience;
-        this.buffers = this.e.audioBufferManager.data;
+        this.buffers = audioBuffers;
     }
 
     stop(id, fadeOutDuration = 0){

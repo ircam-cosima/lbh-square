@@ -10,12 +10,14 @@ export default class PlayerExperience extends Experience {
     // services
     this.checkin = this.require('checkin');
     this.sync = this.require('sync');
+    this.audioBufferManager = this.require('audio-buffer-manager');
   }
 
   start() {
     // init streaming
     let audioFiles = [ 
       './public/streams/aphex-twin-vordhosbn-shortened.wav',
+      './public/streams/virtual_barber_shop-shortened.wav',
     ];
     prepareStreamChunks( audioFiles, (infos) => { this.bufferInfos = infos; });
   }
