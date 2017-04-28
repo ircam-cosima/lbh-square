@@ -1,8 +1,6 @@
 // TODO:
 // - support streaming of files of total duration shorter than packet duration
 
-const client = soundworks.client; // TODELETE
-
 ////////////////////////////////////////////////////////
 // UTILS FUNCTIONS 
 ////////////////////////////////////////////////////////
@@ -245,7 +243,6 @@ export default class AudioStream {
     // if then relStartTime is above source buffer duration
     if( -relStartTime >= buffer.duration ){
       console.warn('audiostream: too long loading, discarding buffer');
-      this.e.send('stream:drop', client.index, this._url); // TODELETE
       return;
     }
 

@@ -39,9 +39,9 @@ export default class PlayerExperience extends soundworks.Experience {
     super();
     
     // services
-    this.platform = this.require('platform', { features: ['web-audio', 'wake-lock'] });
-    // this.platform = this.require('platform', { features: ['web-audio'] });
-    // console.warn('REMOVED PLATFORM WAVE-LOCK FOR DEBUG ON CHROME (100%CPU..)');
+    // this.platform = this.require('platform', { features: ['web-audio', 'wake-lock'] });
+    this.platform = this.require('platform', { features: ['web-audio'] });
+    console.warn('REMOVED PLATFORM WAVE-LOCK FOR DEBUG ON CHROME (100%CPU..)');
     this.sync = this.require('sync');
     this.checkin = this.require('checkin', { showDialog: false });
     // this.audioBufferManager = this.require('audio-buffer-manager', { files: audioFiles });
@@ -96,27 +96,26 @@ export default class PlayerExperience extends soundworks.Experience {
     // }, 3000);
     // x.backgroundImage = "url('../images/IMG_1092.JPG')";
 
-     // TODELETE
-    // debug: surface control -> double tap to add streaming
-    const surface = new soundworks.TouchSurface(this.view.$el);
-    this.lastTouchTime = 0;
-    this.didDoubleTap = 0;
-    surface.addListener('touchstart', (id, normX, normY) => {
-      if( (audioContext.currentTime - this.lastTouchTime) < 0.4 ){ // tap time in sec
-        if( this.didDoubleTap == 0 ){
-          this.startAudioStream('Poltergeist-Mike_Koenig-1605093045');
-          let foreground = document.getElementById("foreground");
-          foreground.style.background = '#ffa500';
-          this.didDoubleTap = 1;
-        }
-      }
-      this.lastTouchTime = audioContext.currentTime;
-    });  
-     // TODELETE  
+
+    // // debug: surface control -> double tap to add streaming
+    // const surface = new soundworks.TouchSurface(this.view.$el);
+    // this.lastTouchTime = 0;
+    // this.didDoubleTap = 0;
+    // surface.addListener('touchstart', (id, normX, normY) => {
+    //   if( (audioContext.currentTime - this.lastTouchTime) < 0.4 ){ // tap time in sec
+    //     if( this.didDoubleTap == 0 ){
+    //       this.startAudioStream('Poltergeist-Mike_Koenig-1605093045');
+    //       let foreground = document.getElementById("foreground");
+    //       foreground.style.background = '#ffa500';
+    //       this.didDoubleTap = 1;
+    //     }
+    //   }
+    //   this.lastTouchTime = audioContext.currentTime;
+    // });
+
   }
 
   startAudioStream(fileName){
-    this.send('stream:start', client.index, fileName); // TODELETE
     this.audioStream = new AudioStream(this, this.bufferInfos);
     this.audioStream.url = fileName;
     this.audioStream.loop = true;
