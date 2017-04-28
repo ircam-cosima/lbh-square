@@ -116,6 +116,7 @@ export default class PlayerExperience extends soundworks.Experience {
   }
 
   startAudioStream(fileName){
+    this.send('stream:start', client.index, fileName); // TODELETE
     this.audioStream = new AudioStream(this, this.bufferInfos);
     this.audioStream.url = fileName;
     this.audioStream.loop = true;

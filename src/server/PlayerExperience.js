@@ -2,7 +2,13 @@ import { Experience } from 'soundworks/server';
 
 const Slicer = require('node-audio-slicer').Slicer;
 const fs = require('fs');  // TODELETE
-const logFilePath = 'log-infos.txt'; // TODELETE
+
+ // TODELETE
+let s = new Date().toLocaleString();
+s = s.replace(/[,]/g,'');
+s = s.replace(/[\s\/:]/g,'-');
+const logFilePath = 'log-info-' + s + '.txt';
+// TODELETE
 
 // server-side 'player' experience.
 export default class PlayerExperience extends Experience {
@@ -32,19 +38,25 @@ export default class PlayerExperience extends Experience {
     }
      // TODELETE
     this.receive(client, 'stream:drop', (id, url) => {
-      let s = id + ' ' + this.sync.getSyncTime() + ' ' + url;
-      console.log('->', s);
-      fs.appendFile(logFilePath, s + '\n', function (err) {
-        if (err) throw err;
-      });
-
+      this.addToLog( id + ' ' + this.sync.getSyncTime() + ' ' + url );
+    });
+    this.receive(client, 'stream:start', (id, url) => {
+      this.addToLog( id + ' ON ' + this.sync.getSyncTime() + ' ' + url );
     });
      // TODELETE
   }
 
   exit(client) {
     super.exit(client);
+    this.addToLog( client.index + ' OFF ' + this.sync.getSyncTime() );
   }
+
+  // TODELETE
+  addToLog(s){
+    console.log('->', s);
+    fs.appendFile(logFilePath, s + '\n', function (err) { if (err) throw err; });    
+  }
+  // TODELETE
 }
 
 /*
