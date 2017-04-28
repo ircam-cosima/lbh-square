@@ -8,34 +8,24 @@ import AudioStream from './AudioStream';
 const audioContext = soundworks.audioContext;
 const client = soundworks.client;
 
-const viewTemplate = `
-  <canvas class="background" id="background">
-  </canvas>
-
+const template = `
+  <canvas class="background" id="background"></canvas>
   <div class="foreground" id="foreground">
-
-    <div class="section-top flex-middle">
-      <p id="title" class="big"> <%= title %> </p>
-    </div>
-
+    <div class="section-top flex-middle"></div>
     <div class="section-center flex-center">
-      <p id="instructions" class"small"> ••• </p>
+      <p class="big"><%= title %></p>
     </div>
-
-    <div class="section-bottom flex-middle">
-      <p id="value0" class="small"><%= 'NaN' %></p>
-      <p id="value1" class="small"><%= 'NaN' %></p>
-      <p id="value2" class="small"><%= 'NaN' %></p>      
-    </div>
-
+    <div class="section-bottom flex-middle"></div>
   </div>
 `;
+
+const model = { title: `Let's go!` };
 
 
 // this experience plays a sound when it starts, and plays another sound when
 // other clients join the experience
 export default class PlayerExperience extends soundworks.Experience {
-  constructor(assetsDomain, audioFiles) {
+  constructor(assetsDomain) {
     super();
     
     // services
@@ -55,63 +45,65 @@ export default class PlayerExperience extends soundworks.Experience {
     
   }
 
-  init() {
-    // initialize the view
-    this.viewTemplate = viewTemplate;
-    this.viewContent = { title: 'Square, id: ' + client.index, instructions: 'browse paris soundscape' };
-    this.viewCtor = soundworks.CanvasView;
-    this.viewOptions = { preservePixelRatio: true };
-    this.view = this.createView(); 
-  }
-
   start() {
-    super.start();
-    if (!this.hasStarted){  this.init(); }
-    this.show();
-    this.displayManager.start();
+    super.start(); // don't forget this
 
-    this.receive('stream:infos', ( bufferInfos ) => {
-      // shape buffer infos
-      bufferInfos.forEach( (item) => {
-        // get file name (assume at least 1 chunk in item)
-        let fileName = item[0].name.split("/").pop();
-        fileName = fileName.substr(fileName.indexOf("-")+1, fileName.lastIndexOf(".")-2);
-        // save in locals
-        this.bufferInfos.set(fileName, item);
+    // initialize the view
+    this.view = new soundworks.CanvasView(template, model, {}, {
+      id: this.id,
+      preservePixelRatio: true,
+    });
+
+    // as show can be async, we make sure that the view is actually rendered
+    this.show().then(() => {
+
+      this.displayManager.start();
+
+      this.receive('stream:infos', ( bufferInfos ) => {
+        // shape buffer infos
+        bufferInfos.forEach( (item) => {
+          // get file name (assume at least 1 chunk in item)
+          let fileName = item[0].name.split("/").pop();
+          fileName = fileName.substr(fileName.indexOf("-")+1, fileName.lastIndexOf(".")-2);
+          // save in locals
+          this.bufferInfos.set(fileName, item);
+        });
+
+        // debug: audio stream
+        this.startAudioStream('aphex-twin-vordhosbn-shortened');
+
       });
+        
+      // debug: display manager
+      this.displayManager.setOpaque(1, 0.1);
+      // setInterval( () => {
+      //   let imgId = Math.floor(Math.random() * 8) + 1;
+      //   console.log('setImage', imgId)
+      //   this.displayManager.setImg(imgId);
+      //   this.displayManager.setOpaque(0, 1);
+      //   setTimeout( () => {this.displayManager.setOpaque(1, 0.5)}, 2000 );
+      // }, 3000);
+      // x.backgroundImage = "url('../images/IMG_1092.JPG')";
 
-      // debug: audio stream
-      this.startAudioStream('aphex-twin-vordhosbn-shortened');
+
+      // // debug: surface control -> double tap to add streaming
+      // const surface = new soundworks.TouchSurface(this.view.$el);
+      // this.lastTouchTime = 0;
+      // this.didDoubleTap = 0;
+      // surface.addListener('touchstart', (id, normX, normY) => {
+      //   if( (audioContext.currentTime - this.lastTouchTime) < 0.4 ){ // tap time in sec
+      //     if( this.didDoubleTap == 0 ){
+      //       this.startAudioStream('Poltergeist-Mike_Koenig-1605093045');
+      //       let foreground = document.getElementById("foreground");
+      //       foreground.style.background = '#ffa500';
+      //       this.didDoubleTap = 1;
+      //     }
+      //   }
+      //   this.lastTouchTime = audioContext.currentTime;
+      // });
 
     });
-      
-    // debug: display manager
-    this.displayManager.setOpaque(1, 0.1);
-    // setInterval( () => {
-    //   let imgId = Math.floor(Math.random() * 8) + 1;
-    //   console.log('setImage', imgId)
-    //   this.displayManager.setImg(imgId);
-    //   this.displayManager.setOpaque(0, 1);
-    //   setTimeout( () => {this.displayManager.setOpaque(1, 0.5)}, 2000 );
-    // }, 3000);
-    // x.backgroundImage = "url('../images/IMG_1092.JPG')";
 
-
-    // // debug: surface control -> double tap to add streaming
-    // const surface = new soundworks.TouchSurface(this.view.$el);
-    // this.lastTouchTime = 0;
-    // this.didDoubleTap = 0;
-    // surface.addListener('touchstart', (id, normX, normY) => {
-    //   if( (audioContext.currentTime - this.lastTouchTime) < 0.4 ){ // tap time in sec
-    //     if( this.didDoubleTap == 0 ){
-    //       this.startAudioStream('Poltergeist-Mike_Koenig-1605093045');
-    //       let foreground = document.getElementById("foreground");
-    //       foreground.style.background = '#ffa500';
-    //       this.didDoubleTap = 1;
-    //     }
-    //   }
-    //   this.lastTouchTime = audioContext.currentTime;
-    // });
 
   }
 
@@ -125,7 +117,6 @@ export default class PlayerExperience extends soundworks.Experience {
   }
 
 }
-
 
 class DisplayManager{
   constructor(){

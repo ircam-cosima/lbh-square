@@ -1,18 +1,18 @@
 import 'source-map-support/register'; // enable sourcemaps in node
+import path from 'path';
 import * as soundworks from 'soundworks/server';
 import PlayerExperience from './PlayerExperience';
-import defaultConfig from './config/default';
-import cosimaAppsConfig from './config/cosima-apps';
 
+const configName = process.env.ENV || 'default';
+const configPath = path.join(__dirname, 'config', configName);
 let config = null;
 
-switch(process.env.ENV) {
-  case 'cosima-apps':
-    config = cosimaAppsConfig;
-    break;
-  default:
-    config = defaultConfig;
-    break;
+// rely on node `require` for synchronicity
+try {
+  config = require(configPath).default;
+} catch(err) {
+  console.error(`Invalid ENV "${configName}", file "${configPath}.js" not found`);
+  process.exit(1);
 }
 
 // configure express environment ('production' enables cache systems)
