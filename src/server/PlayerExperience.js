@@ -38,7 +38,7 @@ export default class PlayerExperience extends Experience {
     }
      // TODELETE
     this.receive(client, 'stream:drop', (id, url) => {
-      this.addToLog( id + ' ' + this.sync.getSyncTime() + ' ' + url );
+      this.addToLog( id + ' DROP ' + this.sync.getSyncTime() + ' ' + url );
     });
     this.receive(client, 'stream:start', (id, url) => {
       this.addToLog( id + ' ON ' + this.sync.getSyncTime() + ' ' + url );
