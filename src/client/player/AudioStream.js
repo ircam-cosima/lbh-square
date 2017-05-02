@@ -287,9 +287,15 @@ export default class AudioStream {
     // kill sources
     this._srcMap.forEach( (src, startTime) => {
       // if source due to start after stop time
-      if( startTime >= this.e.sync.getSyncTime() + when ){ src.stop(); }
+      if( startTime >= this.e.sync.getSyncTime() + when ){ 
+        console.log('soft stop', startTime);
+        src.stop(); 
+      }
       // stop all sources currently playing in "when" (don't care if source then stopped by itself)
-      else{ src.stop(audioContext.currentTime + when); }
+      else{ 
+        console.log('hard stop', startTime, audioContext.currentTime, when);
+        src.stop(audioContext.currentTime + when); 
+      }
     });
   }
 

@@ -9,13 +9,19 @@ const audioContext = soundworks.audioContext;
 const client = soundworks.client;
 
 const template = `
-  <canvas class="background" id="background"></canvas>
+  <div class="background" id="background">
+    <div class="bottom">
+      <p class="soft-blink-2 black-text">toucher l'écran une fois la position atteinte</p>
+    </div>  
+    <canvas id="backgroundCanvas">
+    </canvas>
+  </div>
   <div class="foreground" id="foreground">
     <div class="section-top flex-middle">
-      <p class="big"><%= title %></p>
+      <p class="big" id="foreground-title"><%= title %></p>
     </div>
     <div class="section-center flex-center">
-      <p class="small"><%= instructions %></p>
+      <p class="small" id="foreground-instructions"><%= instructions %></p>
     </div>
     <div class="section-bottom flex-middle"></div>
   </div>
@@ -45,9 +51,10 @@ export default class PlayerExperience extends soundworks.Experience {
     this.readyToStart = 0;
     this.stateId = 0;
     this.numberOfStates = 2;
+    this.displayManager = new DisplayManager();
 
     // bind
-    // this.exit = this.exit.bind(this);
+    this.triggerNextState = this.triggerNextState.bind(this);
     
   }
 
@@ -55,10 +62,7 @@ export default class PlayerExperience extends soundworks.Experience {
     super.start(); // don't forget this
 
    // initialize the view
-    let model = { 
-      title: '',
-      instructions: ''
-    };
+    let model = { title: '', instructions: '' };
     this.view = new soundworks.CanvasView(template, model, {}, {
       id: this.id,
       preservePixelRatio: true,
@@ -88,6 +92,7 @@ export default class PlayerExperience extends soundworks.Experience {
 
     // init locals
     this.audioPlayerTouch = new AudioPlayer(this.audioBufferManager.data.touch);
+    this.displayManager.setOpaque(1, 0.1);
 
     // start state machine
     this.triggerNextState();
@@ -96,6 +101,7 @@ export default class PlayerExperience extends soundworks.Experience {
   triggerNextState() {
     // increment state id
     this.stateId += 1;
+    console.log('-> trigger next state', this.stateId)
     // check if reach last state
     if( this.stateId > this.numberOfStates ){
       this.exit();
@@ -107,18 +113,18 @@ export default class PlayerExperience extends soundworks.Experience {
       this.s.instructions = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vitae lacus molestie, bibendum diam vel, malesuada leo. Cras mattis consectetur ligula, non finibus sem. Sed porta mi eget porta varius. Pellentesque leo eros, dapibus commodo velit et, vehicula volutpat tortor.';
     }
     this.s.start();
+
+    // update display manager
+    this.displayManager.start();
   }
 
   exit() {
     // display exit screen
-    let model = { 
-      title: 'Game Over',
-      instructions: 'thanks for playing'
-    };
-    this.view.model = model;
-    this.view.render();
-
-    this.s.displayManager.setOpaque(1, 0);    
+    this.displayManager.title = 'Game Over';
+    this.displayManager.instructions = 'thanks for playing';
+    
+    // remove background blinking text
+    document.getElementById("background").innerHTML = "";
   }
 
 }
@@ -134,14 +140,12 @@ class State {
     this.preStream = '0' + this.id + '-pre-image-streaming';
     this.postStream = '0' + this.id + '-image-streaming';
     this.image = '../images/' + this.id + '.JPG';
-    this.timeBeforeImage = 3;
-    this.timeBeforeTouchImage = 3;
+    this.timeBeforeImage = 2;
+    this.timeBeforeTouchImage = 2;
 
     this.audioStream = new AudioStream(this.e, this.e.bufferInfos);
     this.audioStream.sync = false;
     this.audioStream.connect(audioContext.destination);
-
-    this.displayManager = new DisplayManager();
 
     // bind 
     this.setupTouchSurface = this.setupTouchSurface.bind(this);  
@@ -151,15 +155,11 @@ class State {
 
   start(){
     // set state view
-    let model = { 
-      title: this.title,
-      instructions: this.instructions
-    };
-    this.e.view.model = model;
-    this.e.view.render();
+    this.e.displayManager.title = this.title;
+    this.e.displayManager.instructions = this.instructions;
 
-    this.displayManager.start();
-    this.displayManager.setOpaque(1, 0);
+    // this.displayManager.start();
+    // this.displayManager.setOpaque(1, 0);
 
     // start audio 
     this.audioStream.url = this.preStream;
@@ -169,14 +169,14 @@ class State {
     // set callback to change stream / display image
     setTimeout( () => {
       // display image
-      this.displayManager.setImg(this.image);
-      this.displayManager.setOpaque(0, 2);
+      this.e.displayManager.setImg(this.image);
+      this.e.displayManager.setOpaque(0, 2);
       // setup touch callback after block time
       setTimeout( () => {
         this.setupTouchSurface();
       }, this.timeBeforeTouchImage * 1000);
 
-    }, this.timeBeforeImage*1000);
+    }, this.timeBeforeImage * 1000);
 
   }
 
@@ -198,8 +198,7 @@ class State {
     this.audioStream.start(0);
     // setup switch to next state when image stream is over
     // const duration = this.audioStream.duration;
-    const duration = 2; // DEBUG
-    console.log('current stream total duration:', duration);
+    const duration = 3; // DEBUG
     setTimeout( this.exit, duration * 1000);
     this.surface.removeListener('touchstart', this.touchCallback);
   }
@@ -207,9 +206,14 @@ class State {
   exit(){
     // shut down audio stream
     this.audioStream.stop(0);
+    // remove foreground text
+    this.e.displayManager.title = '';
+    this.e.displayManager.instructions = '';
+    // fade off image
+    const imageFadeOffDuration = 1;
+    this.e.displayManager.setOpaque(1, imageFadeOffDuration);
     // trigger next state
-    this.e.triggerNextState();
-    console.log('exit state')
+    setTimeout( this.e.triggerNextState, (imageFadeOffDuration+0.3) * 1000);
   }
 
 }
@@ -224,12 +228,20 @@ class DisplayManager{
     // handle to foreground
     this.foreground = document.getElementById("foreground");
     this.foreground.style.background = '#000000';
-    this.background = document.getElementById("background");   
+    this.background = document.getElementById("background");
   }
 
   setImg(url){
     this.background.style.backgroundImage = "url('" + url + "')";
     // this.background.style.backgroundImage = "url('../images/1.JPG')";
+  }
+
+  set title(str){
+    document.getElementById("foreground-title").innerHTML = str;    
+  }
+
+  set instructions(str){
+    document.getElementById("foreground-instructions").innerHTML = str;    
   }
 
   setOpaque(onOff, fadeDuration){
@@ -238,7 +250,7 @@ class DisplayManager{
 
     this.callback = setInterval( () => {
       let val = Number(this.foreground.style.opacity) + oneMinusOne*step;
-      // console.log('opacity', this.foreground.style.opacity)
+      console.log('opacity', this.foreground.style.opacity)
       if( val >= 1.0 || val <= 0 ){ 
         this.foreground.style.opacity = (oneMinusOne === 1)? "1":"0";
         clearInterval( this.callback );

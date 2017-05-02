@@ -38,3 +38,28 @@
     from { opacity: 0; }
     to   { opacity: 1; }
 }
+
+
+
+// create the soft blink animation from keyframe mixin
+@include keyframes(soft-blink-2) {
+  0% { opacity: 1.0; }
+  50% { opacity: 0.05; }
+  100% { opacity: 1.0; }
+}
+
+.soft-blink-2 {
+  @include animation('soft-blink-2 3.6s ease-in-out infinite');
+}
+
+.black-text {
+  font-size: 1.3rem;
+  color: $backgroundColor;
+  background-color: $textColor;
+  text-align: center;
+}
+
+.bottom {
+  position: fixed;
+  bottom: 10px;
+}
