@@ -76,8 +76,6 @@ export default class AudioPlayer {
         // connect graph
         src.connect(gain);
         gain.connect(this.gainOut);
-
-        console.log('start', id)
         
         // start source at correct time
         src.start(audioContext.currentTime, startTime);

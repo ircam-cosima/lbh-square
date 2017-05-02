@@ -1,7 +1,6 @@
 import path from 'path';
 const cwd = process.cwd();
 
-
 // Configuration of the application.
 // Other entries can be added (as long as their name doesn't conflict with
 // existing ones) to define global parameters of the application (e.g. BPM,
@@ -31,7 +30,6 @@ export default {
   // port used to open the http server, in production this value is typically 80
   port: 8000,
 
-
   // define if the server should use gzip compression for static files
   enableGZipCompression: true,
 
@@ -40,7 +38,6 @@ export default {
 
   // directory where the server templating system looks for the `ejs` templates
   templateDirectory: path.join(cwd, 'html'),
-
 
   // define if the HTTP server should be launched using secure connections.
   // For development purposes when set to `true` and no certificates are given

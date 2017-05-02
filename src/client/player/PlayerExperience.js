@@ -28,8 +28,7 @@ const template = `
 `;
 
 
-// this experience plays a sound when it starts, and plays another sound when
-// other clients join the experience
+// Soundworks Square: part of L B H residence
 export default class PlayerExperience extends soundworks.Experience {
   constructor(assetsDomain) {
     super();
@@ -55,11 +54,10 @@ export default class PlayerExperience extends soundworks.Experience {
 
     // bind
     this.triggerNextState = this.triggerNextState.bind(this);
-    
   }
 
   start() {
-    super.start(); // don't forget this
+    super.start();
 
    // initialize the view
     let model = { title: '', instructions: '' };
@@ -68,7 +66,7 @@ export default class PlayerExperience extends soundworks.Experience {
       preservePixelRatio: true,
     });
 
-    // receive stream info
+    // callback: receive stream info
     this.receive('stream:infos', ( bufferInfos ) => {
       // shape buffer infos
       bufferInfos.forEach( (item) => {
@@ -85,6 +83,7 @@ export default class PlayerExperience extends soundworks.Experience {
     this.show().then(() => { this.startWhenReady(); });
   }
 
+  // start mecanism: awaits both stream metadata and view render to start the experience
   startWhenReady(){
     // skip while not ready
     this.readyToStart += 1;
@@ -92,6 +91,8 @@ export default class PlayerExperience extends soundworks.Experience {
 
     // init locals
     this.audioPlayerTouch = new AudioPlayer(this.audioBufferManager.data.touch);
+    this.audioPlayerImgPopup = new AudioPlayer(this.audioBufferManager.data.imgPopup);
+    this.displayManager.start();    
     this.displayManager.setOpaque(1, 0.1);
 
     // start state machine
@@ -101,21 +102,19 @@ export default class PlayerExperience extends soundworks.Experience {
   triggerNextState() {
     // increment state id
     this.stateId += 1;
-    console.log('-> trigger next state', this.stateId)
-    // check if reach last state
+
+    // check if reached last state
     if( this.stateId > this.numberOfStates ){
       this.exit();
       return;
     }
+
     // trigger next state
     this.s = new State(this, this.stateId);
     if( this.stateId == 1 ){
       this.s.instructions = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vitae lacus molestie, bibendum diam vel, malesuada leo. Cras mattis consectetur ligula, non finibus sem. Sed porta mi eget porta varius. Pellentesque leo eros, dapibus commodo velit et, vehicula volutpat tortor.';
     }
     this.s.start();
-
-    // update display manager
-    this.displayManager.start();
   }
 
   exit() {
@@ -131,7 +130,7 @@ export default class PlayerExperience extends soundworks.Experience {
 
 class State {
   constructor(experiment, id){
-    console.log('init state:', id)
+
     this.e = experiment;
     this.id = id;
 
@@ -158,9 +157,6 @@ class State {
     this.e.displayManager.title = this.title;
     this.e.displayManager.instructions = this.instructions;
 
-    // this.displayManager.start();
-    // this.displayManager.setOpaque(1, 0);
-
     // start audio 
     this.audioStream.url = this.preStream;
     this.audioStream.loop = true;
@@ -171,6 +167,8 @@ class State {
       // display image
       this.e.displayManager.setImg(this.image);
       this.e.displayManager.setOpaque(0, 2);
+      // notification sound for image display
+      this.e.audioPlayerImgPopup.start(this.id-1, 0, 0);
       // setup touch callback after block time
       setTimeout( () => {
         this.setupTouchSurface();
@@ -181,8 +179,6 @@ class State {
   }
 
   setupTouchSurface(){
-    console.log('setup touch surface')
-    // debug: surface control -> double tap to add streaming
     this.surface = new soundworks.TouchSurface(this.e.view.$el);
     this.surface.addListener('touchstart', this.touchCallback);
   }
@@ -250,7 +246,6 @@ class DisplayManager{
 
     this.callback = setInterval( () => {
       let val = Number(this.foreground.style.opacity) + oneMinusOne*step;
-      console.log('opacity', this.foreground.style.opacity)
       if( val >= 1.0 || val <= 0 ){ 
         this.foreground.style.opacity = (oneMinusOne === 1)? "1":"0";
         clearInterval( this.callback );
