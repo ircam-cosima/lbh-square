@@ -10,7 +10,7 @@ const client = soundworks.client;
 
 const template = `
   <div class="background" id="background">
-    <div class="bottom">
+    <div class="bottom" id="background-banner">
       <p class="soft-blink-2 black-text">toucher l'écran une fois la position atteinte</p>
     </div>  
     <canvas id="backgroundCanvas">
@@ -118,12 +118,13 @@ export default class PlayerExperience extends soundworks.Experience {
   }
 
   exit() {
+    // update server
+    this.send('osc', [client.index, this.stateId, 0]);
     // display exit screen
     this.displayManager.title = 'Game Over';
     this.displayManager.instructions = 'thanks for playing';
-    
     // remove background blinking text
-    document.getElementById("background").innerHTML = "";
+    document.getElementById("background-banner").innerHTML = "";
   }
 
 }
@@ -153,6 +154,8 @@ class State {
   }
 
   start(){
+    // update server
+    this.e.send('osc', [client.index, this.id, 0]);
     // set state view
     this.e.displayManager.title = this.title;
     this.e.displayManager.instructions = this.instructions;
@@ -164,6 +167,8 @@ class State {
 
     // set callback to change stream / display image
     setTimeout( () => {
+      // update server
+      this.e.send('osc', [client.index, this.id, 1]);
       // display image
       this.e.displayManager.setImg(this.image);
       this.e.displayManager.setOpaque(0, 2);
@@ -184,6 +189,8 @@ class State {
   }
 
   touchCallback(id, normX, normY){
+    // update server
+    this.e.send('osc', [client.index, this.id, 2]);
     // play touch notification sound
     this.e.audioPlayerTouch.start(this.id-1,0,0);
     // stop stream

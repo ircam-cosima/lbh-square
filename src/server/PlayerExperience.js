@@ -11,6 +11,7 @@ export default class PlayerExperience extends Experience {
     this.checkin = this.require('checkin');
     this.sync = this.require('sync');
     this.audioBufferManager = this.require('audio-buffer-manager');
+    this.osc = this.require('osc');
   }
 
   start() {
@@ -22,6 +23,14 @@ export default class PlayerExperience extends Experience {
       './public/streams/02-pre-image-streaming.wav',
     ];
     prepareStreamChunks( audioFiles, (infos) => { this.bufferInfos = infos; });
+
+    // sync. OSS client clock with server's (delayed in setTimeout for now because OSC not init at start.)
+    setTimeout( () => {
+      const clockInterval = 0.1; // refresh interval in seconds
+      setInterval(() => { 
+        this.osc.send('/clock', this.sync.getSyncTime()); 
+      }, 1000 * clockInterval);
+    }, 1000);    
   }
 
   enter(client) {
@@ -30,10 +39,19 @@ export default class PlayerExperience extends Experience {
     if( this.bufferInfos !== undefined ){
       this.send(client, 'stream:infos', this.bufferInfos);
     }
+
+    // define osc msg routing
+    this.receive(client, 'osc', (data) => {
+      this.osc.send('/player', data);
+    });
+    // notify client enter
+    this.osc.send('/player', [client.index, 0, 0]);
+
   }
 
   exit(client) {
     super.exit(client);
+    this.osc.send('/player', [client.index, -1, 0]);
   }
 
 }
