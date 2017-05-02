@@ -109,6 +109,16 @@ export default class AudioStream {
   }  
 
   /**
+  * get duration of audio file currently loaded
+  **/
+  get duration(){
+    let bufferInfo = this.bufferInfos.get( this._url );
+    let endBuffer = bufferInfo[bufferInfo.length-1];
+    let duration = endBuffer.start + endBuffer.duration;
+    return duration;
+  }
+
+  /**
   * connect audio stream to an audio node
   **/
   connect( node ){
@@ -136,8 +146,7 @@ export default class AudioStream {
 
     // get total duration of targetted audio file
     let bufferInfo = this.bufferInfos.get( this._url );
-    let endBuffer = bufferInfo[bufferInfo.length-1];
-    let duration = endBuffer.start + endBuffer.duration;
+    let duration = this.duration;
 
     // make sure offset requested is valid
     if( offset >= duration || offset < 0 ){

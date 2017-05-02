@@ -16,8 +16,10 @@ export default class PlayerExperience extends Experience {
   start() {
     // init streaming
     let audioFiles = [ 
-      './public/streams/aphex-twin-vordhosbn-shortened.wav',
-      './public/streams/virtual_barber_shop-shortened.wav',
+      './public/streams/01-image-streaming.wav',
+      './public/streams/01-pre-image-streaming.wav',
+      './public/streams/02-image-streaming.wav',
+      './public/streams/02-pre-image-streaming.wav',
     ];
     prepareStreamChunks( audioFiles, (infos) => { this.bufferInfos = infos; });
   }
