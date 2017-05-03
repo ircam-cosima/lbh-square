@@ -111,13 +111,16 @@ export default class PlayerExperience extends soundworks.Experience {
     this.displayManager.title = 'SQUARE';
     this.displayManager.instructions = `
     Mon histoire semble si courte.
-    Je suis née en Novembre 2331, ici à Paris. Fille de parents anglais venus en France à la recherche d'une fortune meilleure après la grand crise d’Angleterre, c’est maintenant mon tour de partir, de tout laisser, pour chercher une alternative à ce lieu sans espoir.
-    Voilà les derniers souvenirs que j'ai d'ici.<br> <br>
+    Je suis née en Novembre 2331, ici à Paris. 
+    Fille de parents anglais venus en France, à la recherche d'une fortune meilleure après la grande Crise.
+    C’est maintenant mon tour de m'enfuir... elle a traversé la Manche elle aussi. 
+    <br> <br>
 
-
-    De simple photos, des points de vue sur ce square qui m’est si cher.
-    Pour suivre le fil rouge de mes souvenirs, tu devra me suivre, et littéralement te mettre à l'endroit d'où j'ai pris ces photos.
-    Une image après l’autre, mon histoire.
+    J'emporte les souvenirs de ce dernier jour avec moi, toujours plus au Sud.
+    De simple photos, des points de vue sur ce square, mon square.
+    Puisse celui qui les trouve faire revivre une dernière fois ces souvenirs là où ils ont été écrit. <br> <br>
+    
+    Je ne regrette rien, Lilly.
     `;
     // init local audio stream
     this.audioStream = new AudioStream(this, this.bufferInfos);
