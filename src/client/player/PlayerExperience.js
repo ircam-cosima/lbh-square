@@ -186,6 +186,7 @@ class State {
   setupTouchSurface(){
     this.surface = new soundworks.TouchSurface(this.e.view.$el);
     this.surface.addListener('touchstart', this.touchCallback);
+    window.addEventListener('click', this.touchCallback);
   }
 
   touchCallback(id, normX, normY){
@@ -204,6 +205,7 @@ class State {
     const duration = 3; // DEBUG
     setTimeout( this.exit, duration * 1000);
     this.surface.removeListener('touchstart', this.touchCallback);
+    window.removeEventListener('click', this.touchCallback);
   }
 
   exit(){
