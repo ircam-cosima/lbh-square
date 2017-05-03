@@ -28,7 +28,7 @@ export default {
   assetsDomain: '/',
 
   // port used to open the http server, in production this value is typically 80
-  port: 8000,
+  port: 8005,
 
   // define if the server should use gzip compression for static files
   enableGZipCompression: true,
@@ -48,13 +48,13 @@ export default {
   // server. Both entries are required otherwise a self-signed certificate
   // is generated.
   httpsInfos: {
-    key: null,
-    cert: null,
+    key: '/etc/ssl/letsencrypt/certs/cosima-apps.ircam.fr/privkey.pem',
+    cert: '/etc/ssl/letsencrypt/certs/cosima-apps.ircam.fr/fullchain.pem',
   },
 
   // socket.io configuration
   websockets: {
-    url: '',
+    url: 'https://apps.cosima.ircam.fr:8005',
     transports: ['websocket'],
     path: '',
     // @note: EngineIO defaults
@@ -103,7 +103,7 @@ export default {
   // configuration of the `raw-socket` service
   rawSocket: {
     // port
-    port: 8080,
+    port: 8006,
   },
 
   // bunyan configuration
