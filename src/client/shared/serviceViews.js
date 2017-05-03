@@ -610,26 +610,30 @@ const serviceViews = {
           </div>
           <div class="section-bottom"></div>
         <% } else { %>
-          <div class="section-top flex-middle">
+          <div class="section-top flex-center">
               <p class="nice-title">
                 <%= intro %>
                 <br />
                 <b><%= globals.appName %></b>
+                <br />
+                <i class="nice-subtitle">by Lorenzo Bianchi Hoesch</i>
               </p>      
           </div>
-          <div class="section-center flex-center" style="clear:both">
+          <div class="section-center flex-middle">
               <p class="small">
-                <i class="nice-subtitle">by Lorenzo Bianchi Hoesch</i>
-                <br /> <br /> <br />
+                • • •
+                <br /> <br />
                 <b> avant de commencer, vérifier que: </b>
                 <br />  <br />
-                le mode silencieux est désactivé
+                l'écran est bloqué en mode portrait 
                 <br />  <br />
-                la veille est désactivé
+                <b> la veille est désactivé </b>                
                 <br />  <br />
-                vos ecouteurs sont branchés
+                vos ecouteurs sont branchés                
                 <br />  <br />
-                le volume n'est pas au minimum                
+                le mode vibreur est activé
+                <br />  <br />
+                le volume n'est pas au minimum
               </p>          
           </div>
           <div class="section-bottom flex-middle">

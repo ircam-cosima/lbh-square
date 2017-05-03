@@ -49,18 +49,16 @@ export default class PlayerExperience extends soundworks.Experience {
     this.bufferInfos = new Map();
     this.readyToStart = 0;
     this.stateId = 0;
-    this.numberOfStates = 2;
+    this.numberOfStates = 8;
     this.displayManager = new DisplayManager();
 
     // states parameters
     this.sParams = {
-      timeBeforeOldImageRemoved : [5, 7, 3, 3, 3, 3, 3, 3],
-      timeBeforeNewImageDisplayed : [14, 13, 3, 3, 3, 3, 3, 3], // cummulative with timeBeforeOldImageRemoved
+      timeBeforeNewImageDisplayed : [19, 20, 19, 20, 19, 20, 19, 20],
     }
     // same-same: debug
     // this.sParams = {
-    //   timeBeforeOldImageRemoved : [2, 2, 2, 3, 3, 3, 3, 3],
-    //   timeBeforeNewImageDisplayed : [2, 2, 2, 3, 3, 3, 3, 3],
+    //   timeBeforeNewImageDisplayed : [3,3,3,3,3,3,3,3],
     // }
 
     // bind
@@ -102,6 +100,8 @@ export default class PlayerExperience extends soundworks.Experience {
     this.readyToStart += 1;
     if( this.readyToStart < 2 ){ return; }
 
+    // notify server
+    this.send('osc', [client.index, this.stateId, 1]);
     // init locals
     this.audioPlayerTouch = new AudioPlayer(this.audioBufferManager.data.touch);
     this.displayManager.start();    
@@ -109,7 +109,16 @@ export default class PlayerExperience extends soundworks.Experience {
 
     // setup description screen ----------------------------------------
     this.displayManager.title = 'SQUARE';
-    this.displayManager.instructions = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vitae lacus molestie, bibendum diam vel, malesuada leo. Cras mattis consectetur ligula, non finibus sem. Sed porta mi eget porta varius. Pellentesque leo eros, dapibus commodo velit et, vehicula volutpat tortor.';
+    this.displayManager.instructions = `
+    Mon histoire semble si courte.
+    Je suis née en Novembre 2331, ici à Paris. Fille de parents anglais venus en France à la recherche d'une fortune meilleure après la grand crise d’Angleterre, c’est maintenant mon tour de partir, de tout laisser, pour chercher une alternative à ce lieu sans espoir.
+    Voilà les derniers souvenirs que j'ai d'ici.<br> <br>
+
+
+    De simple photos, des points de vue sur ce square qui m’est si cher.
+    Pour suivre le fil rouge de mes souvenirs, tu devra me suivre, et littéralement te mettre à l'endroit d'où j'ai pris ces photos.
+    Une image après l’autre, mon histoire.
+    `;
     // init local audio stream
     this.audioStream = new AudioStream(this, this.bufferInfos);
     this.audioStream.sync = false;
@@ -140,6 +149,8 @@ export default class PlayerExperience extends soundworks.Experience {
     document.getElementById("foreground-footer").innerHTML = '';
     // stop audio stream
     this.audioStream.stop(0);
+    // set opaque background
+    this.displayManager.setOpaque(1, 0);
     // start state machine
     this.triggerNextState();
   }
@@ -151,7 +162,8 @@ export default class PlayerExperience extends soundworks.Experience {
     // check if reached last state
     if( this.stateId > this.numberOfStates ){
       // plan exit
-      setTimeout( this.exit, 1 * 1000 );
+      const waitBeforeEndDisplay = 4;
+      setTimeout( this.exit, waitBeforeEndDisplay * 1000 );
       return;
     }
     // trigger next state
@@ -186,8 +198,7 @@ class State {
     this.title = 'SQUARE';
     this.instructions = '';
     this.streamUrl = '0' + this.id + '-streaming';
-    this.image = '../images/' + this.id + '.JPG';
-    this.timeBeforeOldImageRemoved = this.e.sParams.timeBeforeOldImageRemoved[this.id-1];
+    this.image = '../images/' + this.id + '.jpg';
     this.timeBeforeNewImageDisplayed = this.e.sParams.timeBeforeNewImageDisplayed[this.id-1];
     this.timeBeforeTouchImage = 2;
 
@@ -199,11 +210,10 @@ class State {
     // bind 
     this.setupTouchSurface = this.setupTouchSurface.bind(this);  
     this.touchCallback = this.touchCallback.bind(this);  
-    this.exit = this.exit.bind(this);  
   }
 
   start(){
-    // update server
+    // notify server
     this.e.send('osc', [client.index, this.id, 0]);
     // set state view
     this.e.displayManager.title = this.title;
@@ -213,21 +223,10 @@ class State {
     this.audioStream.loop = true;
     this.audioStream.start(0);
 
-    // set callback to fade off previous image
-    setTimeout( () => {
-      // // remove foreground text
-      // this.e.displayManager.title = '';
-      // this.e.displayManager.instructions = '';
-      // fade off image
-      const imageFadeOffDuration = 1;
-      this.e.displayManager.setOpaque(1, imageFadeOffDuration);
-
-    }, this.timeBeforeOldImageRemoved * 1000);
-
     // set callback to change stream / display image
     setTimeout( () => {
-      // update server
-      this.e.send('osc', [client.index, this.id, 1]);
+      // notify server
+      this.e.send('osc', [client.index, this.id, 2]);
       // display image
       this.e.displayManager.setImg(this.image);
       this.e.displayManager.setOpaque(0, 2);
@@ -238,7 +237,7 @@ class State {
         this.setupTouchSurface();
       }, this.timeBeforeTouchImage * 1000);
 
-    }, (this.timeBeforeNewImageDisplayed + this.timeBeforeOldImageRemoved) * 1000);
+    }, (this.timeBeforeNewImageDisplayed) * 1000);
 
   }
 
@@ -257,24 +256,14 @@ class State {
     document.getElementById("background-banner").style.display='none';
     // stop stream
     this.audioStream.stop(0);
+    // fade off image
+    const imageFadeOffDuration = 1;
+    this.e.displayManager.setOpaque(1, imageFadeOffDuration);    
     // setup switch to next state when image stream is over
     // const duration = this.audioStream.duration;
     this.surface.removeListener('touchstart', this.touchCallback);
     window.removeEventListener('click', this.touchCallback);
-    this.exit();
-  }
-
-  exit(){
-    // // shut down audio stream
-    // this.audioStream.stop(0);
-    // // remove foreground text
-    // this.e.displayManager.title = '';
-    // this.e.displayManager.instructions = '';
-    // // fade off image
-    // const imageFadeOffDuration = 1;
-    // this.e.displayManager.setOpaque(1, imageFadeOffDuration);
-    // // trigger next state
-    // setTimeout( this.e.triggerNextState, (imageFadeOffDuration+0.3) * 1000);
+    // trigger state change
     this.e.triggerNextState();
   }
 
@@ -289,7 +278,6 @@ class DisplayManager{
   start(){
     // handle to foreground
     this.foreground = document.getElementById("foreground");
-    this.foreground.style.background = '#000000';
     this.background = document.getElementById("background");
   }
 

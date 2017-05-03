@@ -59,6 +59,7 @@ p {
 .foreground {
   position: relative;
   z-index: 1;
+  background-color: $backgroundColor;
 }
 
 img {
