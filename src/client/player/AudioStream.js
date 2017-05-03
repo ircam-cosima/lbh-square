@@ -73,6 +73,7 @@ export default class AudioStream {
     this._ctxStartTime = -1;
     this._unsyncStartOffset = undefined;
     this._currentBufferIndex = -1;    
+    this._firstPacketState = 0;
   }
 
   /** 
@@ -194,6 +195,9 @@ export default class AudioStream {
     // loop: do we need to request more chunks? if so, do, increment time flag, ask again
     while( this._ctx_time_when_queue_ends - this.e.sync.getSyncTime() <= REQUIRED_ADVANCE_THRESHOLD_S ){
 
+      // mechanism to force await first buffer to offset whole queue in unsync mode
+      if( this._firstPacketState == 1 && !this._sync ){ return; }
+
       // get current working chunk info
       let metaBuffer = bufferInfo[this._currentBufferIndex];
 
@@ -204,7 +208,12 @@ export default class AudioStream {
       let chunkName = PUBLIC_PATH + metaBuffer.name.substr(metaBuffer.name.indexOf('public')+7, metaBuffer.name.length-1);
       loadAudioBuffer(chunkName).then( (buffer) => {
         this._addBufferToQueue( buffer, ctx_startTime );
+        // mark that first packet arrived and that we can ask for more
+        if( this._firstPacketState == 1 && !this._sync ){ this._firstPacketState = 2; }
       });
+
+      // flag that first packet has been required and that we must await for its arrival in unsync mode before asking for more
+      if( this._firstPacketState == 0 && !this._sync ){ this._firstPacketState = 1; }
 
       // increment
       this._currentBufferIndex += 1;
@@ -234,7 +243,7 @@ export default class AudioStream {
     
     // non sync scenario: should play whole first buffer when downloaded
     if( !this._sync ){
-      // first packet: keep track off init offset
+      // first packet: keep track off init offset (MUST BE FIRST PACKET REGARDING TIME LINE, hence _firstPacketState based mechanism above)
       if( this._unsyncStartOffset === undefined ){
         this._unsyncStartOffset = relStartTime;
       }
