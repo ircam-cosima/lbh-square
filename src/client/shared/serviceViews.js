@@ -51,8 +51,8 @@ const serviceViews = {
         status: 'loading',
         showProgress: true,
         msg: {
-          loading: 'Loading sounds...',
-          decoding: 'Decoding sounds...',
+          loading: 'Chargement des fichiers audio...',
+          decoding: 'Décodage...',
         }
       };
     }
@@ -181,7 +181,7 @@ const serviceViews = {
         labelPostfix: 'Touch the screen<br class="portrait-only" />when you are ready.',
         error: false,
         errorMessage: 'Sorry,<br/>no place available',
-        wait: 'Please wait...',
+        wait: 'Connection...',
         label: '',
       };
 

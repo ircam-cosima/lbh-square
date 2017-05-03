@@ -16,12 +16,14 @@ const template = `
   </div>
   <div class="foreground" id="foreground">
     <div class="section-top flex-middle">
-      <p class="big" id="foreground-title"><%= title %></p>
+      <p class="big nice-title" id="foreground-title"><%= title %></p>
     </div>
     <div class="section-center flex-center">
       <p class="small" id="foreground-instructions"><%= instructions %></p>
     </div>
-    <div class="section-bottom flex-middle"></div>
+    <div class="section-bottom flex-middle soft-blink">
+      <p class="small" id="foreground-footer"></p>
+    </div>
   </div>
 `;
 
@@ -50,8 +52,21 @@ export default class PlayerExperience extends soundworks.Experience {
     this.numberOfStates = 2;
     this.displayManager = new DisplayManager();
 
+    // states parameters
+    this.sParams = {
+      timeBeforeOldImageRemoved : [5, 7, 3, 3, 3, 3, 3, 3],
+      timeBeforeNewImageDisplayed : [14, 13, 3, 3, 3, 3, 3, 3], // cummulative with timeBeforeOldImageRemoved
+    }
+    // same-same: debug
+    // this.sParams = {
+    //   timeBeforeOldImageRemoved : [2, 2, 2, 3, 3, 3, 3, 3],
+    //   timeBeforeNewImageDisplayed : [2, 2, 2, 3, 3, 3, 3, 3],
+    // }
+
     // bind
     this.triggerNextState = this.triggerNextState.bind(this);
+    this.touchCallback = this.touchCallback.bind(this);  
+    this.exit = this.exit.bind(this);  
   }
 
   start() {
@@ -89,29 +104,60 @@ export default class PlayerExperience extends soundworks.Experience {
 
     // init locals
     this.audioPlayerTouch = new AudioPlayer(this.audioBufferManager.data.touch);
-    this.audioPlayerImgPopup = new AudioPlayer(this.audioBufferManager.data.imgPopup);
     this.displayManager.start();    
     this.displayManager.setOpaque(1, 0);
+
+    // setup description screen ----------------------------------------
+    this.displayManager.title = 'SQUARE';
+    this.displayManager.instructions = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vitae lacus molestie, bibendum diam vel, malesuada leo. Cras mattis consectetur ligula, non finibus sem. Sed porta mi eget porta varius. Pellentesque leo eros, dapibus commodo velit et, vehicula volutpat tortor.';
+    // init local audio stream
+    this.audioStream = new AudioStream(this, this.bufferInfos);
+    this.audioStream.sync = false;
+    let gainNode = audioContext.createGain();
+    gainNode.gain.value = 0.05;
+    gainNode.connect(audioContext.destination);
+    this.audioStream.connect(gainNode);
+    // start audio 
+    this.audioStream.url = 'introduction';
+    this.audioStream.loop = true;
+    this.audioStream.start(0);
+    setTimeout( () => {
+      // set surface listener
+      this.surface = new soundworks.TouchSurface(this.view.$el);
+      this.surface.addListener('touchstart', this.touchCallback);
+      window.addEventListener('click', this.touchCallback);
+      // indicate click to go on 
+      document.getElementById("foreground-footer").innerHTML = `toucher l'écran pour continuer`;
+    }, 3 * 1000);
+    // setup description screen ----------------------------------------
+  }
+
+  touchCallback(id, normX, normY){
+    // remove listener from surface
+    this.surface.removeListener('touchstart', this.touchCallback);
+    window.removeEventListener('click', this.touchCallback);
+    // remove footer
+    document.getElementById("foreground-footer").innerHTML = '';
+    // stop audio stream
+    this.audioStream.stop(0);
     // start state machine
     this.triggerNextState();
   }
 
+
   triggerNextState() {
     // increment state id
     this.stateId += 1;
-
     // check if reached last state
     if( this.stateId > this.numberOfStates ){
-      this.exit();
+      // plan exit
+      setTimeout( this.exit, 1 * 1000 );
       return;
     }
     // un-hide banner for latter (it, for now, will still be hidden behind background)
     document.getElementById("background-banner").style.display='block';
     // trigger next state
     this.s = new State(this, this.stateId);
-    if( this.stateId == 1 ){
-      this.s.instructions = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vitae lacus molestie, bibendum diam vel, malesuada leo. Cras mattis consectetur ligula, non finibus sem. Sed porta mi eget porta varius. Pellentesque leo eros, dapibus commodo velit et, vehicula volutpat tortor.';
-    }
     this.s.start();
   }
 
@@ -124,6 +170,9 @@ export default class PlayerExperience extends soundworks.Experience {
     this.displayManager.instructions = 'Lorenzo Bianchi Hoesch <br> <br> www.lorbi.info';
     // remove background blinking text
     document.getElementById("background-banner").innerHTML = "";
+    // fade off image
+    const imageFadeOffDuration = 1;
+    this.displayManager.setOpaque(1, imageFadeOffDuration);
   }
 
 }
@@ -131,17 +180,20 @@ export default class PlayerExperience extends soundworks.Experience {
 class State {
   constructor(experiment, id){
 
+    // parameters / options
     this.e = experiment;
     this.id = id;
 
-    this.title = 'Square ' + this.id;
+    // locals
+    this.title = 'SQUARE';
     this.instructions = '';
-    this.preStream = '0' + this.id + '-pre-image-streaming';
-    this.postStream = '0' + this.id + '-image-streaming';
+    this.streamUrl = '0' + this.id + '-streaming';
     this.image = '../images/' + this.id + '.JPG';
-    this.timeBeforeImage = 2;
+    this.timeBeforeOldImageRemoved = this.e.sParams.timeBeforeOldImageRemoved[this.id-1];
+    this.timeBeforeNewImageDisplayed = this.e.sParams.timeBeforeNewImageDisplayed[this.id-1];
     this.timeBeforeTouchImage = 2;
 
+    // init local audio stream
     this.audioStream = new AudioStream(this.e, this.e.bufferInfos);
     this.audioStream.sync = false;
     this.audioStream.connect(audioContext.destination);
@@ -158,11 +210,21 @@ class State {
     // set state view
     this.e.displayManager.title = this.title;
     this.e.displayManager.instructions = this.instructions;
-
     // start audio 
-    this.audioStream.url = this.preStream;
+    this.audioStream.url = this.streamUrl;
     this.audioStream.loop = true;
     this.audioStream.start(0);
+
+    // set callback to fade off previous image
+    setTimeout( () => {
+      // // remove foreground text
+      // this.e.displayManager.title = '';
+      // this.e.displayManager.instructions = '';
+      // fade off image
+      const imageFadeOffDuration = 1;
+      this.e.displayManager.setOpaque(1, imageFadeOffDuration);
+
+    }, this.timeBeforeOldImageRemoved * 1000);
 
     // set callback to change stream / display image
     setTimeout( () => {
@@ -171,14 +233,12 @@ class State {
       // display image
       this.e.displayManager.setImg(this.image);
       this.e.displayManager.setOpaque(0, 2);
-      // notification sound for image display
-      this.e.audioPlayerImgPopup.start(this.id-1, 0, 0);
       // setup touch callback after block time
       setTimeout( () => {
         this.setupTouchSurface();
       }, this.timeBeforeTouchImage * 1000);
 
-    }, this.timeBeforeImage * 1000);
+    }, (this.timeBeforeNewImageDisplayed + this.timeBeforeOldImageRemoved) * 1000);
 
   }
 
@@ -197,29 +257,25 @@ class State {
     document.getElementById("background-banner").style.display='none';
     // stop stream
     this.audioStream.stop(0);
-    // change stream
-    this.audioStream.url = this.postStream;
-    this.audioStream.loop = false;
-    this.audioStream.start(0);
     // setup switch to next state when image stream is over
     // const duration = this.audioStream.duration;
-    const duration = 3; // DEBUG
-    setTimeout( this.exit, duration * 1000);
     this.surface.removeListener('touchstart', this.touchCallback);
     window.removeEventListener('click', this.touchCallback);
+    this.exit();
   }
 
   exit(){
-    // shut down audio stream
-    this.audioStream.stop(0);
-    // remove foreground text
-    this.e.displayManager.title = '';
-    this.e.displayManager.instructions = '';
-    // fade off image
-    const imageFadeOffDuration = 1;
-    this.e.displayManager.setOpaque(1, imageFadeOffDuration);
-    // trigger next state
-    setTimeout( this.e.triggerNextState, (imageFadeOffDuration+0.3) * 1000);
+    // // shut down audio stream
+    // this.audioStream.stop(0);
+    // // remove foreground text
+    // this.e.displayManager.title = '';
+    // this.e.displayManager.instructions = '';
+    // // fade off image
+    // const imageFadeOffDuration = 1;
+    // this.e.displayManager.setOpaque(1, imageFadeOffDuration);
+    // // trigger next state
+    // setTimeout( this.e.triggerNextState, (imageFadeOffDuration+0.3) * 1000);
+    this.e.triggerNextState();
   }
 
 }
