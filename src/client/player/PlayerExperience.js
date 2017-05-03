@@ -19,7 +19,7 @@ const template = `
       <p class="big nice-title" id="foreground-title"><%= title %></p>
     </div>
     <div class="section-center flex-center">
-      <p class="small" id="foreground-instructions"><%= instructions %></p>
+      <p class="nice-subtitle" id="foreground-instructions"><%= instructions %></p>
     </div>
     <div class="section-bottom flex-middle soft-blink">
       <p class="small" id="foreground-footer"></p>
@@ -110,17 +110,17 @@ export default class PlayerExperience extends soundworks.Experience {
     // setup description screen ----------------------------------------
     this.displayManager.title = 'SQUARE';
     this.displayManager.instructions = `
-    Mon histoire semble si courte.
+    Ça s'est passé si vite.
     Je suis née en Novembre 2331, ici à Paris. 
-    Fille de parents anglais venus en France, à la recherche d'une fortune meilleure après la grande Crise.
-    C’est maintenant mon tour de m'enfuir... elle a traversé la Manche elle aussi. 
+    Fille de parents anglais, venus en France à la recherche d'une fortune meilleure après la grande Crise.
+    C’est maintenant mon tour de m'enfuir, elle a traversé la Manche elle aussi. 
     <br> <br>
 
-    J'emporte les souvenirs de ce dernier jour avec moi, toujours plus au Sud.
+    J'emporte les souvenirs de ce dernier jour avec moi, plus au Sud encore.
     De simple photos, des points de vue sur ce square, mon square.
     Puisse celui qui les trouve faire revivre une dernière fois ces souvenirs là où ils ont été écrit. <br> <br>
     
-    Je ne regrette rien, Lilly.
+    Lilly.
     `;
     // init local audio stream
     this.audioStream = new AudioStream(this, this.bufferInfos);
@@ -179,7 +179,6 @@ export default class PlayerExperience extends soundworks.Experience {
     this.send('osc', [client.index, this.stateId, 0]);
     // display exit screen
     this.displayManager.title = 'FIN';
-    document.getElementById("foreground-title").style.fontFamily = 'Trattatello';
     this.displayManager.instructions = 'Lorenzo Bianchi Hoesch <br> <br> www.lorbi.info';
     // remove background blinking text
     document.getElementById("background-banner").innerHTML = "";
