@@ -1,8 +1,6 @@
 import * as soundworks from 'soundworks/client';
 
 import AudioPlayer from './AudioPlayer';
-// import AudioStreamHandler from './AudioStreamHandler';
-// import UglyAudioStream from './UglyAudioStream';
 import AudioStream from './AudioStream';
 
 const audioContext = soundworks.audioContext;
@@ -10,7 +8,7 @@ const client = soundworks.client;
 
 const template = `
   <div class="background" id="background">
-    <div class="bottom" id="background-banner" style="display:none">
+    <div class="bottom" id="background-banner" style="display:none" align="center">
       <p class="soft-blink-2 black-text">toucher l'écran une fois la position atteinte</p>
     </div>  
     <canvas id="backgroundCanvas">
@@ -94,8 +92,6 @@ export default class PlayerExperience extends soundworks.Experience {
     this.audioPlayerImgPopup = new AudioPlayer(this.audioBufferManager.data.imgPopup);
     this.displayManager.start();    
     this.displayManager.setOpaque(1, 0);
-    // un-hide banner for latter (it, for now, will still be hidden behind background)
-    document.getElementById("background-banner").style.display='block';
     // start state machine
     this.triggerNextState();
   }
@@ -109,7 +105,8 @@ export default class PlayerExperience extends soundworks.Experience {
       this.exit();
       return;
     }
-
+    // un-hide banner for latter (it, for now, will still be hidden behind background)
+    document.getElementById("background-banner").style.display='block';
     // trigger next state
     this.s = new State(this, this.stateId);
     if( this.stateId == 1 ){
@@ -122,8 +119,9 @@ export default class PlayerExperience extends soundworks.Experience {
     // update server
     this.send('osc', [client.index, this.stateId, 0]);
     // display exit screen
-    this.displayManager.title = 'Game Over';
-    this.displayManager.instructions = 'thanks for playing';
+    this.displayManager.title = 'FIN';
+    document.getElementById("foreground-title").style.fontFamily = 'Trattatello';
+    this.displayManager.instructions = 'Lorenzo Bianchi Hoesch <br> <br> www.lorbi.info';
     // remove background blinking text
     document.getElementById("background-banner").innerHTML = "";
   }
@@ -195,6 +193,8 @@ class State {
     this.e.send('osc', [client.index, this.id, 2]);
     // play touch notification sound
     this.e.audioPlayerTouch.start(this.id-1,0,0);
+    // hide banner
+    document.getElementById("background-banner").style.display='none';
     // stop stream
     this.audioStream.stop(0);
     // change stream

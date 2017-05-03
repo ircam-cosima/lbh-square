@@ -611,21 +611,25 @@ const serviceViews = {
           <div class="section-bottom"></div>
         <% } else { %>
           <div class="section-top flex-middle">
-              <p class="big">
+              <p class="nice-title">
                 <%= intro %>
                 <br />
                 <b><%= globals.appName %></b>
-              </p>          
+              </p>      
           </div>
-          <div class="section-center flex-center">
-              <p class="medium">
-                volume on
-                <br /> <br />
-                vibration off
-                <br /> <br />
-                veille off
-                <br /> <br />
-                ecouteurs
+          <div class="section-center flex-center" style="clear:both">
+              <p class="small">
+                <i class="nice-subtitle">by Lorenzo Bianchi Hoesch</i>
+                <br /> <br /> <br />
+                <b> avant de commencer, vérifier que: </b>
+                <br />  <br />
+                le mode silencieux est désactivé
+                <br />  <br />
+                la veille est désactivé
+                <br />  <br />
+                vos ecouteurs sont branchés
+                <br />  <br />
+                le volume n'est pas au minimum                
               </p>          
           </div>
           <div class="section-bottom flex-middle">
@@ -643,7 +647,7 @@ const serviceViews = {
         hasAuthorizations: null,
         checking: false,
         intro: '',
-        instructions: 'Touch the screen to join!',
+        instructions: 'Toucher l\'écran pour commencer',
         checkingMessage: 'Please wait while checking compatiblity',
         errorCompatibleMessage: 'Sorry,<br />Your device is not compatible with the application.',
         errorHooksMessage: `Sorry,<br />The application didn't obtain the necessary authorizations.`,
@@ -723,7 +727,7 @@ const serviceViews = {
       `;
 
       this.model = {
-        wait: `Clock syncing,<br />stand by&hellip;`,
+        wait: `synchronisation`,
       };
     }
   },

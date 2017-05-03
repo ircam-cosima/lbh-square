@@ -39,7 +39,11 @@
     to   { opacity: 1; }
 }
 
+// GLOBALS
+$secondFont: Trattatello;
 
+// IMPORTS FONTS
+@include font-face('Trattatello', 700, 'Trattatello');
 
 // create the soft blink animation from keyframe mixin
 @include keyframes(soft-blink-2) {
@@ -62,4 +66,29 @@
 .bottom {
   position: fixed;
   bottom: 10px;
+  text-align: center;
+  width: 100%;
 }
+
+.nice-title {
+  font-family: $secondFont;
+  font-size: 100.0%;
+  font-size: 2rem;
+}
+
+.nice-subtitle {
+  font-family: $secondFont;
+  font-size: 100.0%;
+  font-size: 1.2rem;
+}
+
+.medium {
+  font-size: 1.2rem;
+}
+
+.similar {
+  float: left;
+  clear: left;
+  width: 200px;
+
+} 
