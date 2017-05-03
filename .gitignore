@@ -2,13 +2,15 @@
 /node_modules
 /public/js
 /public/css
-/server
-/client
-/common
+/dist
 
 # ignore all config except default
 #/src/server/config/*
 #!/src/server/config/default.js
+
+# ignore streaming folders
+/public/streams/*/
+!project/*
 
 # Application instance specific
 /logs
