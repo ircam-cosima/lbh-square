@@ -10,7 +10,7 @@ const client = soundworks.client;
 
 const template = `
   <div class="background" id="background">
-    <div class="bottom" id="background-banner">
+    <div class="bottom" id="background-banner" style="display:none">
       <p class="soft-blink-2 black-text">toucher l'écran une fois la position atteinte</p>
     </div>  
     <canvas id="backgroundCanvas">
@@ -93,8 +93,9 @@ export default class PlayerExperience extends soundworks.Experience {
     this.audioPlayerTouch = new AudioPlayer(this.audioBufferManager.data.touch);
     this.audioPlayerImgPopup = new AudioPlayer(this.audioBufferManager.data.imgPopup);
     this.displayManager.start();    
-    this.displayManager.setOpaque(1, 0.1);
-
+    this.displayManager.setOpaque(1, 0);
+    // un-hide banner for latter (it, for now, will still be hidden behind background)
+    document.getElementById("background-banner").style.display='block';
     // start state machine
     this.triggerNextState();
   }
@@ -226,7 +227,7 @@ class State {
 class DisplayManager{
   constructor(){
     // locals
-    this.refreshRate = 100; // in ms
+    this.refreshRate = 20; // in ms
   }
 
   start(){
@@ -250,9 +251,16 @@ class DisplayManager{
   }
 
   setOpaque(onOff, fadeDuration){
-    let oneMinusOne = onOff?1:-1
-    const step = (this.refreshRate / 1000 ) / fadeDuration;
+    let oneMinusOne = onOff ? 1 : -1;
+    
+    // immediate fade
+    if( fadeDuration <= this.refreshRate/1000 ){
+      this.foreground.style.opacity = onOff;
+      return;
+    }
 
+    // progressive fade
+    const step = (this.refreshRate / 1000 ) / fadeDuration;
     this.callback = setInterval( () => {
       let val = Number(this.foreground.style.opacity) + oneMinusOne*step;
       if( val >= 1.0 || val <= 0 ){ 
