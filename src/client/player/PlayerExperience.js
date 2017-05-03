@@ -154,8 +154,6 @@ export default class PlayerExperience extends soundworks.Experience {
       setTimeout( this.exit, 1 * 1000 );
       return;
     }
-    // un-hide banner for latter (it, for now, will still be hidden behind background)
-    document.getElementById("background-banner").style.display='block';
     // trigger next state
     this.s = new State(this, this.stateId);
     this.s.start();
@@ -233,6 +231,8 @@ class State {
       // display image
       this.e.displayManager.setImg(this.image);
       this.e.displayManager.setOpaque(0, 2);
+      // un-hide banner
+      document.getElementById("background-banner").style.display='block';      
       // setup touch callback after block time
       setTimeout( () => {
         this.setupTouchSurface();
