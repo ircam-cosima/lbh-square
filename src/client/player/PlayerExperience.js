@@ -117,6 +117,7 @@ export default class PlayerExperience extends soundworks.Experience {
     this.displayManager.instructions = `
     Mon histoire est vite fait dite.
     Je suis née en 2331 ici à Paris. Fille de parents anglaises venus ici en cherche de fortune après la grand crise d’Angleterre, c’est maintenant mon tour de partir, de tout laisser, pour chercher une alternative à ce lieu sans espoir.
+    <br> <br>
 
     Voila mes derniers souvenirs avant mon départ.
     C’est des photos, des points de vue sur ce square qui m’est si cher. 
