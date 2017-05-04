@@ -55,11 +55,8 @@ export default class PlayerExperience extends soundworks.Experience {
     // states parameters
     this.sParams = {
       timeBeforeNewImageDisplayed : [19, 20, 19, 20, 19, 20, 19, 20],
+      // timeBeforeNewImageDisplayed : [3,3,3,3,3,3,3,3],
     }
-    // same-same: debug
-    // this.sParams = {
-    //   timeBeforeNewImageDisplayed : [3,3,3,3,3,3,3,3],
-    // }
 
     // bind
     this.triggerNextState = this.triggerNextState.bind(this);
