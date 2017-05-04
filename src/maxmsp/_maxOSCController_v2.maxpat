@@ -9,7 +9,7 @@
 			"modernui" : 1
 		}
 ,
-		"rect" : [ 968.0, 624.0, 640.0, 480.0 ],
+		"rect" : [ 979.0, 301.0, 1095.0, 752.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -38,6 +38,59 @@
 		"subpatcher_template" : "",
 		"boxes" : [ 			{
 				"box" : 				{
+					"attr" : "rows",
+					"id" : "obj-5",
+					"maxclass" : "attrui",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 706.0, 184.0, 150.0, 22.0 ],
+					"style" : ""
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-2",
+					"ignoreclick" : 1,
+					"invisiblebkgnd" : 1,
+					"maxclass" : "matrixctrl",
+					"numinlets" : 1,
+					"numoutlets" : 2,
+					"outlettype" : [ "list", "list" ],
+					"parameter_enable" : 0,
+					"patching_rect" : [ 550.0, 396.5, 289.0, 152.0 ],
+					"style" : ""
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"editor_rect" : [ 100.0, 100.0, 300.0, 300.0 ],
+					"embed" : 0,
+					"id" : "obj-1",
+					"maxclass" : "newobj",
+					"numinlets" : 2,
+					"numoutlets" : 2,
+					"outlettype" : [ "int", "bang" ],
+					"patching_rect" : [ 617.0, 168.0, 37.0, 22.0 ],
+					"saved_object_attributes" : 					{
+						"embed" : 0,
+						"name" : "",
+						"parameter_enable" : 0,
+						"range" : 128,
+						"showeditor" : 0,
+						"size" : 128
+					}
+,
+					"showeditor" : 0,
+					"style" : "",
+					"text" : "table"
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"id" : "obj-31",
 					"maxclass" : "comment",
 					"numinlets" : 1,
@@ -53,7 +106,7 @@
 					"bgcolor" : [ 0.376471, 0.384314, 0.4, 0.01 ],
 					"bgcolor2" : [ 0.290196, 0.309804, 0.301961, 0.0 ],
 					"bgfillcolor_angle" : 270.0,
-					"bgfillcolor_autogradient" : 0,
+					"bgfillcolor_autogradient" : 0.0,
 					"bgfillcolor_color" : [ 0.290196, 0.309804, 0.301961, 1.0 ],
 					"bgfillcolor_color1" : [ 0.376471, 0.384314, 0.4, 0.01 ],
 					"bgfillcolor_color2" : [ 0.290196, 0.309804, 0.301961, 0.0 ],
@@ -90,7 +143,7 @@
 					"bgcolor" : [ 0.376471, 0.384314, 0.4, 0.01 ],
 					"bgcolor2" : [ 0.290196, 0.309804, 0.301961, 0.0 ],
 					"bgfillcolor_angle" : 270.0,
-					"bgfillcolor_autogradient" : 0,
+					"bgfillcolor_autogradient" : 0.0,
 					"bgfillcolor_color" : [ 0.290196, 0.309804, 0.301961, 1.0 ],
 					"bgfillcolor_color1" : [ 0.376471, 0.384314, 0.4, 0.01 ],
 					"bgfillcolor_color2" : [ 0.290196, 0.309804, 0.301961, 0.0 ],
@@ -138,13 +191,13 @@
 , 			{
 				"box" : 				{
 					"id" : "obj-30",
-					"linecount" : 12,
+					"linecount" : 14,
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 273.0, 245.0, 189.0, 167.0 ],
+					"patching_rect" : [ 273.0, 245.0, 189.0, 194.0 ],
 					"style" : "",
-					"text" : "states:\n0: client entered\n1: in soundscape 1\n2: ...\n...\nnumOfSteps: on \"finish\" screen\n-1: disconnected\n\nsubstates: \n0: pre-image\n1: looking for image\n2: listening to image"
+					"text" : "states:\n0: 0 client entered\n0: 1 introduction\n\n1: in soundscape 1\n2: ...\n...\nnumOfSteps: on \"finish\" screen\n-1: disconnected\n\nsubstates: \n0: old image\n1: blank navigation\n2: new image"
 				}
 
 			}
@@ -165,7 +218,7 @@
 					"bgcolor" : [ 0.376471, 0.384314, 0.4, 0.01 ],
 					"bgcolor2" : [ 0.290196, 0.309804, 0.301961, 0.0 ],
 					"bgfillcolor_angle" : 270.0,
-					"bgfillcolor_autogradient" : 0,
+					"bgfillcolor_autogradient" : 0.0,
 					"bgfillcolor_color" : [ 0.290196, 0.309804, 0.301961, 1.0 ],
 					"bgfillcolor_color1" : [ 0.376471, 0.384314, 0.4, 0.01 ],
 					"bgfillcolor_color2" : [ 0.290196, 0.309804, 0.301961, 0.0 ],
@@ -202,7 +255,7 @@
 					"bgcolor" : [ 0.376471, 0.384314, 0.4, 0.01 ],
 					"bgcolor2" : [ 0.290196, 0.309804, 0.301961, 0.0 ],
 					"bgfillcolor_angle" : 270.0,
-					"bgfillcolor_autogradient" : 0,
+					"bgfillcolor_autogradient" : 0.0,
 					"bgfillcolor_color" : [ 0.290196, 0.309804, 0.301961, 1.0 ],
 					"bgfillcolor_color1" : [ 0.376471, 0.384314, 0.4, 0.01 ],
 					"bgfillcolor_color2" : [ 0.290196, 0.309804, 0.301961, 0.0 ],
@@ -1202,7 +1255,7 @@
 					"numoutlets" : 0,
 					"patching_rect" : [ 16.75, 396.5, 31.0, 20.0 ],
 					"style" : "",
-					"text" : "0 s",
+					"text" : "2 s",
 					"textcolor" : [ 1.0, 1.0, 1.0, 1.0 ],
 					"textjustification" : 2
 				}
@@ -1982,6 +2035,15 @@
 					"disabled" : 0,
 					"hidden" : 1,
 					"source" : [ "obj-36", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-2", 0 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-5", 0 ]
 				}
 
 			}
