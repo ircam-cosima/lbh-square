@@ -91,11 +91,11 @@ export default {
   // configuration of the `osc` service
   osc: {
     // IP of the currently running node server
-    receiveAddress: '129.102.17.232',
+    receiveAddress: '127.0.0.1',
     // port listening for incomming messages
     receivePort: 57121,
     // IP of the remote application
-    sendAddress: '129.102.17.232',
+    sendAddress: '127.0.0.1',
     // port where the remote application is listening for messages
     sendPort: 57120,
   },
