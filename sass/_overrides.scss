@@ -78,8 +78,8 @@ $secondFont: Trattatello;
 
 .nice-subtitle {
   font-family: $secondFont;
-  font-size: 80.0%;
-  font-size: 1.0rem;
+  font-size: 100.0%;
+  font-size: 1.1rem;
 }
 
 .medium {
@@ -92,3 +92,7 @@ $secondFont: Trattatello;
   width: 200px;
 
 } 
+
+br {
+    line-height: 20%;
+}

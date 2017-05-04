@@ -18,7 +18,7 @@ const template = `
     <div class="section-top flex-middle">
       <p class="big nice-title" id="foreground-title"><%= title %></p>
     </div>
-    <div class="section-center flex-center">
+    <div class="section-center flex-middle">
       <p class="nice-subtitle" id="foreground-instructions"><%= instructions %></p>
     </div>
     <div class="section-bottom flex-middle soft-blink">
@@ -75,6 +75,11 @@ export default class PlayerExperience extends soundworks.Experience {
     this.view = new soundworks.CanvasView(template, model, {}, {
       id: this.id,
       preservePixelRatio: true,
+      ratios: {
+      '.section-top': 0.1,
+      '.section-center': 0.8,
+      '.section-bottom': 0.1        
+      }
     });
 
     // callback: receive stream info
@@ -116,7 +121,7 @@ export default class PlayerExperience extends soundworks.Experience {
     C’est maintenant mon tour de m'enfuir, elle a traversé la Manche elle aussi. 
     <br> <br>
 
-    J'emporte les souvenirs de ce dernier jour avec moi, plus au Sud encore.
+    J'emporte les souvenirs de ce dernier jour avec moi vers le Sud.
     De simple photos, des points de vue sur ce square, mon square.
     Puisse celui qui les trouve faire revivre une dernière fois ces souvenirs là où ils ont été écrit. <br> <br>
     
