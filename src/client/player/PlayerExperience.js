@@ -115,17 +115,13 @@ export default class PlayerExperience extends soundworks.Experience {
     // setup description screen ----------------------------------------
     this.displayManager.title = 'SQUARE';
     this.displayManager.instructions = `
-    Ça s'est passé si vite.
-    Je suis née en Novembre 2331, ici à Paris. 
-    Fille de parents anglais, venus en France à la recherche d'une fortune meilleure après la grande Crise.
-    C’est maintenant mon tour de m'enfuir, elle a traversé la Manche elle aussi. 
-    <br> <br>
+    Mon histoire est vite fait dite.
+    Je suis née en 2331 ici à Paris. Fille de parents anglaises venus ici en cherche de fortune après la grand crise d’Angleterre, c’est maintenant mon tour de partir, de tout laisser, pour chercher une alternative à ce lieu sans espoir.
 
-    J'emporte les souvenirs de ce dernier jour avec moi vers le Sud.
-    De simple photos, des points de vue sur ce square, mon square.
-    Puisse celui qui les trouve faire revivre une dernière fois ces souvenirs là où ils ont été écrit. <br> <br>
-    
-    Lilly.
+    Voila mes derniers souvenirs avant mon départ.
+    C’est des photos, des points de vue sur ce square qui m’est si cher. 
+    Pour suivre le fil rouge de mes souvenirs tu devras me suivre, te déplacer sur la place et trouver le même point de vue de la photo, devenir moi en train de me promener, de prendre les photos, seulement une fois que t’aura trouvé le même point de vue de l’image, tu devras cliquer sur l’image e suivre mon parcours. 
+    Une image après l’autre, mon histoire.
     `;
     // init local audio stream
     this.audioStream = new AudioStream(this, this.bufferInfos);
