@@ -9,9 +9,9 @@
 			"modernui" : 1
 		}
 ,
-		"rect" : [ 1349.0, 219.0, 598.0, 422.0 ],
+		"rect" : [ 1349.0, 219.0, 533.0, 411.0 ],
 		"bglocked" : 0,
-		"openinpresentation" : 0,
+		"openinpresentation" : 1,
 		"default_fontsize" : 12.0,
 		"default_fontface" : 0,
 		"default_fontname" : "Arial",
@@ -2288,7 +2288,7 @@
 					"numoutlets" : 0,
 					"patching_rect" : [ 323.0, 11.0, 263.0, 19.0 ],
 					"presentation" : 1,
-					"presentation_rect" : [ 323.0, 11.0, 263.0, 19.0 ],
+					"presentation_rect" : [ 268.0, 9.5, 263.0, 19.0 ],
 					"style" : "",
 					"text" : "Author: David Poirier-Quinot, IRCAM-EAC, 05/2017"
 				}
