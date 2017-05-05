@@ -9,7 +9,7 @@
 			"modernui" : 1
 		}
 ,
-		"rect" : [ 1794.0, 204.0, 598.0, 422.0 ],
+		"rect" : [ 1349.0, 219.0, 598.0, 422.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -738,7 +738,9 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 302.0, 94.916748, 56.0, 20.0 ],
+					"patching_rect" : [ 280.0, 99.916748, 56.0, 20.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 213.0, 48.5, 56.0, 20.0 ],
 					"style" : "",
 					"text" : "substate"
 				}
@@ -750,7 +752,9 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 238.0, 94.916748, 52.0, 20.0 ],
+					"patching_rect" : [ 223.0, 99.916748, 52.0, 20.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 156.0, 48.5, 52.0, 20.0 ],
 					"style" : "",
 					"text" : "state"
 				}
@@ -762,7 +766,9 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 177.0, 94.916748, 52.0, 20.0 ],
+					"patching_rect" : [ 169.0, 99.916748, 52.0, 20.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 102.0, 48.5, 52.0, 20.0 ],
 					"style" : "",
 					"text" : "playerId"
 				}
@@ -771,18 +777,27 @@
 , 			{
 				"box" : 				{
 					"bgcolor" : [ 1.0, 1.0, 1.0, 0.0 ],
+					"bordercolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 					"cols" : 3,
-					"fontface" : 0,
+					"colwidth" : 56,
+					"fontface" : 1,
 					"fontname" : "Arial",
-					"fontsize" : 12.0,
+					"fontsize" : 14.0,
+					"hcellcolor" : [ 0.819608, 0.819608, 0.898039, 0.0 ],
+					"hscroll" : 0,
 					"id" : "obj-4",
-					"ignoreclick" : 1,
 					"maxclass" : "jit.cellblock",
 					"numinlets" : 2,
 					"numoutlets" : 4,
 					"outlettype" : [ "list", "", "", "" ],
-					"patching_rect" : [ 169.0, 119.916748, 216.0, 199.0 ],
-					"rows" : 1
+					"patching_rect" : [ 169.0, 119.916748, 186.0, 199.583252 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 102.0, 68.5, 185.0, 325.583252 ],
+					"rows" : 18,
+					"sccolor" : [ 1.0, 1.0, 1.0, 0.0 ],
+					"selmode" : 3,
+					"sgcolor" : [ 0.960784, 0.960784, 0.980392, 0.0 ],
+					"stcolor" : [ 0.32549, 0.345098, 0.372549, 1.0 ]
 				}
 
 			}
@@ -794,6 +809,9 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 397.0, 119.916748, 189.0, 194.0 ],
+					"presentation" : 1,
+					"presentation_linecount" : 14,
+					"presentation_rect" : [ 293.0, 68.5, 189.0, 194.0 ],
 					"style" : "",
 					"text" : "states:\n0: 0 introduction\n\n1: in soundscape 1\n2: ...\n...\n\"numOfSteps\": on end screen\n\n-1: disconnected\n\nsubstates: \n0: old image\n1: blank navigation\n2: new image"
 				}
@@ -1591,6 +1609,8 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 9.0, 380.5, 39.0, 20.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 25.5, 110.916748, 39.0, 20.0 ],
 					"style" : "",
 					"text" : "clock"
 				}
@@ -1605,6 +1625,8 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 58.0, 387.5, 82.0, 20.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 9.0, 46.5, 82.0, 20.0 ],
 					"style" : "",
 					"text" : "server status"
 				}
@@ -1623,6 +1645,8 @@
 					"outlettype" : [ "int" ],
 					"parameter_enable" : 0,
 					"patching_rect" : [ 58.0, 334.5, 40.0, 40.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 24.0, 68.5, 40.0, 40.0 ],
 					"style" : ""
 				}
 
@@ -1666,8 +1690,10 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 10.5, 345.5, 31.0, 20.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 26.0, 140.916748, 31.0, 20.0 ],
 					"style" : "",
-					"text" : "3 s",
+					"text" : "2 s",
 					"textcolor" : [ 1.0, 1.0, 1.0, 1.0 ],
 					"textjustification" : 2
 				}
@@ -1728,6 +1754,8 @@
 					"outlettype" : [ "float" ],
 					"parameter_enable" : 0,
 					"patching_rect" : [ 9.0, 334.5, 40.0, 40.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 24.5, 129.916748, 40.0, 40.0 ],
 					"size" : 99.0,
 					"style" : ""
 				}
@@ -2259,6 +2287,8 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 323.0, 11.0, 263.0, 19.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 323.0, 11.0, 263.0, 19.0 ],
 					"style" : "",
 					"text" : "Author: David Poirier-Quinot, IRCAM-EAC, 05/2017"
 				}
@@ -2275,6 +2305,8 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 9.0, 6.0, 255.0, 24.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 9.0, 6.0, 255.0, 24.0 ],
 					"style" : "",
 					"text" : "Soundworks Square Controller"
 				}
