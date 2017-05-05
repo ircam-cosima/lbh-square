@@ -49,8 +49,6 @@ export default class PlayerExperience extends Experience {
     this.receive(client, 'osc', (data) => {
       this.osc.send('/player', data);
     });
-    // notify client enter
-    this.osc.send('/player', [client.index, 0, 0]);
 
   }
 

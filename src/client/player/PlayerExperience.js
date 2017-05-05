@@ -103,7 +103,7 @@ export default class PlayerExperience extends soundworks.Experience {
     if( this.readyToStart < 2 ){ return; }
 
     // notify server
-    this.send('osc', [client.index, this.stateId, 1]);
+    this.send('osc', [client.index, this.stateId, 0]);
     // init locals
     this.audioPlayerTouch = new AudioPlayer(this.audioBufferManager.data.touch);
     this.displayManager.start();    
