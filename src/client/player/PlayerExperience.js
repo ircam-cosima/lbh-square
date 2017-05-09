@@ -206,6 +206,7 @@ class State {
     // init local audio stream
     this.audioStream = new AudioStream(this.e, this.e.bufferInfos);
     this.audioStream.sync = false;
+    if( this.id == 3 ){ this.audioStream.sync = true; }
     this.audioStream.connect(audioContext.destination);
 
     // bind 
@@ -215,7 +216,7 @@ class State {
 
   start(){
     // notify server
-    this.e.send('osc', [client.index, this.id, 0]);
+    this.e.send('osc', [client.index, this.id, 0, this.e.sync.getSyncTime()]);
     // set state view
     this.e.displayManager.title = this.title;
     this.e.displayManager.instructions = this.instructions;
