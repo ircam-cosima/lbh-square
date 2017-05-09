@@ -227,7 +227,7 @@ class State {
     // set callback to change stream / display image
     setTimeout( () => {
       // notify server
-      this.e.send('osc', [client.index, this.id, 2]);
+      this.e.send('osc', [client.index, this.id, 1]);
       // display image
       this.e.displayManager.setImg(this.image);
       this.e.displayManager.setOpaque(0, 2);
@@ -249,8 +249,6 @@ class State {
   }
 
   touchCallback(id, normX, normY){
-    // update server
-    this.e.send('osc', [client.index, this.id, 2]);
     // play touch notification sound
     this.e.audioPlayerTouch.start(this.id-1,0,0);
     // hide banner
