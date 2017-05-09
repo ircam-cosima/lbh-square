@@ -16,10 +16,10 @@ const template = `
   </div>
   <div class="foreground" id="foreground">
     <div class="section-top flex-middle">
-      <p class="big nice-title" id="foreground-title"><%= title %></p>
+      <p class="big" id="foreground-title"><%= title %></p>
     </div>
     <div class="section-center flex-middle">
-      <p class="nice-subtitle" id="foreground-instructions"><%= instructions %></p>
+      <p class="small" id="foreground-instructions"><%= instructions %></p>
     </div>
     <div class="section-bottom flex-middle soft-blink">
       <p class="small" id="foreground-footer"></p>
@@ -196,7 +196,7 @@ class State {
     this.id = id;
 
     // locals
-    this.title = 'SQUARE';
+    this.title = 'ecoute';
     this.instructions = '';
     this.streamUrl = '0' + this.id + '-streaming';
     this.image = '../images/' + this.id + '.jpg';

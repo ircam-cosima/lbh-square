@@ -611,12 +611,12 @@ const serviceViews = {
           <div class="section-bottom"></div>
         <% } else { %>
           <div class="section-top flex-center">
-              <p class="nice-title">
+              <p class="big">
                 <%= intro %>
                 <br />
                 <b><%= globals.appName %></b>
                 <br />
-                <i class="nice-subtitle">by Lorenzo Bianchi Hoesch</i>
+                <i class="small">by Lorenzo Bianchi Hoesch</i>
               </p>      
           </div>
           <div class="section-center flex-middle">
