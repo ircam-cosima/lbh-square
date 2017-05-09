@@ -59,6 +59,7 @@ export default class AudioStream {
     this._ctx_time_when_queue_ends = 0;
     this._srcMap = new Map();
     this._reset();
+    this._stopRequired = false;
     
     // bind
     this._chunkRequestCallback = this._chunkRequestCallback.bind(this);
@@ -155,6 +156,9 @@ export default class AudioStream {
       return;
     }
 
+    // unflag stop required
+    this._stopRequired = false;
+
     // if sync, discard offset and sync with master clock
     if( this._sync ){ 
       if( offset !== undefined ){ console.warn('audiostream start offset discarded with sync mode enabled'); }
@@ -207,6 +211,8 @@ export default class AudioStream {
       // load and add buffer to queue
       let chunkName = PUBLIC_PATH + metaBuffer.name.substr(metaBuffer.name.indexOf('public')+7, metaBuffer.name.length-1);
       loadAudioBuffer(chunkName).then( (buffer) => {
+        // discard if stop required since
+        if( this._stopRequired ){ return; }
         this._addBufferToQueue( buffer, ctx_startTime );
         // mark that first packet arrived and that we can ask for more
         if( this._firstPacketState == 1 && !this._sync ){ this._firstPacketState = 2; }
@@ -293,6 +299,8 @@ export default class AudioStream {
       return;
     }
     this._drop();
+    // flag stop required to avoid playing newly loaded buffers
+    this._stopRequired = true;
     // kill sources
     this._srcMap.forEach( (src, startTime) => {
       // if source due to start after stop time
