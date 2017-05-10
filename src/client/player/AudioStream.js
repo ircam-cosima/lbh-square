@@ -101,6 +101,9 @@ export default class AudioStream {
     if( this.isPlaying() ){ console.warn('set sync ignored while playing'); return; }
     this._sync = val;
   }
+  get sync(){
+    return this._sync;
+  }  
 
   /**
   * set loop mode
@@ -159,12 +162,16 @@ export default class AudioStream {
     // unflag stop required
     this._stopRequired = false;
 
-    // if sync, discard offset and sync with master clock
+    // if sync, either use offset for quatization start or sync with running loop 
     if( this._sync ){ 
-      if( offset !== undefined ){ console.warn('audiostream start offset discarded with sync mode enabled'); }
-      offset = this.e.sync.getSyncTime() % duration;
+      // quantization mode: start with offset in file to match period (offset must be computed accordingly, in parent who calls this method)
+      if( offset !== undefined ){ 
+        if( offset >= duration ){ console.error('req. offset above file duration', offset, duration); }
+      }
+      // sync in "running loop" mode
+      else{ offset = this.e.sync.getSyncTime() % duration; }
     }
-    // valid offset value, set default offset if not defined
+    // set default offset if not defined
     else{ offset = (offset !== undefined) ? offset : 0; }
 
     // init queue timer
