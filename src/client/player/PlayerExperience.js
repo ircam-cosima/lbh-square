@@ -54,8 +54,8 @@ export default class PlayerExperience extends soundworks.Experience {
 
     // states parameters
     this.sParams = {
-      timeBeforeNewImageDisplayed : [19, 20, 19, 20, 19, 20, 19, 20],
-      // timeBeforeNewImageDisplayed : [3,3,3,3,3,3,3,3],
+      // timeBeforeNewImageDisplayed : [19, 20, 19, 20, 19, 20, 19, 20],
+      timeBeforeNewImageDisplayed : [3,3,3,3,119,20,3,3],
     }
 
     // bind
@@ -195,7 +195,7 @@ class State {
     this.id = id;
 
     // locals
-    this.title = 'ecoute';
+    this.title = 'ecoute ' + this.id;
     this.instructions = '';
     this.streamUrl = '0' + this.id + '-streaming';
     this.image = '../images/' + this.id + '.jpg';
@@ -205,7 +205,7 @@ class State {
     // init local audio stream
     this.audioStream = new AudioStream(this.e, this.e.bufferInfos);
     this.audioStream.sync = false;
-    if( this.id == 3 ){ this.audioStream.sync = true; }
+    if( this.id == 6 ){ this.audioStream.sync = true; }
     this.audioStream.connect(audioContext.destination);
 
     // bind 
