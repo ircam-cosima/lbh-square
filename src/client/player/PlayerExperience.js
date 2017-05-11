@@ -54,8 +54,8 @@ export default class PlayerExperience extends soundworks.Experience {
 
     // states parameters
     this.sParams = {
-      // timeBeforeNewImageDisplayed : [19, 20, 19, 20, 19, 20, 19, 20],
-      timeBeforeNewImageDisplayed : [3,3,3,3,119,20,3,3],
+      timeBeforeNewImageDisplayed : [19, 20, 19, 20, 19, 20, 19, 20],
+      // timeBeforeNewImageDisplayed : [3,3,3,3,119,20,3,3],
     }
 
     // bind
