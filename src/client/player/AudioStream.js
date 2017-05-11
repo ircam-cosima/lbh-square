@@ -213,6 +213,9 @@ export default class AudioStream {
       let metaBuffer = bufferInfo[this._currentBufferIndex];
 
       // get context absolute time at which current buffer must be started
+      // this "const" here allows to define a unique ctx_startTime per while loop that will 
+      // be used in its corresponding loadAudioBuffer callback. (hence not to worry in sync.
+      // mode if the first loaded audio buffer is not the first requested)
       const ctx_startTime = this._ctx_time_when_queue_ends;
       
       // load and add buffer to queue

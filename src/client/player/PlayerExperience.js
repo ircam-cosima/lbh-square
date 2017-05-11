@@ -43,7 +43,7 @@ export default class PlayerExperience extends soundworks.Experience {
       assetsDomain: assetsDomain,
       directories: { path: 'sounds', recursive: true },
     });
-    // this.motionInput = this.require('motion-input', { descriptors: ['deviceorientation', 'accelerationIncludingGravity'] });
+    this.motionInput = this.require('motion-input', { descriptors: ['deviceorientation'] });
 
     // locals
     this.bufferInfos = new Map();
@@ -152,6 +152,8 @@ export default class PlayerExperience extends soundworks.Experience {
     this.audioStream.stop(0);
     // set opaque background
     this.displayManager.setOpaque(1, 0);
+    // DEBUG: set state machine start state (-1)
+    this.stateId = 4;
     // start state machine
     this.triggerNextState();
   }
@@ -205,11 +207,18 @@ class State {
     // init local audio stream
     this.audioStream = new AudioStream(this.e, this.e.bufferInfos);
     this.audioStream.sync = false;
-    if( this.id == 6 ){ this.audioStream.sync = true; }
-    this.audioStream.connect(audioContext.destination);
+    if( [7, 6, 5].indexOf(this.id) >= 0 ){ this.audioStream.sync = true; }
+
+    // init channel splitter / merger used in audio panning
+    this.stereoPanner = new StereoPanner();
+    this.audioStream.connect(this.stereoPanner.in);
+    this.stereoPanner.connect(audioContext.destination);
+    // this.audioStream.connect(audioContext.destination);
 
     // bind 
     this.setupTouchSurface = this.setupTouchSurface.bind(this);  
+    this.setupMotionInput = this.setupMotionInput.bind(this);  
+    this.motionInputCallback = this.motionInputCallback.bind(this);  
     this.touchCallback = this.touchCallback.bind(this);  
   }
 
@@ -219,10 +228,22 @@ class State {
     // set state view
     this.e.displayManager.title = this.title;
     this.e.displayManager.instructions = this.instructions;
+    // setup motionInput
+    this.setupMotionInput(true);
     // start audio 
     this.audioStream.url = this.streamUrl;
     this.audioStream.loop = true;
-    this.audioStream.start(0);
+    console.log('sync enabled:', this.audioStream.sync)
+    if( [7, 6, 5].indexOf(this.id) >= 0 ){
+      // get quantization offset
+      let period = 2.76;
+      const offset = this.e.sync.getSyncTime() % period; // mod sound period for quantization
+      console.log('offset', offset, this.e.sync);
+      this.audioStream.start(offset);
+    }
+    else{
+      this.audioStream.start(0);
+    }
 
     // set callback to change stream / display image
     setTimeout( () => {
@@ -262,8 +283,25 @@ class State {
     // const duration = this.audioStream.duration;
     this.surface.removeListener('touchstart', this.touchCallback);
     window.removeEventListener('click', this.touchCallback);
+    // remove motion input listener
+    this.setupMotionInput(false);
     // trigger state change
     this.e.triggerNextState();
+  }
+
+  setupMotionInput(onOff){
+    // discard if not available
+    if (!this.e.motionInput.isAvailable('deviceorientation')) { return; }
+    // setup motion input listeners
+    if(onOff){ this.e.motionInput.addListener('deviceorientation', this.motionInputCallback); }
+    else{ this.e.motionInput.removeListener('deviceorientation', this.motionInputCallback); }
+    
+  }
+
+  // set left / right panning based on device orientation
+  motionInputCallback(data) {
+
+    this.stereoPanner.inverseChannels(data[0] > 180);
   }
 
 }
@@ -316,6 +354,73 @@ class DisplayManager{
 
 }
 
+class StereoPanner{
+  constructor(){
+
+    // locals
+    this.inversed = false;
+
+    // init channel splitter / merger used in audio panning
+    this.splitter = audioContext.createChannelSplitter(2);
+    this.merger = audioContext.createChannelMerger(2);
+    this.gainLL = audioContext.createGain();
+    this.gainLR = audioContext.createGain();
+    this.gainRL = audioContext.createGain();
+    this.gainRR = audioContext.createGain();
+    this.gainLL.gain.value = 1.0;
+    this.gainLR.gain.value = 0.0;
+    this.gainRL.gain.value = 0.0;
+    this.gainRR.gain.value = 1.0;
+
+    // connect graph
+    this.splitter.connect(this.gainLL, 0);
+    this.splitter.connect(this.gainLR, 0);
+    this.splitter.connect(this.gainRL, 1);
+    this.splitter.connect(this.gainRR, 1);
+
+    this.gainLL.connect(this.merger, 0, 0);
+    this.gainLR.connect(this.merger, 0, 1);
+    this.gainRL.connect(this.merger, 0, 0);
+    this.gainRR.connect(this.merger, 0, 1);
+  }
+
+  get in(){
+    return this.splitter;
+  }
+
+  connect(audioNode){
+    this.merger.connect(audioNode);
+  }
+
+  inverseChannels(onOff){
+    if( onOff && !this.inversed){
+      console.log('inverse')
+      this.rampGain(this.gainLL, 0);
+      this.rampGain(this.gainLR, 1);
+      this.rampGain(this.gainRL, 1);
+      this.rampGain(this.gainRR, 0);
+      this.inversed = true;
+    }
+    else if( !onOff && this.inversed ){
+      console.log('un-inverse')
+      this.rampGain(this.gainLL, 1);
+      this.rampGain(this.gainLR, 0);
+      this.rampGain(this.gainRL, 0);
+      this.rampGain(this.gainRR, 1);
+      this.inversed = false;
+    }
+
+  }
+
+  rampGain(gNode, oneZero, rampDuration = 4.0){
+    // handle envelope
+    let now = audioContext.currentTime;
+    gNode.gain.cancelScheduledValues(now);
+    gNode.gain.setValueAtTime(gNode.gain.value, now);
+    gNode.gain.linearRampToValueAtTime(oneZero, now + rampDuration);  
+  }
+
+}
 
 
 
