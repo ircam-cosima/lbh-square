@@ -233,12 +233,10 @@ class State {
     // start audio 
     this.audioStream.url = this.streamUrl;
     this.audioStream.loop = true;
-    console.log('sync enabled:', this.audioStream.sync)
     if( [7, 6, 5].indexOf(this.id) >= 0 ){
       // get quantization offset
       let period = 2.76;
       const offset = this.e.sync.getSyncTime() % period; // mod sound period for quantization
-      console.log('offset', offset, this.e.sync);
       this.audioStream.start(offset);
     }
     else{
@@ -306,9 +304,6 @@ class State {
     // from when they clicked on img, i.e. current state started)
     let rev = Math.cos( (data[0] - this.initOri) * (Math.PI / 180)) < 0;
     this.stereoPanner.inverseChannels(rev);
-    // debug: display current state
-    if( rev ){ this.e.displayManager.title = 'reversed ' + this.stereoPanner.inversed; }
-    else{ this.e.displayManager.title = 'default ' + this.stereoPanner.inversed; }
   }
 
 }
@@ -366,8 +361,6 @@ class StereoPanner{
 
     // locals
     this.inversed = false;
-    this.lastSwitchtime = 0.0;
-    this.hystTimeThreshold = 4.0; // hysteresis to avoid constant reverse / default switch is device in mid-orientation
 
     // init channel splitter / merger used in audio panning
     this.splitter = audioContext.createChannelSplitter(2);
@@ -402,12 +395,7 @@ class StereoPanner{
   }
 
   inverseChannels(onOff){
-    // discard if last switch is too recent
-    if( (audioContext.currentTime - this.lastSwitchtime) < this.hystTimeThreshold ){ return; }
-
     if( onOff && !this.inversed){
-      // remember time for hysteresis mec.
-      this.lastSwitchtime = audioContext.currentTime;
       this.rampGain(this.gainLL, 0);
       this.rampGain(this.gainLR, 1);
       this.rampGain(this.gainRL, 1);
@@ -415,8 +403,6 @@ class StereoPanner{
       this.inversed = true;
     }
     else if( !onOff && this.inversed ){
-      // remember time for hysteresis mec.
-      this.lastSwitchtime = audioContext.currentTime;
       this.rampGain(this.gainLL, 1);
       this.rampGain(this.gainLR, 0);
       this.rampGain(this.gainRL, 0);
