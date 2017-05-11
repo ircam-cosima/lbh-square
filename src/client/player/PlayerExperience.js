@@ -153,7 +153,7 @@ export default class PlayerExperience extends soundworks.Experience {
     // set opaque background
     this.displayManager.setOpaque(1, 0);
     // DEBUG: set state machine start state (-1)
-    this.stateId = 4;
+    // this.stateId = 4;
     // start state machine
     this.triggerNextState();
   }
