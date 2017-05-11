@@ -203,6 +203,7 @@ class State {
     this.image = '../images/' + this.id + '.jpg';
     this.timeBeforeNewImageDisplayed = this.e.sParams.timeBeforeNewImageDisplayed[this.id-1];
     this.timeBeforeTouchImage = 2;
+    this.initOri = undefined;
 
     // init local audio stream
     this.audioStream = new AudioStream(this.e, this.e.bufferInfos);
@@ -213,7 +214,6 @@ class State {
     this.stereoPanner = new StereoPanner();
     this.audioStream.connect(this.stereoPanner.in);
     this.stereoPanner.connect(audioContext.destination);
-    // this.audioStream.connect(audioContext.destination);
 
     // bind 
     this.setupTouchSurface = this.setupTouchSurface.bind(this);  
@@ -300,8 +300,15 @@ class State {
 
   // set left / right panning based on device orientation
   motionInputCallback(data) {
-
-    this.stereoPanner.inverseChannels(data[0] > 180);
+    // store first orientation value for rel. ori
+    if( this.initOri === undefined ){ this.initOri = data[0]; }
+    // get reverse orientation state (is subject facing opposite dir. 
+    // from when they clicked on img, i.e. current state started)
+    let rev = Math.cos( (data[0] - this.initOri) * (Math.PI / 180)) < 0;
+    this.stereoPanner.inverseChannels(rev);
+    // debug: display current state
+    if( rev ){ this.e.displayManager.title = 'reversed'; }
+    else{ this.e.displayManager.title = 'default'; }
   }
 
 }
