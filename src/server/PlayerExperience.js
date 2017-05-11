@@ -31,7 +31,7 @@ export default class PlayerExperience extends Experience {
 
     // sync. OSS client clock with server's (delayed in setTimeout for now because OSC not init at start.)
     setTimeout( () => {
-      const clockInterval = 0.1; // refresh interval in seconds
+      const clockInterval = 1; // refresh interval in seconds
       setInterval(() => { 
         this.osc.send('/clock', this.sync.getSyncTime()); 
       }, 1000 * clockInterval);
