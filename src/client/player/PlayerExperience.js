@@ -56,11 +56,11 @@ export default class PlayerExperience extends soundworks.Experience {
     this.sParams = {
       timeBeforeNewImageDisplayed : [35, 111, 113.5, 19, 16.5, 11, 26.8, 57, 317, 112, 22, 112, 8, 57],
       timeText1: 32, 
-      titles: [ 'SQUARE', 'gimgembre', 'coriandre', 'sarazin', 'cerfeuil', 'couscous', 'kebab', 'cumin', 'curry', 'epautre', 'blé', 'foin', 'serendipity', 'cacao', 'cobalt',
+      // titles: [ 'SQUARE', 'gimgembre', 'coriandre', 'sarazin', 'cerfeuil', 'couscous', 'kebab', 'cumin', 'curry', 'epautre', 'blé', 'foin', 'serendipity', 'cacao', 'cobalt',
       ],
 
-      // timeBeforeNewImageDisplayed : [7,3,3,3,3,3,3,3,3,3,3,3,3],
-      // timeText1: 12, 
+      // timeBeforeNewImageDisplayed : [3,3,3,3,3,3,3,3,3,3,3,3,3],
+      // timeText1: 3, 
  
     }
 
@@ -155,8 +155,8 @@ class State {
     this.id = id;
 
     // locals
-    // this.title = 'ecoute ' + this.id;
-    this.title = this.e.sParams.titles[this.id];
+    this.title = 'ecoute ' + this.id;
+    // this.title = this.e.sParams.titles[this.id];
     this.instructions = '';
     this.streamUrl = '0' + this.id + '-streaming';
     this.image = '../images/' + this.id + '.jpg';
@@ -271,8 +271,6 @@ class StateIntro extends State{
   constructor(experiment){
     super(experiment, 0);
     
-    // // setup description screen ----------------------------------------
-
     this.e.displayManager.instructions = `
     Mon histoire est vite fait racontée. Je suis née en Novembre 2331, ici à 
     Paris. Fille de parents anglais venus en France à la recherche d’une fortune 
@@ -280,37 +278,6 @@ class StateIntro extends State{
     partir, de tout laisser, pour chercher une alternative à ce lieu sans espoir. 
     Voilà les derniers souvenirs que j'ai d'ici. 
     `;
-
-
-    // setTimeout( () => {
-    //   // change text
-    //   this.displayManager.instructions = `
-    //   De simple photos, des points de vue sur ce square qui m’est si cher. Pour 
-    //   suivre le fil rouge de mes souvenirs, tu devra me suivre, et littéralement 
-    //   te mettre à l'endroit d'où j'ai pris ces photos. Seulement une fois que tu 
-    //   aura trouvé le même point de vue de l’image, tu devras cliquer sur l’image 
-    //   et suivre mon parcours. Une image après l’autre, mon histoire.   
-    //   `;
-    //   // automatically start state machine when text reading is over
-    //   setTimeout( () => {
-    //     // set surface listener
-    //     this.surface = new soundworks.TouchSurface(this.view.$el);
-    //     this.surface.addListener('touchstart', this.touchCallback);
-    //     window.addEventListener('click', this.touchCallback);
-    //     // indicate click to go on
-    //     document.getElementById("foreground-footer").innerHTML = `toucher l'écran pour continuer`;        
-    //     // stop audio stream
-    //     this.audioStream.stop(0);
-    //     // set opaque background
-    //     this.displayManager.setOpaque(1, 0);
-    //     // DEBUG: set state machine start state (-1)
-    //     // this.stateId = 4;
-    //     // start state machine
-    //     this.triggerNextState(); 
-    //   }, this.e.sParams.timeText2 * 1000);
-    // }, this.e.sParams.timeText1 * 1000);
-    // // setup description screen ----------------------------------------
-
   }
 
   start(){
@@ -348,29 +315,11 @@ class StateIntro extends State{
           this.setupTouchSurface();
         }, this.timeBeforeTouchImage * 1000);
 
-    }, (this.timeBeforeNewImageDisplayed) * 1000);
+      }, (this.timeBeforeNewImageDisplayed) * 1000);
 
-  }, this.e.sParams.timeText1 * 1000);
-
-  // touchCallback(id, normX, normY){
-  //   // remove listener from surface
-  //   this.surface.removeListener('touchstart', this.touchCallback);
-  //   window.removeEventListener('click', this.touchCallback);
-  //   // remove footer
-  //   document.getElementById("foreground-footer").innerHTML = '';
-  //   // stop audio stream
-  //   this.audioStream.stop(0);
-  //   // set opaque background
-  //   this.displayManager.setOpaque(1, 0);
-  //   // DEBUG: set state machine start state (-1)
-  //   // this.stateId = 4;
-  //   // start state machine
-  //   this.triggerNextState();
-  // }  
+    }, this.e.sParams.timeText1 * 1000);
 
   }
-
-
 }
 
 class DisplayManager{
