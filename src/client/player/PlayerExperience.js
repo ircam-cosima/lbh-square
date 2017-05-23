@@ -19,7 +19,7 @@ const template = `
       <p class="big" id="foreground-title"><%= title %></p>
     </div>
     <div class="section-center flex-middle">
-      <p class="small" id="foreground-instructions"><%= instructions %></p>
+      <p class="medium" id="foreground-instructions"><%= instructions %></p>
     </div>
     <div class="section-bottom flex-middle soft-blink">
       <p class="small" id="foreground-footer"></p>
@@ -49,18 +49,23 @@ export default class PlayerExperience extends soundworks.Experience {
     this.bufferInfos = new Map();
     this.readyToStart = 0;
     this.stateId = 0;
-    this.numberOfStates = 8;
+    this.numberOfStates = 14;
     this.displayManager = new DisplayManager();
 
     // states parameters
     this.sParams = {
-      timeBeforeNewImageDisplayed : [19, 20, 19, 20, 19, 20, 19, 20],
-      // timeBeforeNewImageDisplayed : [3,3,3,3,119,20,3,3],
+      timeBeforeNewImageDisplayed : [35, 111, 113.5, 19, 16.5, 11, 26.8, 57, 317, 112, 22, 112, 8, 57],
+      timeText1: 32, 
+      titles: [ 'SQUARE', 'gimgembre', 'coriandre', 'sarazin', 'cerfeuil', 'couscous', 'kebab', 'cumin', 'curry', 'epautre', 'blé', 'foin', 'serendipity', 'cacao', 'cobalt',
+      ],
+
+      // timeBeforeNewImageDisplayed : [7,3,3,3,3,3,3,3,3,3,3,3,3],
+      // timeText1: 12, 
+ 
     }
 
     // bind
     this.triggerNextState = this.triggerNextState.bind(this);
-    this.touchCallback = this.touchCallback.bind(this);  
     this.exit = this.exit.bind(this);  
   }
 
@@ -102,62 +107,15 @@ export default class PlayerExperience extends soundworks.Experience {
     this.readyToStart += 1;
     if( this.readyToStart < 2 ){ return; }
 
-    // notify server
-    this.send('osc', [client.index, this.stateId, 0]);
     // init locals
     this.audioPlayerTouch = new AudioPlayer(this.audioBufferManager.data.touch);
     this.displayManager.start();    
     this.displayManager.setOpaque(1, 0);
 
-    // setup description screen ----------------------------------------
-    this.displayManager.title = 'SQUARE';
-    this.displayManager.instructions = `
-    Je suis née en Novembre 2331, ici à Paris. Fille de parents anglais venus en France à la recherche d'une fortune meilleure après la grandé crise d’Angleterre, c’est maintenant mon tour de partir, de tout laisser, pour chercher une alternative à ce lieu sans espoir.
-    Voilà les derniers souvenirs que j'ai d'ici.
-    <br> <br>
-
-    De simple photos, des points de vue sur ce square qui m’est si cher.
-    Pour suivre le fil rouge de mes souvenirs, tu devra me suivre, et littéralement te mettre à l'endroit d'où j'ai pris ces photos.
-    Une image après l’autre, mon histoire.    
-    `;
-    // init local audio stream
-    this.audioStream = new AudioStream(this, this.bufferInfos);
-    this.audioStream.sync = false;
-    let gainNode = audioContext.createGain();
-    gainNode.gain.value = 0.05;
-    gainNode.connect(audioContext.destination);
-    this.audioStream.connect(gainNode);
-    // start audio 
-    this.audioStream.url = 'introduction';
-    this.audioStream.loop = true;
-    this.audioStream.start(0);
-    setTimeout( () => {
-      // set surface listener
-      this.surface = new soundworks.TouchSurface(this.view.$el);
-      this.surface.addListener('touchstart', this.touchCallback);
-      window.addEventListener('click', this.touchCallback);
-      // indicate click to go on 
-      document.getElementById("foreground-footer").innerHTML = `toucher l'écran pour continuer`;
-    }, 3 * 1000);
-    // setup description screen ----------------------------------------
+    // start introduction
+    this.s = new StateIntro(this);
+    this.s.start();
   }
-
-  touchCallback(id, normX, normY){
-    // remove listener from surface
-    this.surface.removeListener('touchstart', this.touchCallback);
-    window.removeEventListener('click', this.touchCallback);
-    // remove footer
-    document.getElementById("foreground-footer").innerHTML = '';
-    // stop audio stream
-    this.audioStream.stop(0);
-    // set opaque background
-    this.displayManager.setOpaque(1, 0);
-    // DEBUG: set state machine start state (-1)
-    // this.stateId = 4;
-    // start state machine
-    this.triggerNextState();
-  }
-
 
   triggerNextState() {
     // increment state id
@@ -197,11 +155,12 @@ class State {
     this.id = id;
 
     // locals
-    this.title = 'ecoute ' + this.id;
+    // this.title = 'ecoute ' + this.id;
+    this.title = this.e.sParams.titles[this.id];
     this.instructions = '';
     this.streamUrl = '0' + this.id + '-streaming';
     this.image = '../images/' + this.id + '.jpg';
-    this.timeBeforeNewImageDisplayed = this.e.sParams.timeBeforeNewImageDisplayed[this.id-1];
+    this.timeBeforeNewImageDisplayed = this.e.sParams.timeBeforeNewImageDisplayed[this.id];
     this.timeBeforeTouchImage = 2;
     this.initOri = undefined;
 
@@ -269,7 +228,7 @@ class State {
 
   touchCallback(id, normX, normY){
     // play touch notification sound
-    this.e.audioPlayerTouch.start(this.id-1,0,0);
+    this.e.audioPlayerTouch.start(this.id,0,0);
     // hide banner
     document.getElementById("background-banner").style.display='none';
     // stop stream
@@ -305,6 +264,112 @@ class State {
     let rev = Math.cos( (data[0] - this.initOri) * (Math.PI / 180)) < 0;
     this.stereoPanner.inverseChannels(rev);
   }
+
+}
+
+class StateIntro extends State{
+  constructor(experiment){
+    super(experiment, 0);
+    
+    // // setup description screen ----------------------------------------
+
+    this.e.displayManager.instructions = `
+    Mon histoire est vite fait racontée. Je suis née en Novembre 2331, ici à 
+    Paris. Fille de parents anglais venus en France à la recherche d’une fortune 
+    meilleure après la grande crise d’Angleterre, c’est maintenant mon tour de
+    partir, de tout laisser, pour chercher une alternative à ce lieu sans espoir. 
+    Voilà les derniers souvenirs que j'ai d'ici. 
+    `;
+
+
+    // setTimeout( () => {
+    //   // change text
+    //   this.displayManager.instructions = `
+    //   De simple photos, des points de vue sur ce square qui m’est si cher. Pour 
+    //   suivre le fil rouge de mes souvenirs, tu devra me suivre, et littéralement 
+    //   te mettre à l'endroit d'où j'ai pris ces photos. Seulement une fois que tu 
+    //   aura trouvé le même point de vue de l’image, tu devras cliquer sur l’image 
+    //   et suivre mon parcours. Une image après l’autre, mon histoire.   
+    //   `;
+    //   // automatically start state machine when text reading is over
+    //   setTimeout( () => {
+    //     // set surface listener
+    //     this.surface = new soundworks.TouchSurface(this.view.$el);
+    //     this.surface.addListener('touchstart', this.touchCallback);
+    //     window.addEventListener('click', this.touchCallback);
+    //     // indicate click to go on
+    //     document.getElementById("foreground-footer").innerHTML = `toucher l'écran pour continuer`;        
+    //     // stop audio stream
+    //     this.audioStream.stop(0);
+    //     // set opaque background
+    //     this.displayManager.setOpaque(1, 0);
+    //     // DEBUG: set state machine start state (-1)
+    //     // this.stateId = 4;
+    //     // start state machine
+    //     this.triggerNextState(); 
+    //   }, this.e.sParams.timeText2 * 1000);
+    // }, this.e.sParams.timeText1 * 1000);
+    // // setup description screen ----------------------------------------
+
+  }
+
+  start(){
+    // notify server
+    this.e.send('osc', [client.index, this.id, 0, this.e.sync.getSyncTime()]);
+    // setup motionInput
+    this.setupMotionInput(true);
+    // start audio 
+    this.audioStream.url = this.streamUrl;
+    this.audioStream.loop = true;
+    this.audioStream.start(0);
+
+    // set callback to change stream / display image
+    setTimeout( () => {
+
+      // change text
+      this.e.displayManager.instructions = `
+      De simple photos, des points de vue sur ce square qui m’est si cher. Pour 
+      suivre le fil rouge de mes souvenirs, tu devra me suivre, et littéralement 
+      te mettre à l'endroit d'où j'ai pris ces photos. Seulement une fois que tu 
+      aura trouvé le même point de vue de l’image, tu devras cliquer sur l’image 
+      et suivre mon parcours. Une image après l’autre, mon histoire.   
+      `;
+
+      setTimeout( () => {
+        // notify server
+        this.e.send('osc', [client.index, this.id, 1]);
+        // display image
+        this.e.displayManager.setImg(this.image);
+        this.e.displayManager.setOpaque(0, 2);
+        // un-hide banner
+        document.getElementById("background-banner").style.display='block';      
+        // setup touch callback after block time
+        setTimeout( () => {
+          this.setupTouchSurface();
+        }, this.timeBeforeTouchImage * 1000);
+
+    }, (this.timeBeforeNewImageDisplayed) * 1000);
+
+  }, this.e.sParams.timeText1 * 1000);
+
+  // touchCallback(id, normX, normY){
+  //   // remove listener from surface
+  //   this.surface.removeListener('touchstart', this.touchCallback);
+  //   window.removeEventListener('click', this.touchCallback);
+  //   // remove footer
+  //   document.getElementById("foreground-footer").innerHTML = '';
+  //   // stop audio stream
+  //   this.audioStream.stop(0);
+  //   // set opaque background
+  //   this.displayManager.setOpaque(1, 0);
+  //   // DEBUG: set state machine start state (-1)
+  //   // this.stateId = 4;
+  //   // start state machine
+  //   this.triggerNextState();
+  // }  
+
+  }
+
 
 }
 

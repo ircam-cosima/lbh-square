@@ -17,7 +17,7 @@ export default class PlayerExperience extends Experience {
   start() {
     // init streaming
     let audioFiles = [ 
-      './public/streams/introduction.wav',
+      './public/streams/00-streaming.wav',
       './public/streams/01-streaming.wav',
       './public/streams/02-streaming.wav',
       './public/streams/03-streaming.wav',
@@ -26,6 +26,11 @@ export default class PlayerExperience extends Experience {
       './public/streams/06-streaming.wav',
       './public/streams/07-streaming.wav',
       './public/streams/08-streaming.wav',
+      './public/streams/09-streaming.wav',
+      './public/streams/10-streaming.wav',
+      './public/streams/11-streaming.wav',
+      // './public/streams/12-streaming.wav',
+      // './public/streams/13-streaming.wav',
     ];
     prepareStreamChunks( audioFiles, (infos) => { this.bufferInfos = infos; });
 
