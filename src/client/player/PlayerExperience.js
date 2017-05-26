@@ -56,12 +56,11 @@ export default class PlayerExperience extends soundworks.Experience {
     this.sParams = {
       timeBeforeNewImageDisplayed : [35, 111, 113.5, 19, 16.5, 11, 26.8, 57, 317, 112, 22, 112, 8, 57],
       timeText1: 32, 
-      // titles: [ 'SQUARE', 'gimgembre', 'coriandre', 'sarazin', 'cerfeuil', 'couscous', 'kebab', 'cumin', 'curry', 'epautre', 'blé', 'foin', 'serendipity', 'cacao', 'cobalt',
-      ],
-
-      // timeBeforeNewImageDisplayed : [3,3,3,3,3,3,3,3,3,3,3,3,3],
-      // timeText1: 3, 
  
+      // titles: [ 'SQUARE', 'gimgembre', 'coriandre', 'sarazin', 'cerfeuil', 'couscous', 'kebab', 'cumin', 'curry', 'epautre', 'blé', 'foin', 'serendipity', 'cacao', 'cobalt'],
+
+      // timeBeforeNewImageDisplayed : [3,3,113,3,3,3,3,3,3,3,3,3,3],
+      // timeText1: 3, 
     }
 
     // bind
@@ -189,9 +188,16 @@ class State {
     this.e.displayManager.instructions = this.instructions;
     // setup motionInput
     this.setupMotionInput(true);
-    // start audio 
+    // setup audio stream
     this.audioStream.url = this.streamUrl;
-    this.audioStream.loop = true;
+    this.audioStream.loop = false;
+    // setup "on end of audio stream" callback
+    this.audioStream.onended = function(){
+      this.url = 'loop-streaming';
+      this.loop = true;
+      this.start(0);
+    }
+    // start audio stream
     if( [7, 6, 5].indexOf(this.id) >= 0 ){
       // get quantization offset
       let period = 2.76;
@@ -285,9 +291,16 @@ class StateIntro extends State{
     this.e.send('osc', [client.index, this.id, 0, this.e.sync.getSyncTime()]);
     // setup motionInput
     this.setupMotionInput(true);
-    // start audio 
+    // setup audio 
     this.audioStream.url = this.streamUrl;
-    this.audioStream.loop = true;
+    this.audioStream.loop = false;
+    // setup "on end of audio stream" callback
+    this.audioStream.onended = function(){
+      this.url = 'loop-streaming';
+      this.loop = true;
+      this.start(0);
+    }    
+    // start audio 
     this.audioStream.start(0);
 
     // set callback to change stream / display image

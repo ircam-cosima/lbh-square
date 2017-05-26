@@ -31,6 +31,7 @@ export default class PlayerExperience extends Experience {
       './public/streams/11-streaming.wav',
       './public/streams/12-streaming.wav',
       './public/streams/13-streaming.wav',
+      './public/streams/loop-streaming.wav',
     ];
     prepareStreamChunks( audioFiles, (infos) => { this.bufferInfos = infos; });
 
