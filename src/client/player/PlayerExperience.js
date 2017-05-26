@@ -57,13 +57,13 @@ export default class PlayerExperience extends soundworks.Experience {
 
     // states parameters
     this.sParams = {
-      timeBeforeNewImageDisplayed : [25.6, 59, 80, 19.2, 16.5, 26.8, 40.5, 317, 112, 25, 98, 8.2, 31.5, 10.5],
+      timeBeforeNewImageDisplayed : [25.6, 59, 80, 19.2, 16.5, 26, 40.5, 317, 112, 25, 98, 8.2, 31.5, 10.5],
       timeText1: 27, 
  
       // titles: [ 'SQUARE', 'gimgembre', 'coriandre', 'sarazin', 'cerfeuil', 'couscous', 'kebab', 'cumin', 'curry', 'epautre', 'blé', 'foin', 'serendipity', 'cacao', 'cobalt'],
 
-      // timeBeforeNewImageDisplayed : [3,3,3,3,3,3,3,3,3,3,3,3,3],
-      // timeText1: 3, 
+      // timeBeforeNewImageDisplayed : [1,1,1,1,1,1,1,1,1,1,1,1,1],
+      // timeText1: 1, 
     }
 
     // bind
