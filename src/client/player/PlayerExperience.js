@@ -27,12 +27,15 @@ const template = `
   </div>
 `;
 
+function padDigits(number, digits) {
+    return Array(Math.max(digits - String(number).length + 1, 0)).join(0) + number;
+}
 
 // Soundworks Square: part of L B H residence
 export default class PlayerExperience extends soundworks.Experience {
   constructor(assetsDomain) {
     super();
-    
+
     // services
     // this.platform = this.require('platform', { features: ['web-audio', 'wake-lock'] });
     this.platform = this.require('platform', { features: ['web-audio'] });
@@ -157,7 +160,7 @@ class State {
     this.title = 'écoute';
     // this.title = this.e.sParams.titles[this.id];
     this.instructions = '';
-    this.streamUrl = '0' + this.id + '-streaming';
+    this.streamUrl = padDigits(this.id, 2) + '-streaming';
     this.image = '../images/' + this.id + '.jpg';
     this.timeBeforeNewImageDisplayed = this.e.sParams.timeBeforeNewImageDisplayed[this.id];
     this.timeBeforeTouchImage = 2;
