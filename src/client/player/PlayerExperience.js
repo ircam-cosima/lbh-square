@@ -49,17 +49,17 @@ export default class PlayerExperience extends soundworks.Experience {
     this.bufferInfos = new Map();
     this.readyToStart = 0;
     this.stateId = 0;
-    this.numberOfStates = 14;
+    this.numberOfStates = 15;
     this.displayManager = new DisplayManager();
 
     // states parameters
     this.sParams = {
-      timeBeforeNewImageDisplayed : [35, 111, 113.5, 19, 16.5, 11, 26.8, 57, 317, 112, 22, 112, 8, 57],
-      timeText1: 32, 
+      timeBeforeNewImageDisplayed : [25.6, 59, 80, 19.2, 16.5, 26.8, 40.5, 317, 112, 25, 98, 8.2, 31.5, 10.5],
+      timeText1: 27, 
  
       // titles: [ 'SQUARE', 'gimgembre', 'coriandre', 'sarazin', 'cerfeuil', 'couscous', 'kebab', 'cumin', 'curry', 'epautre', 'blé', 'foin', 'serendipity', 'cacao', 'cobalt'],
 
-      // timeBeforeNewImageDisplayed : [3,3,113,3,3,3,3,3,3,3,3,3,3],
+      // timeBeforeNewImageDisplayed : [3,3,3,3,3,3,3,3,3,3,3,3,3],
       // timeText1: 3, 
     }
 
