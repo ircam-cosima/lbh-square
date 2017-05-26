@@ -135,7 +135,7 @@ export default class PlayerExperience extends soundworks.Experience {
     // update server
     this.send('osc', [client.index, this.stateId, 0]);
     // display exit screen
-    this.displayManager.title = 'FIN';
+    this.displayManager.title = 'SQUARE';
     this.displayManager.instructions = 'Lorenzo Bianchi Hoesch <br> <br> www.lorbi.info';
     // remove background blinking text
     document.getElementById("background-banner").innerHTML = "";
@@ -154,7 +154,7 @@ class State {
     this.id = id;
 
     // locals
-    this.title = 'ecoute ' + this.id;
+    this.title = 'écoute';
     // this.title = this.e.sParams.titles[this.id];
     this.instructions = '';
     this.streamUrl = '0' + this.id + '-streaming';
@@ -278,7 +278,7 @@ class StateIntro extends State{
     super(experiment, 0);
     
     this.e.displayManager.instructions = `
-    Mon histoire est vite fait racontée. Je suis née en Novembre 2331, ici à 
+    Mon histoire est vite racontée. Je suis née en Novembre 2331, ici à 
     Paris. Fille de parents anglais venus en France à la recherche d’une fortune 
     meilleure après la grande crise d’Angleterre, c’est maintenant mon tour de
     partir, de tout laisser, pour chercher une alternative à ce lieu sans espoir. 
@@ -308,11 +308,11 @@ class StateIntro extends State{
 
       // change text
       this.e.displayManager.instructions = `
-      De simple photos, des points de vue sur ce square qui m’est si cher. Pour 
-      suivre le fil rouge de mes souvenirs, tu devra me suivre, et littéralement 
-      te mettre à l'endroit d'où j'ai pris ces photos. Seulement une fois que tu 
-      aura trouvé le même point de vue de l’image, tu devras cliquer sur l’image 
-      et suivre mon parcours. Une image après l’autre, mon histoire.   
+      Des simples photos, des points de vue sur ce square qui m’est si cher. Pour
+      suivre le fil rouge de mes souvenirs, tu devras me suivre, et littéralement
+      te mettre à l'endroit d'où j'ai pris ces photos. Seulement une fois que
+      tu auras trouvé le même point de vue de l’image, tu devras cliquer sur l’image
+      et suivre mon parcours. Une image après l’autre, mon histoire.
       `;
 
       setTimeout( () => {
