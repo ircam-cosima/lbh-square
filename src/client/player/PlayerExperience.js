@@ -27,12 +27,15 @@ const template = `
   </div>
 `;
 
+function padDigits(number, digits) {
+    return Array(Math.max(digits - String(number).length + 1, 0)).join(0) + number;
+}
 
 // Soundworks Square: part of L B H residence
 export default class PlayerExperience extends soundworks.Experience {
   constructor(assetsDomain) {
     super();
-    
+
     // services
     // this.platform = this.require('platform', { features: ['web-audio', 'wake-lock'] });
     this.platform = this.require('platform', { features: ['web-audio'] });
@@ -49,19 +52,18 @@ export default class PlayerExperience extends soundworks.Experience {
     this.bufferInfos = new Map();
     this.readyToStart = 0;
     this.stateId = 0;
-    this.numberOfStates = 14;
+    this.numberOfStates = 15;
     this.displayManager = new DisplayManager();
 
     // states parameters
     this.sParams = {
-      timeBeforeNewImageDisplayed : [35, 111, 113.5, 19, 16.5, 11, 26.8, 57, 317, 112, 22, 112, 8, 57],
-      timeText1: 32, 
-      // titles: [ 'SQUARE', 'gimgembre', 'coriandre', 'sarazin', 'cerfeuil', 'couscous', 'kebab', 'cumin', 'curry', 'epautre', 'blé', 'foin', 'serendipity', 'cacao', 'cobalt',
-      ],
-
-      // timeBeforeNewImageDisplayed : [3,3,3,3,3,3,3,3,3,3,3,3,3],
-      // timeText1: 3, 
+      timeBeforeNewImageDisplayed : [25.6, 59, 80, 19.2, 16.5, 26, 40.5, 317, 112, 25, 98, 8.2, 31.5, 10.5],
+      timeText1: 27, 
  
+      // titles: [ 'SQUARE', 'gimgembre', 'coriandre', 'sarazin', 'cerfeuil', 'couscous', 'kebab', 'cumin', 'curry', 'epautre', 'blé', 'foin', 'serendipity', 'cacao', 'cobalt'],
+
+      // timeBeforeNewImageDisplayed : [1,1,1,1,1,1,1,1,1,1,1,1,1],
+      // timeText1: 1, 
     }
 
     // bind
@@ -136,7 +138,7 @@ export default class PlayerExperience extends soundworks.Experience {
     // update server
     this.send('osc', [client.index, this.stateId, 0]);
     // display exit screen
-    this.displayManager.title = 'FIN';
+    this.displayManager.title = 'SQUARE';
     this.displayManager.instructions = 'Lorenzo Bianchi Hoesch <br> <br> www.lorbi.info';
     // remove background blinking text
     document.getElementById("background-banner").innerHTML = "";
@@ -155,10 +157,10 @@ class State {
     this.id = id;
 
     // locals
-    this.title = 'ecoute ' + this.id;
+    this.title = 'écoute';
     // this.title = this.e.sParams.titles[this.id];
     this.instructions = '';
-    this.streamUrl = '0' + this.id + '-streaming';
+    this.streamUrl = padDigits(this.id, 2) + '-streaming';
     this.image = '../images/' + this.id + '.jpg';
     this.timeBeforeNewImageDisplayed = this.e.sParams.timeBeforeNewImageDisplayed[this.id];
     this.timeBeforeTouchImage = 2;
@@ -189,9 +191,16 @@ class State {
     this.e.displayManager.instructions = this.instructions;
     // setup motionInput
     this.setupMotionInput(true);
-    // start audio 
+    // setup audio stream
     this.audioStream.url = this.streamUrl;
-    this.audioStream.loop = true;
+    this.audioStream.loop = false;
+    // setup "on end of audio stream" callback
+    this.audioStream.onended = function(){
+      this.url = 'loop-streaming';
+      this.loop = true;
+      this.start(0);
+    }
+    // start audio stream
     if( [7, 6, 5].indexOf(this.id) >= 0 ){
       // get quantization offset
       let period = 2.76;
@@ -272,7 +281,7 @@ class StateIntro extends State{
     super(experiment, 0);
     
     this.e.displayManager.instructions = `
-    Mon histoire est vite fait racontée. Je suis née en Novembre 2331, ici à 
+    Mon histoire est vite racontée. Je suis née en Novembre 2331, ici à 
     Paris. Fille de parents anglais venus en France à la recherche d’une fortune 
     meilleure après la grande crise d’Angleterre, c’est maintenant mon tour de
     partir, de tout laisser, pour chercher une alternative à ce lieu sans espoir. 
@@ -285,9 +294,16 @@ class StateIntro extends State{
     this.e.send('osc', [client.index, this.id, 0, this.e.sync.getSyncTime()]);
     // setup motionInput
     this.setupMotionInput(true);
-    // start audio 
+    // setup audio 
     this.audioStream.url = this.streamUrl;
-    this.audioStream.loop = true;
+    this.audioStream.loop = false;
+    // setup "on end of audio stream" callback
+    this.audioStream.onended = function(){
+      this.url = 'loop-streaming';
+      this.loop = true;
+      this.start(0);
+    }    
+    // start audio 
     this.audioStream.start(0);
 
     // set callback to change stream / display image
@@ -295,11 +311,11 @@ class StateIntro extends State{
 
       // change text
       this.e.displayManager.instructions = `
-      De simple photos, des points de vue sur ce square qui m’est si cher. Pour 
-      suivre le fil rouge de mes souvenirs, tu devra me suivre, et littéralement 
-      te mettre à l'endroit d'où j'ai pris ces photos. Seulement une fois que tu 
-      aura trouvé le même point de vue de l’image, tu devras cliquer sur l’image 
-      et suivre mon parcours. Une image après l’autre, mon histoire.   
+      Des simples photos, des points de vue sur ce square qui m’est si cher. Pour
+      suivre le fil rouge de mes souvenirs, tu devras me suivre, et littéralement
+      te mettre à l'endroit d'où j'ai pris ces photos. Seulement une fois que
+      tu auras trouvé le même point de vue de l’image, tu devras cliquer sur l’image
+      et suivre mon parcours. Une image après l’autre, mon histoire.
       `;
 
       setTimeout( () => {

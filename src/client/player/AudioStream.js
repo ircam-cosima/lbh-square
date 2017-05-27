@@ -243,7 +243,15 @@ export default class AudioStream {
       // check if reached end of chunk list (i.e. end of file) at next iteration
       if( this._currentBufferIndex === bufferInfo.length ){
         if( this._loop){ this._currentBufferIndex = 0; }
-        else{ this._drop(); return; }
+        else{ 
+          // soft stop
+          this._drop();
+          // activate onended callback (todo: should be called by last AudioBufferSource rather than with 
+          // this setTimeout) 
+          const timeBeforeEnd = this._ctx_time_when_queue_ends - this.e.sync.getSyncTime();
+          setTimeout( () => { this.onended(); }, timeBeforeEnd * 1000);
+          return; 
+        }
       }
 
     }
