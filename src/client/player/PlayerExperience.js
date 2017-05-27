@@ -52,12 +52,11 @@ export default class PlayerExperience extends soundworks.Experience {
     this.bufferInfos = new Map();
     this.readyToStart = 0;
     this.stateId = 0;
-    this.numberOfStates = 15;
     this.displayManager = new DisplayManager();
 
     // states parameters
     this.sParams = {
-      timeBeforeNewImageDisplayed : [25.6, 59, 80, 19.2, 16.5, 26, 40.5, 317, 112, 25, 98, 8.2, 31.5, 10.5],
+      timeBeforeNewImageDisplayed : [25.6, 59, 80, 19.2, 16.5, 26, 40.5, 317, 112, 25, 98, 8.2, 31.5],
       timeText1: 27, 
  
       // titles: [ 'SQUARE', 'gimgembre', 'coriandre', 'sarazin', 'cerfeuil', 'couscous', 'kebab', 'cumin', 'curry', 'epautre', 'blé', 'foin', 'serendipity', 'cacao', 'cobalt'],
@@ -65,10 +64,10 @@ export default class PlayerExperience extends soundworks.Experience {
       // timeBeforeNewImageDisplayed : [1,1,1,1,1,1,1,1,1,1,1,1,1],
       // timeText1: 1, 
     }
+    this.numberOfStates = this.sParams.timeBeforeNewImageDisplayed.length;
 
     // bind
     this.triggerNextState = this.triggerNextState.bind(this);
-    this.exit = this.exit.bind(this);  
   }
 
   start() {
@@ -120,31 +119,16 @@ export default class PlayerExperience extends soundworks.Experience {
   }
 
   triggerNextState() {
+    // debug start with higher state
+    // if( this.stateId == 0 ){ this.stateId = 11; }
     // increment state id
     this.stateId += 1;
-    // check if reached last state
-    if( this.stateId > this.numberOfStates ){
-      // plan exit
-      const waitBeforeEndDisplay = 4;
-      setTimeout( this.exit, waitBeforeEndDisplay * 1000 );
-      return;
-    }
     // trigger next state
-    this.s = new State(this, this.stateId);
-    this.s.start();
-  }
-
-  exit() {
-    // update server
-    this.send('osc', [client.index, this.stateId, 0]);
-    // display exit screen
-    this.displayManager.title = 'SQUARE';
-    this.displayManager.instructions = 'Lorenzo Bianchi Hoesch <br> <br> www.lorbi.info';
-    // remove background blinking text
-    document.getElementById("background-banner").innerHTML = "";
-    // fade off image
-    const imageFadeOffDuration = 1;
-    this.displayManager.setOpaque(1, imageFadeOffDuration);
+    if( this.stateId < this.numberOfStates ){
+      this.s = new State(this, this.stateId);
+      this.s.start();
+    }
+    else{ this.s = new StateEnd(this); this.s.start(); }
   }
 
 }
@@ -338,6 +322,58 @@ class StateIntro extends State{
   }
 }
 
+class StateEnd extends State {
+  constructor(experiment){
+    super(experiment, experiment.numberOfStates);
+    // specific title / instruction for end screen
+    this.title = 'SQUARE';
+    this.instructions = `
+      Lorenzo Bianchi Hoesch <br> <br>
+      Développement: David poirier quinot <br>
+      Violon: szuhwa Wu <br>
+      Trompette et voix: Amir el saffar <br>
+      Voix principale: Deborah Lopatin <br>
+    `;
+  }
+
+  start(){
+    // notify server
+    this.e.send('osc', [client.index, this.id, 0, this.e.sync.getSyncTime()]);
+    // set state view
+    this.e.displayManager.title = this.title;
+    this.e.displayManager.instructions = this.instructions;
+    // setup motionInput
+    this.setupMotionInput(true);
+    // setup audio stream
+    this.audioStream.url = this.streamUrl;
+    this.audioStream.loop = false;
+    // setup "on end of audio stream" callback
+    this.audioStream.onended = function(){}
+    // start audio stream
+    this.audioStream.start(0);
+    // set touch callback to finish experiment
+    setTimeout( () => {
+      this.setupTouchSurface();
+      this.e.displayManager.footer = "toucher l'écran pour recommencer";
+    }, 13 * 1000);
+  }
+
+  touchCallback(id, normX, normY){
+    // play touch notification sound
+    this.e.audioPlayerTouch.start(this.id,0,0);
+    // stop stream
+    this.audioStream.stop(0);
+    // update info display on screen
+    this.e.displayManager.instructions = '';    
+    this.e.displayManager.footer = "l'exploration recommence dans quelques secondes";
+    // plan page reload
+    const lastClickSoundDuration = 11; // in sec
+    setTimeout( () => {
+      location.reload();
+    }, (lastClickSoundDuration + 1) *1000);
+  }
+}
+
 class DisplayManager{
   constructor(){
     // locals
@@ -361,6 +397,10 @@ class DisplayManager{
 
   set instructions(str){
     document.getElementById("foreground-instructions").innerHTML = str;    
+  }
+
+  set footer(str){
+    document.getElementById("foreground-footer").innerHTML = str;    
   }
 
   setOpaque(onOff, fadeDuration){
