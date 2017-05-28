@@ -5,6 +5,7 @@ import AudioStream from './AudioStream';
 
 const audioContext = soundworks.audioContext;
 const client = soundworks.client;
+const streamLoopFileName = '14-streaming-loop-infinite';
 
 const template = `
   <div class="background" id="background">
@@ -193,7 +194,7 @@ class State {
     this.audioStream.loop = false;
     // setup "on end of audio stream" callback
     this.audioStream.onended = function(){
-      this.url = '14-streaming-loop-infinite';
+      this.url = streamLoopFileName;
       this.loop = true;
       this.start(0);
     }
@@ -296,7 +297,7 @@ class StateIntro extends State{
     this.audioStream.loop = false;
     // setup "on end of audio stream" callback
     this.audioStream.onended = function(){
-      this.url = '14-streaming-loop-infinite';
+      this.url = streamLoopFileName;
       this.loop = true;
       this.start(0);
     }    
@@ -349,7 +350,6 @@ class DisplayManager{
 
   setImg(url){
     this.background.style.backgroundImage = "url('" + url + "')";
-    // this.background.style.backgroundImage = "url('../images/1.JPG')";
   }
 
   set title(str){
