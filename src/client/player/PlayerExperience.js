@@ -52,19 +52,17 @@ export default class PlayerExperience extends soundworks.Experience {
     this.bufferInfos = new Map();
     this.readyToStart = 0;
     this.stateId = 0;
-    this.numberOfStates = 15;
     this.displayManager = new DisplayManager();
 
     // states parameters
     this.sParams = {
-      timeBeforeNewImageDisplayed : [25.6, 59, 80, 19.2, 16.5, 26, 40.5, 317, 112, 25, 98, 8.2, 31.5, 10.5],
-      timeText1: 27, 
+      // timeBeforeNewImageDisplayed : [25.6, 59, 80, 19.2, 16.5, 26, 40.5, 317, 112, 25, 98, 8.2, 31.5, 10.5],
+      // timeText1: 27, 
  
-      // titles: [ 'SQUARE', 'gimgembre', 'coriandre', 'sarazin', 'cerfeuil', 'couscous', 'kebab', 'cumin', 'curry', 'epautre', 'blé', 'foin', 'serendipity', 'cacao', 'cobalt'],
-
-      // timeBeforeNewImageDisplayed : [1,1,1,1,1,1,1,1,1,1,1,1,1],
-      // timeText1: 1, 
+      timeBeforeNewImageDisplayed : [1,1,1,1,1,1,1,1,1,1,1,1,1],
+      timeText1: 1, 
     }
+    this.numberOfStates = this.sParams.timeBeforeNewImageDisplayed.length;
 
     // bind
     this.triggerNextState = this.triggerNextState.bind(this);
@@ -158,7 +156,6 @@ class State {
 
     // locals
     this.title = 'écoute';
-    // this.title = this.e.sParams.titles[this.id];
     this.instructions = '';
     this.streamUrl = padDigits(this.id, 2) + '-streaming';
     this.image = '../images/' + this.id + '.jpg';
