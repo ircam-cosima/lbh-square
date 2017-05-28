@@ -193,7 +193,7 @@ class State {
     this.audioStream.loop = false;
     // setup "on end of audio stream" callback
     this.audioStream.onended = function(){
-      this.url = 'loop-streaming';
+      this.url = '14-streaming-loop-infinite';
       this.loop = true;
       this.start(0);
     }
@@ -296,7 +296,7 @@ class StateIntro extends State{
     this.audioStream.loop = false;
     // setup "on end of audio stream" callback
     this.audioStream.onended = function(){
-      this.url = 'loop-streaming';
+      this.url = '14-streaming-loop-infinite';
       this.loop = true;
       this.start(0);
     }    
