@@ -59,11 +59,12 @@ export default class PlayerExperience extends soundworks.Experience {
     this.sParams = {
       timeBeforeNewImageDisplayed : [25.6, 59, 80, 19.2, 16.5, 26, 40.5, 317, 112, 25, 98, 8.2, 31.5, 10.5],
       timeText1: 27, 
- 
-      // timeBeforeNewImageDisplayed : [1,1,1,1,1,1,1,1,1,1,1,1,1],
+
+      // debug: avoid waiting hours for tests
+      // timeBeforeNewImageDisplayed : [1,1,1,1,1,1,1,1,1,1,1,1,1,10.5],
       // timeText1: 1, 
     }
-    this.numberOfStates = this.sParams.timeBeforeNewImageDisplayed.length;
+    this.numberOfStates = this.sParams.timeBeforeNewImageDisplayed.length - 1; // -1 to acount for end state time
 
     // bind
     this.triggerNextState = this.triggerNextState.bind(this);
@@ -325,13 +326,7 @@ class StateEnd extends State {
     super(experiment, experiment.numberOfStates);
     // specific title / instruction for end screen
     this.title = 'SQUARE';
-    this.instructions = `
-      Concept: Lorenzo Bianchi Hoesch <br> <br>
-      Développement: David Poirier-Quinot <br>
-      Violon: Szuhwa Wu <br>
-      Trompette et voix: Amir el Saffar <br>
-      Voix principale: Deborah Lopatin <br>
-    `;
+    this.instructions = '';
   }
 
   start(){
@@ -349,11 +344,20 @@ class StateEnd extends State {
     this.audioStream.onended = function(){}
     // start audio stream
     this.audioStream.start(0);
-    // set touch callback to finish experiment
+    // setup callback
     setTimeout( () => {
+      // credits
+      this.e.displayManager.instructions = `
+        Concept: Lorenzo Bianchi Hoesch <br> <br>
+        Développement: David Poirier-Quinot <br>
+        Violon: Szuhwa Wu <br>
+        Trompette et voix: Amir el Saffar <br>
+        Voix principale: Deborah Lopatin <br>
+      `;
+      // touch callback to restart experiment
       this.setupTouchSurface();
       this.e.displayManager.footer = "toucher l'écran pour recommencer";
-    }, 13 * 1000);
+    }, this.timeBeforeNewImageDisplayed * 1000);
   }
 
   touchCallback(id, normX, normY){
