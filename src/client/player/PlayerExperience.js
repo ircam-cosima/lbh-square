@@ -58,10 +58,12 @@ export default class PlayerExperience extends soundworks.Experience {
     // states parameters
     this.sParams = {
       timeBeforeNewImageDisplayed : [25.6, 59, 80, 19.2, 16.5, 26, 40.5, 317, 112, 25, 98, 8.2, 31.5, 10.5],
+      timeBeforeNewImageClickable : [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10],
       timeText1: 27, 
 
       // debug: avoid waiting hours for tests
       // timeBeforeNewImageDisplayed : [1,1,1,1,1,1,1,1,1,1,1,1,1,10.5],
+      // timeBeforeNewImageClickable : [1,1,1,1,1,1,1,1,1,1,1,1,1,10],
       // timeText1: 1, 
     }
     this.numberOfStates = this.sParams.timeBeforeNewImageDisplayed.length - 1; // -1 to acount for end state time
@@ -146,7 +148,7 @@ class State {
     this.streamUrl = padDigits(this.id, 2) + '-streaming';
     this.image = '../images/' + this.id + '.jpg';
     this.timeBeforeNewImageDisplayed = this.e.sParams.timeBeforeNewImageDisplayed[this.id];
-    this.timeBeforeTouchImage = 2;
+    this.timeBeforeNewImageClickable = this.e.sParams.timeBeforeNewImageClickable[this.id];
     this.initOri = undefined;
 
     // init local audio stream
@@ -201,14 +203,15 @@ class State {
       // display image
       this.e.displayManager.setImg(this.image);
       this.e.displayManager.setOpaque(0, 2);
-      // un-hide banner
-      document.getElementById("background-banner").style.display='block';      
       // setup touch callback after block time
       setTimeout( () => {
+        // un-hide banner
+        document.getElementById("background-banner").style.display='block';
+        // setup touch callback
         this.setupTouchSurface();
-      }, this.timeBeforeTouchImage * 1000);
+      }, this.timeBeforeNewImageClickable * 1000);
 
-    }, (this.timeBeforeNewImageDisplayed) * 1000);
+    }, this.timeBeforeNewImageDisplayed * 1000);
 
   }
 
@@ -307,12 +310,13 @@ class StateIntro extends State{
         // display image
         this.e.displayManager.setImg(this.image);
         this.e.displayManager.setOpaque(0, 2);
-        // un-hide banner
-        document.getElementById("background-banner").style.display='block';      
         // setup touch callback after block time
         setTimeout( () => {
+          // un-hide banner
+          document.getElementById("background-banner").style.display='block';      
+          // setup touch callback
           this.setupTouchSurface();
-        }, this.timeBeforeTouchImage * 1000);
+        }, this.timeBeforeNewImageClickable * 1000);
 
       }, (this.timeBeforeNewImageDisplayed) * 1000);
 
@@ -348,31 +352,28 @@ class StateEnd extends State {
     setTimeout( () => {
       // credits
       this.e.displayManager.instructions = `
-        Concept: Lorenzo Bianchi Hoesch <br> <br>
+        Concept et Création: Lorenzo Bianchi Hoesch <br> <br>
         Développement: David Poirier-Quinot <br>
+        Voix principale: Deborah Lopatin <br>
         Violon: Szuhwa Wu <br>
         Trompette et voix: Amir el Saffar <br>
-        Voix principale: Deborah Lopatin <br>
+        Water Games: West Gaua
       `;
-      // touch callback to restart experiment
-      this.setupTouchSurface();
-      this.e.displayManager.footer = "toucher l'écran pour recommencer";
+      setTimeout( () => {
+        // touch callback to restart experiment
+        this.setupTouchSurface();
+        this.e.displayManager.footer = "toucher l'écran pour recommencer";
+      }, this.timeBeforeNewImageClickable * 1000 );
     }, this.timeBeforeNewImageDisplayed * 1000);
   }
 
   touchCallback(id, normX, normY){
     // play touch notification sound
-    this.e.audioPlayerTouch.start(this.id,0,0);
+    // this.e.audioPlayerTouch.start(this.id,0,0);
     // stop stream
     this.audioStream.stop(0);
-    // update info display on screen
-    this.e.displayManager.instructions = '';    
-    this.e.displayManager.footer = "l'exploration recommence dans quelques secondes";
-    // plan page reload
-    const lastClickSoundDuration = 11; // in sec
-    setTimeout( () => {
-      location.reload();
-    }, (lastClickSoundDuration + 1) *1000);
+    // page reload
+    location.reload();
   }
 }
 
