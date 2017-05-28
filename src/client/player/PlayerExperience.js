@@ -57,11 +57,11 @@ export default class PlayerExperience extends soundworks.Experience {
 
     // states parameters
     this.sParams = {
-      // timeBeforeNewImageDisplayed : [25.6, 59, 80, 19.2, 16.5, 26, 40.5, 317, 112, 25, 98, 8.2, 31.5, 10.5],
-      // timeText1: 27, 
+      timeBeforeNewImageDisplayed : [25.6, 59, 80, 19.2, 16.5, 26, 40.5, 317, 112, 25, 98, 8.2, 31.5, 10.5],
+      timeText1: 27, 
  
-      timeBeforeNewImageDisplayed : [1,1,1,1,1,1,1,1,1,1,1,1,1],
-      timeText1: 1, 
+      // timeBeforeNewImageDisplayed : [1,1,1,1,1,1,1,1,1,1,1,1,1],
+      // timeText1: 1, 
     }
     this.numberOfStates = this.sParams.timeBeforeNewImageDisplayed.length;
 
