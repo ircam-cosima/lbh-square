@@ -621,16 +621,16 @@ const serviceViews = {
           </div>
           <div class="section-center flex-middle">
               <p class="small"> <b> <i>
-                avant de commencer, prenez une minute pour vérifier que:
+                Avant de commencer, prenez une minute pour vérifier que:
                 <br /> <br />
                 La mise en veille de votre téléphone est DÉSACTIVÉE.
                 <br /> <br />
-                L’écran de votre portable est bloqué en mode “PORTRAIT”.
+                L'orientation de l’écran est bloquée en mode “ PORTRAIT ”.
                 <br /> <br />
-                Le mode vibreur est activé.
-                <br /> <br />
-                Vos ecouteurs sont branchés.                
-                <br /> <br />
+                Le mode vibreur est activé,
+                <br />
+                vos ecouteurs sont branchés,                
+                <br />
                 le volume est assez fort.
                 <br /> <br />
                 merci.
