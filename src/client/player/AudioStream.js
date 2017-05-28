@@ -246,8 +246,7 @@ export default class AudioStream {
         else{ 
           // soft stop
           this._drop();
-          // activate onended callback (todo: should be called by last AudioBufferSource rather than with 
-          // this setTimeout) 
+          // activate onended callback (todo: should be called by last AudioBufferSource rather than with setTimeout) 
           const timeBeforeEnd = this._ctx_time_when_queue_ends - this.e.sync.getSyncTime();
           setTimeout( () => { this.onended(); }, timeBeforeEnd * 1000);
           return; 
