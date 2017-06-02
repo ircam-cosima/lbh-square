@@ -58,7 +58,7 @@ export default class PlayerExperience extends soundworks.Experience {
     // states parameters
     this.sParams = {
       timeBeforeNewImageDisplayed : [25.6, 59, 80, 19.2, 16.5, 26, 40.5, 317, 112, 25, 98, 8.2, 31.5, 10.5],
-      timeBeforeNewImageClickable : [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10],
+      timeBeforeNewImageClickable : [10, 7, 11, 2, 2, 20, 25, 20, 2, 20, 18, 60, 25, 10],
       timeText1: 27, 
 
       // debug: avoid waiting hours for tests
