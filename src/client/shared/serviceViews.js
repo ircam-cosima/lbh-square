@@ -611,32 +611,31 @@ const serviceViews = {
           <div class="section-bottom"></div>
         <% } else { %>
           <div class="section-top flex-center">
-              <p class="big">
-                <%= intro %>
-                <br />
+              <p class="small">
                 <b><%= globals.appName %></b>
                 <br />
                 <i class="small">by Lorenzo Bianchi Hoesch</i>
+                <b><br /><br />
+                Avant de commencer, viens nous voir à l'entrée de l'Ircam ou suis ces instructions...
+                </b>
               </p>      
           </div>
           <div class="section-center flex-middle">
-              <p class="small"> <b> <i>
-                Avant de commencer, prenez une minute pour vérifier que:
-                <br /> <br />
-                La mise en veille de votre téléphone est DÉSACTIVÉE.
-                <br /> <br />
-                L'orientation de l’écran est bloquée en mode “ PORTRAIT ”.
-                <br /> <br />
-                Le mode vibreur est activé,
+              <p class="small">
+                Désactive la mise en veille du téléphone.
                 <br />
-                vos ecouteurs sont branchés,                
+                Bloque l’écran en mode <i>portrait</i>.
                 <br />
-                le volume est assez fort.
-                <br /> <br />
-                merci.
-               </b>  </i> </p>
+                Active le mode vibreur.
+                <br />
+                Branche les ecouteurs et ajuste le volume.
+                <br />
+                Ne repond pas aux appels entrants (sauf ceux de ma part).
+                <br />
+                Si le son est très bruité au début, recharge la page.
+               </i> </p>
           </div>
-          <div class="section-bottom flex-middle">
+          <div class="section-bottom flex-center">
             <% if (checking === true) { %>
             <p class="small soft-blink"><%= checkingMessage %></p>
             <% } else if (hasAuthorizations === true) { %>
