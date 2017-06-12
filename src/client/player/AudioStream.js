@@ -210,20 +210,20 @@ export default class AudioStream {
       if( this._firstPacketState == 1 && !this._sync ){ return; }
 
       // get current working chunk info
-      let metaBuffer = bufferInfo[this._currentBufferIndex];
+      const metaBuffer = bufferInfo[this._currentBufferIndex];
 
       // get context absolute time at which current buffer must be started
       // this "const" here allows to define a unique ctx_startTime per while loop that will 
       // be used in its corresponding loadAudioBuffer callback. (hence not to worry in sync.
       // mode if the first loaded audio buffer is not the first requested)
-      const ctx_startTime = this._ctx_time_when_queue_ends;
+      const ctx_startTime = this._ctx_time_when_queue_ends - metaBuffer.overlapStart;
       
       // load and add buffer to queue
       let chunkName = PUBLIC_PATH + metaBuffer.name.substr(metaBuffer.name.indexOf('public')+7, metaBuffer.name.length-1);
       loadAudioBuffer(chunkName).then( (buffer) => {
         // discard if stop required since
         if( this._stopRequired ){ return; }
-        this._addBufferToQueue( buffer, ctx_startTime );
+        this._addBufferToQueue( buffer, ctx_startTime, metaBuffer.overlapStart, metaBuffer.overlapEnd );
         // mark that first packet arrived and that we can ask for more
         if( this._firstPacketState == 1 && !this._sync ){ this._firstPacketState = 2; }
       });
@@ -259,7 +259,7 @@ export default class AudioStream {
   /**
   * add audio buffer to stream queue
   **/
-  _addBufferToQueue( buffer, startTime ){
+  _addBufferToQueue( buffer, startTime, overlapStart, overlapEnd ){
 
     // get relative start time (in  how many seconds from now must the buffer be played)
     let relStartTime = startTime - this.e.sync.getSyncTime();
@@ -288,6 +288,23 @@ export default class AudioStream {
     }
 
     // console.log( 'add buffer to queue starting at', startTime, 'i.e. in', relStartTime, 'sec' );
+
+    // hardcode overlap fade-in and out into buffer
+    let nSampFadeIn = Math.floor(overlapStart * buffer.sampleRate);
+    let nSampFadeOut = Math.floor(overlapEnd * buffer.sampleRate);
+    // loop over audio channels
+    for (let chId=0; chId < buffer.numberOfChannels; chId++) {
+      // get ref to audio data
+      let chData = buffer.getChannelData(chId);
+      // fade in
+      for (var i = 0; i < nSampFadeIn; i++) {
+        chData[i] = chData[i] * (i / (nSampFadeIn-1) );
+      }
+      // fade out
+      for( let i = chData.length - nSampFadeOut; i < chData.length; i++ ){
+        chData[i] = chData[i] * (chData.length - i - 1) / (nSampFadeOut-1);
+      }
+    }
 
     // create audio source
     let src = audioContext.createBufferSource();
