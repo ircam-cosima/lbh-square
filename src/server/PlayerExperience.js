@@ -74,7 +74,7 @@ function prepareStreamChunks(audioFiles, callback) {
   // output array
   let bufferInfos = [];
   // init slicer
-  let slicer = new Slicer({ compress: true, duration: 4, overlap: 0.01 });
+  let slicer = new Slicer({ compress: true, duration: 4, overlap: 0.1 });
   // loop over input audio files
   audioFiles.forEach((item, id) => {
     // slice current audio file
