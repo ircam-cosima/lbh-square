@@ -362,7 +362,7 @@ class StateEnd extends State {
       setTimeout( () => {
         // touch callback to restart experiment
         this.setupTouchSurface();
-        this.e.displayManager.footer = "toucher l'écran pour recommencer";
+        this.e.displayManager.footer = "toucher l'écran pour accéder à la page du projet";
       }, this.timeBeforeNewImageClickable * 1000 );
     }, this.timeBeforeNewImageDisplayed * 1000);
   }
@@ -372,8 +372,8 @@ class StateEnd extends State {
     // this.e.audioPlayerTouch.start(this.id,0,0);
     // stop stream
     this.audioStream.stop(0);
-    // page reload
-    location.reload();
+    // redirect to project webpage
+    location = "http://forumnet.ircam.fr/fr/event/square";
   }
 }
 
