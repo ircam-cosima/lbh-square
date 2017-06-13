@@ -146,7 +146,7 @@ class State {
     this.title = 'écoute';
     this.instructions = '';
     this.streamUrl = padDigits(this.id, 2) + '-streaming';
-    this.image = '../images/' + this.id + '.jpg';
+    this.image = soundworks.client.config.assetsDomain + 'images/' + this.id + '.jpg';
     this.timeBeforeNewImageDisplayed = this.e.sParams.timeBeforeNewImageDisplayed[this.id];
     this.timeBeforeNewImageClickable = this.e.sParams.timeBeforeNewImageClickable[this.id];
     this.initOri = undefined;
