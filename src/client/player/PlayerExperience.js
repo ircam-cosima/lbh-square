@@ -2,6 +2,7 @@ import * as soundworks from 'soundworks/client';
 
 import AudioPlayer from './AudioPlayer';
 import AudioStream from './AudioStream';
+import './googleAnalytics'
 
 const audioContext = soundworks.audioContext;
 const client = soundworks.client;
