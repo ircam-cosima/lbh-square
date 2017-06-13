@@ -35,7 +35,6 @@ import * as soundworks from 'soundworks/client';
 const audioContext = soundworks.audioContext;
 const STREAM_MONITOR_INTERVAL_MS = 1000; // in ms
 const REQUIRED_ADVANCE_THRESHOLD_S = 10; // in seconds
-const PUBLIC_PATH = __dirname + '/../../../';
 
 ////////////////////////////////////////////////////////
 // MAIN
@@ -61,6 +60,9 @@ export default class AudioStream {
     this._reset();
     this._stopRequired = false;
     
+    // get stream assets path
+    this.PUBLIC_PATH = soundworks.client.config.assetsDomain;
+
     // bind
     this._chunkRequestCallback = this._chunkRequestCallback.bind(this);
   }
@@ -219,7 +221,7 @@ export default class AudioStream {
       const ctx_startTime = this._ctx_time_when_queue_ends - metaBuffer.overlapStart;
       
       // load and add buffer to queue
-      let chunkName = PUBLIC_PATH + metaBuffer.name.substr(metaBuffer.name.indexOf('public')+7, metaBuffer.name.length-1);
+      let chunkName = this.PUBLIC_PATH + metaBuffer.name.substr(metaBuffer.name.indexOf('public')+7, metaBuffer.name.length-1);
       loadAudioBuffer(chunkName).then( (buffer) => {
         // discard if stop required since
         if( this._stopRequired ){ return; }
