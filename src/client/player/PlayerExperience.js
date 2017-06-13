@@ -8,7 +8,7 @@ const client = soundworks.client;
 const streamLoopFileName = '14-streaming-loop-infinite';
 
 const template = `
-  <div class="background" id="background">
+  <div class="background bkg-img" id="background">
     <div class="bottom" id="background-banner" style="display:none" align="center">
       <p class="soft-blink-2 black-text">toucher l'écran une fois la position atteinte</p>
     </div>  

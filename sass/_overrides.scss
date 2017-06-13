@@ -93,6 +93,12 @@ $secondFont: Trattatello;
 
 } 
 
+.bkg-img {
+    // background-size: cover;
+    background-size: auto 100%; // make sure one always sees all image height
+    background-repeat: no-repeat;    
+}
+
 br {
     line-height: 5%;
 }
