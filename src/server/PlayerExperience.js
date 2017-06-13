@@ -1,9 +1,9 @@
-import * as soundworks from 'soundworks/server';
+import { Experience } from 'soundworks/server';
 
 const Slicer = require('node-audio-slicer').Slicer;
 
 // server-side 'player' experience.
-export default class PlayerExperience extends soundworks.Experience {
+export default class PlayerExperience extends Experience {
   constructor(clientType) {
     super(clientType);
 
@@ -15,26 +15,23 @@ export default class PlayerExperience extends soundworks.Experience {
   }
 
   start() {
-    // get asset domain path
-    let p = soundworks.server.config.assetsDomain;
-
     // init streaming
     let audioFiles = [ 
-      p + 'public/streams/00-streaming.wav',
-      p + 'public/streams/01-streaming.wav',
-      p + 'public/streams/02-streaming.wav',
-      p + 'public/streams/03-streaming.wav',
-      p + 'public/streams/04-streaming.wav',
-      p + 'public/streams/05-streaming.wav',
-      p + 'public/streams/06-streaming.wav',
-      p + 'public/streams/07-streaming.wav',
-      p + 'public/streams/08-streaming.wav',
-      p + 'public/streams/09-streaming.wav',
-      p + 'public/streams/10-streaming.wav',
-      p + 'public/streams/11-streaming.wav',
-      p + 'public/streams/12-streaming.wav',
-      p + 'public/streams/13-streaming.wav',
-      p + 'public/streams/14-streaming-loop-infinite.wav',
+      './public/streams/00-streaming.wav',
+      './public/streams/01-streaming.wav',
+      './public/streams/02-streaming.wav',
+      './public/streams/03-streaming.wav',
+      './public/streams/04-streaming.wav',
+      './public/streams/05-streaming.wav',
+      './public/streams/06-streaming.wav',
+      './public/streams/07-streaming.wav',
+      './public/streams/08-streaming.wav',
+      './public/streams/09-streaming.wav',
+      './public/streams/10-streaming.wav',
+      './public/streams/11-streaming.wav',
+      './public/streams/12-streaming.wav',
+      './public/streams/13-streaming.wav',
+      './public/streams/14-streaming-loop-infinite.wav',
     ];
     prepareStreamChunks( audioFiles, (infos) => { this.bufferInfos = infos; });
 
