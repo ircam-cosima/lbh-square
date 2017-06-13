@@ -12,7 +12,7 @@ export default {
   appName: 'SQUARE',
 
   // name of the environnement ('production' enable cache in express application)
-  env: 'development',
+  env: 'production',
 
   // version of application, can be used to force reload css and js files
   // from server (cf. `html/default.ejs`)
@@ -25,7 +25,7 @@ export default {
   // define from where the assets (static files) should be loaded, these value
   // could also refer to a separate server for scalability reasons. This value
   // should also be used client-side to configure the `loader` service.
-  assetsDomain: '/',
+  assetsDomain: 'https://apps.cosima.ircam.fr/square/',
 
   // port used to open the http server, in production this value is typically 80
   port: 8005,
@@ -42,21 +42,21 @@ export default {
   // define if the HTTP server should be launched using secure connections.
   // For development purposes when set to `true` and no certificates are given
   // (cf. `httpsInfos`), a self-signed certificate is created.
-  useHttps: true,
+  useHttps: false,
 
   // paths to the key and certificate to be used in order to launch the https
   // server. Both entries are required otherwise a self-signed certificate
   // is generated.
   httpsInfos: {
-    key: '/etc/ssl/letsencrypt/certs/cosima-apps.ircam.fr/privkey.pem',
-    cert: '/etc/ssl/letsencrypt/certs/cosima-apps.ircam.fr/fullchain.pem',
+    key: 'null',
+    cert: 'null',
   },
 
   // socket.io configuration
   websockets: {
-    url: 'https://apps.cosima.ircam.fr:8005',
+    url: '',
     transports: ['websocket'],
-    path: '',
+    path: '/square/socket.io',
     // @note: EngineIO defaults
     // pingTimeout: 3000,
     // pingInterval: 1000,
@@ -91,11 +91,11 @@ export default {
   // configuration of the `osc` service
   osc: {
     // IP of the currently running node server
-    receiveAddress: '127.0.0.1',
+    receiveAddress: 'apps.cosima.ircam.fr',
     // port listening for incomming messages
     receivePort: 57121,
     // IP of the remote application
-    sendAddress: '127.0.0.1',
+    sendAddress: '129.102.17.231',
     // port where the remote application is listening for messages
     sendPort: 57120,
   },
@@ -103,7 +103,7 @@ export default {
   // configuration of the `raw-socket` service
   rawSocket: {
     // port
-    port: 8006,
+    // port: 8006,
   },
 
   // bunyan configuration
