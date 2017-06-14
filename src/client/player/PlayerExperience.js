@@ -66,7 +66,7 @@ export default class PlayerExperience extends soundworks.Experience {
       // timeBeforeNewImageClickable : [1,1,1,1,1,1,1,1,1,1,1,1,1,10],
       // timeText1: 1, 
     }
-    this.numberOfStates = this.sParams.timeBeforeNewImageDisplayed.length - 1; // -1 to acount for end state time
+    this.numberOfStates = this.sParams.timeBeforeNewImageDisplayed.length - 1; // -1 to account for end state time
 
     // bind
     this.triggerNextState = this.triggerNextState.bind(this);
@@ -122,17 +122,20 @@ export default class PlayerExperience extends soundworks.Experience {
     // propose to restart exp. from where left last time
     if( this.cookieState > 0 ){ this.displaySelectionScreen(); }
     // start introduction
-    else{
-      this.s = new StateIntro(this);
-      this.s.start();
-    }
+    else{ this.startIntro(); }
   }
   
+  // setup and start introduction (text + reading voice)
+  startIntro(){
+    this.s = new StateIntro(this);
+    this.s.start();
+  }
+   
   // function for restart option (from last state or from start)
   displaySelectionScreen(){
     // display image
-    this.displayManager.setOpaque(0, 1);
     this.displayManager.setImg(soundworks.client.config.assetsDomain + 'images/' + 'start-options.jpg'); 
+    this.displayManager.setOpaque(0, 0.3);
     // setup touch surface
     this.surface = new soundworks.TouchSurface(this.view.$el);
     this.surface.addListener('touchstart', this.touchCallback);
@@ -148,10 +151,7 @@ export default class PlayerExperience extends soundworks.Experience {
     this.surface.removeListener('touchstart', this.touchCallback);
     window.removeEventListener('click', this.touchCallback);
     // trigger from start
-    if(normY < 0.5){ 
-      this.s = new StateIntro(this);
-      this.s.start();
-    }
+    if(normY < 0.5){ this.startIntro(); }
     else{
       this.stateId = this.cookieState - 1;
       this.triggerNextState();
@@ -413,7 +413,7 @@ class StateEnd extends State {
     // stop stream
     this.audioStream.stop(0);
     // redirect to project webpage
-    location = "http://forumnet.ircam.fr/fr/event/square";
+    location = "http://forumnet.ircam.fr/event/square-installation-interactive-lorenzo-bianchi-hoesch/";
   }
 }
 
