@@ -8,6 +8,7 @@ var utils = require('./utils');
 const audioContext = soundworks.audioContext;
 const client = soundworks.client;
 const streamLoopFileName = '14-streaming-loop-infinite';
+const numDaysCookieValid = 1; // number of days cookies are valid (for restarting exp. not from beginning)
 
 const template = `
   <div class="background bkg-img" id="background">
@@ -162,8 +163,8 @@ export default class PlayerExperience extends soundworks.Experience {
     // if( this.stateId === 0 ){ this.stateId = 11; }
     // increment state id
     this.stateId += 1;
-    // update cookie (saved for 1 day)
-    utils.setCookie('lastState', this.stateId, 1 );
+    // update cookie
+    utils.setCookie('lastState', this.stateId, numDaysCookieValid );
     // trigger next state
     if( this.stateId < this.numberOfStates ){
       this.s = new State(this, this.stateId);
