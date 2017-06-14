@@ -33,6 +33,29 @@ function padDigits(number, digits) {
     return Array(Math.max(digits - String(number).length + 1, 0)).join(0) + number;
 }
 
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
 // Soundworks Square: part of L B H residence
 export default class PlayerExperience extends soundworks.Experience {
   constructor(assetsDomain) {
@@ -55,6 +78,7 @@ export default class PlayerExperience extends soundworks.Experience {
     this.readyToStart = 0;
     this.stateId = 0;
     this.displayManager = new DisplayManager();
+    this.cookieState = 0;
 
     // states parameters
     this.sParams = {
@@ -71,12 +95,13 @@ export default class PlayerExperience extends soundworks.Experience {
 
     // bind
     this.triggerNextState = this.triggerNextState.bind(this);
+    this.touchCallback = this.touchCallback.bind(this);  
   }
 
   start() {
     super.start();
 
-   // initialize the view
+    // initialize the view
     let model = { title: '', instructions: '' };
     this.view = new soundworks.CanvasView(template, model, {}, {
       id: this.id,
@@ -100,7 +125,7 @@ export default class PlayerExperience extends soundworks.Experience {
       });
       this.startWhenReady();
     });
-    
+
     // as show can be async, we make sure that the view is actually rendered
     this.show().then(() => { this.startWhenReady(); });
   }
@@ -116,9 +141,46 @@ export default class PlayerExperience extends soundworks.Experience {
     this.displayManager.start();    
     this.displayManager.setOpaque(1, 0);
 
+    // check if I've already undertaken part of the exp. lately (to propose the option to jump there directly)
+    this.cookieState = Number(getCookie('lastState'));
+
+    // propose to restart exp. from where left last time
+    if( this.cookieState > 0 ){ this.displaySelectionScreen(); }
     // start introduction
-    this.s = new StateIntro(this);
-    this.s.start();
+    else{
+      this.s = new StateIntro(this);
+      this.s.start();
+    }
+  }
+  
+  // function for restart option (from last state or from start)
+  displaySelectionScreen(){
+    // display image
+    this.displayManager.setOpaque(0, 1);
+    this.displayManager.setImg(soundworks.client.config.assetsDomain + 'images/' + 'start-options.jpg'); 
+    // setup touch surface
+    this.surface = new soundworks.TouchSurface(this.view.$el);
+    this.surface.addListener('touchstart', this.touchCallback);
+    window.addEventListener('click', this.touchCallback);
+  }
+
+  // touch callback for restart option (from last state or from start)
+  touchCallback(id, normX, normY){
+    // fade off image
+    const imageFadeOffDuration = 1;
+    this.displayManager.setOpaque(1, 0);    
+    // remove touch callback
+    this.surface.removeListener('touchstart', this.touchCallback);
+    window.removeEventListener('click', this.touchCallback);
+    // trigger from start
+    if(normY < 0.5){ 
+      this.s = new StateIntro(this);
+      this.s.start();
+    }
+    else{
+      this.stateId = this.cookieState - 1;
+      this.triggerNextState();
+    }
   }
 
   triggerNextState() {
@@ -126,6 +188,8 @@ export default class PlayerExperience extends soundworks.Experience {
     // if( this.stateId === 0 ){ this.stateId = 11; }
     // increment state id
     this.stateId += 1;
+    // update cookie (saved for 1 day)
+    setCookie('lastState', this.stateId, 1 );
     // trigger next state
     if( this.stateId < this.numberOfStates ){
       this.s = new State(this, this.stateId);
