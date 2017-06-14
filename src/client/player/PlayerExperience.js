@@ -3,6 +3,7 @@ import * as soundworks from 'soundworks/client';
 import AudioPlayer from './AudioPlayer';
 import AudioStream from './AudioStream';
 import './googleAnalytics'
+var utils = require('./utils');
 
 const audioContext = soundworks.audioContext;
 const client = soundworks.client;
@@ -28,33 +29,6 @@ const template = `
     </div>
   </div>
 `;
-
-function padDigits(number, digits) {
-    return Array(Math.max(digits - String(number).length + 1, 0)).join(0) + number;
-}
-
-function getCookie(cname) {
-    var name = cname + "=";
-    var decodedCookie = decodeURIComponent(document.cookie);
-    var ca = decodedCookie.split(';');
-    for(var i = 0; i <ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-        }
-    }
-    return "";
-}
-
-function setCookie(cname, cvalue, exdays) {
-    var d = new Date();
-    d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    var expires = "expires="+ d.toUTCString();
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-}
 
 // Soundworks Square: part of L B H residence
 export default class PlayerExperience extends soundworks.Experience {
@@ -142,7 +116,7 @@ export default class PlayerExperience extends soundworks.Experience {
     this.displayManager.setOpaque(1, 0);
 
     // check if I've already undertaken part of the exp. lately (to propose the option to jump there directly)
-    this.cookieState = Number(getCookie('lastState'));
+    this.cookieState = Number(utils.getCookie('lastState'));
 
     // propose to restart exp. from where left last time
     if( this.cookieState > 0 ){ this.displaySelectionScreen(); }
@@ -189,7 +163,7 @@ export default class PlayerExperience extends soundworks.Experience {
     // increment state id
     this.stateId += 1;
     // update cookie (saved for 1 day)
-    setCookie('lastState', this.stateId, 1 );
+    utils.setCookie('lastState', this.stateId, 1 );
     // trigger next state
     if( this.stateId < this.numberOfStates ){
       this.s = new State(this, this.stateId);
@@ -210,7 +184,7 @@ class State {
     // locals
     this.title = 'écoute';
     this.instructions = '';
-    this.streamUrl = padDigits(this.id, 2) + '-streaming';
+    this.streamUrl = utils.padDigits(this.id, 2) + '-streaming';
     this.image = soundworks.client.config.assetsDomain + 'images/' + this.id + '.jpg';
     this.timeBeforeNewImageDisplayed = this.e.sParams.timeBeforeNewImageDisplayed[this.id];
     this.timeBeforeNewImageClickable = this.e.sParams.timeBeforeNewImageClickable[this.id];
