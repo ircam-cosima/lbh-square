@@ -147,7 +147,7 @@ export default class PlayerExperience extends soundworks.Experience {
     // handle click scenario (id is then a MouseEvent, normX and normY are not defined)
     if( id.button !== undefined ){
       let event = id;
-      normY = event.screenY / event.view.innerHeight;
+      normY = event.clientY / event.view.innerHeight;
     }
     // fade off image
     const imageFadeOffDuration = 1;
