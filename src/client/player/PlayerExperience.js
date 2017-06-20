@@ -120,7 +120,7 @@ export default class PlayerExperience extends soundworks.Experience {
     this.cookieState = Number(utils.getCookie('lastState'));
 
     // propose to restart exp. from where left last time
-    if( this.cookieState > 0 ){ this.displaySelectionScreen(); }
+    if( this.cookieState > 0 && this.cookieState < this.numberOfStates ){ this.displaySelectionScreen(); }
     // start introduction
     else{ this.startIntro(); }
   }
