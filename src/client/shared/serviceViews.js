@@ -616,23 +616,24 @@ const serviceViews = {
                 <br />
                 <i class="small">by Lorenzo Bianchi Hoesch</i>
                 <b><br /><br />
-                Avant de commencer, viens nous voir à l'entrée de l'Ircam ou suis ces instructions...
+                EXPÉRIENCE À FAIRE AU CASQUE <br /> <br />
                 </b>
+                <i class="fa fa-headphones fa-4x" aria-hidden="true"></i>
               </p>      
           </div>
           <div class="section-center flex-middle">
               <p class="small">
-                Désactive la mise en veille du téléphone.
+              Si tu es sur ton téléphone:
+              <br /> <br />
+                Désactive la mise en veille.
                 <br />
                 Bloque l’écran en mode <i>portrait</i>.
                 <br />
                 Active le mode vibreur.
                 <br />
                 Branche les ecouteurs et ajuste le volume.
-                <br />
-                Ne repond pas aux appels entrants (sauf ceux de ma part).
-                <br />
-                Si le son est très bruité au début, recharge la page.
+                <br /> <br />
+                <i>si le son est très bruité au début, recharge la page</i>
                </i> </p>
           </div>
           <div class="section-bottom flex-center">
@@ -650,7 +651,7 @@ const serviceViews = {
         hasAuthorizations: null,
         checking: false,
         intro: '',
-        instructions: 'Toucher l\'écran pour commencer',
+        instructions: 'Touche l\'écran pour commencer',
         checkingMessage: 'Please wait while checking compatiblity',
         errorCompatibleMessage: 'Sorry,<br />Your device is not compatible with the application.',
         errorHooksMessage: `Sorry,<br />The application didn't obtain the necessary authorizations.`,
