@@ -77,14 +77,14 @@ export default class PlayerExperience extends soundworks.Experience {
       Heading to Marseille? Yeah, and then further south. You want to cross the sea and go to Bechar? 
       Yeah, and then further south. You go to Beni Abbes?`,
       ``,
-      `Imagination exists.`,
+      `Imagination exists`,
       `I finally did not go in there. <br> <br> Too much noise, <br> too many people.`,
       ``,
       ],
 
       subtitlesImg: [
-      `The first picture just showed up. A viewpoint so ordinary, declining.`,// introduction
-      `Another picture, an animal`,
+      `The first photo just showed up. A viewpoint so ordinary, declining.`,// introduction
+      `Another photo, an animal`,
       `I then turned around and took a few pictures to bring with me.`, // state 1
       `You're heading to Marseille?`,
       `My memories were grim`,
