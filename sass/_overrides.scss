@@ -56,11 +56,43 @@ $secondFont: Trattatello;
   @include animation('soft-blink-2 5.6s ease-in-out infinite');
 }
 
-.black-text {
+.black-text-banner {
   font-size: 1.3rem;
   color: $black;
   background-color: $textColor;
   text-align: center;
+}
+
+.black-text {
+  font-size: 1.3rem;
+  color: $black;
+  text-align: center;
+}
+
+.black-text-bold {
+  font-weight: bold;
+  font-size: 1.3rem;
+  color: $black;
+  text-align: center;
+}
+
+.white-text {
+  font-size: 1.3rem;
+  color: $white;
+  text-align: center;
+}
+
+.white-text-bold {
+  font-weight: bold;
+  font-size: 1.3rem;
+  color: $white;
+  text-align: center;
+}
+
+.middle {
+  position: fixed;
+  text-align: center;
+  width: 100%;
 }
 
 .bottom {

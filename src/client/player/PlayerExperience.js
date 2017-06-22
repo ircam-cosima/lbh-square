@@ -13,8 +13,11 @@ const numDaysCookieValid = 1; // number of days cookies are valid (for restartin
 const template = `
   <div class="background bkg-img" id="background">
     <div class="bottom" id="background-banner" style="display:none" align="center">
-      <p class="soft-blink-2 black-text">toucher l'écran une fois la position atteinte</p>
+      <p class="soft-blink-2 black-text-banner">toucher l'écran une fois la position atteinte</p>
     </div>  
+    <div class="middle flex-middle">
+      <p class="black-text" id="background-instructions"></p>
+    </div>      
     <canvas id="backgroundCanvas">
     </canvas>
   </div>
@@ -57,6 +60,63 @@ export default class PlayerExperience extends soundworks.Experience {
 
     // states parameters
     this.sParams = {
+      subtitles: [
+      ``, // introduction
+      // `Here is where I grew up, me, my kids, my nephews...`, // state 1
+      `I think I read something about the couple who created this fountain, more than 3 centuries ago.
+      I remember this sentence that the lady who made these sculptures, once full of colors and their feet in water, wrote.
+      <br> <br> 
+      "I am blind, my sculptures are my eyes, imagination is the rainbow, hapyness is the imagination, imagination exists."`,
+      ``,
+      ``,
+      ``,
+      `There is no synagogue, church, polis, ethnic community, that does not deserve to be abandonned.`,
+      `It's here, taking this picture, that I made my mind to leave.`,
+      `I closed my eyes to get used not to see this place anymore. <br> <br> I'm blind.`,
+      `Allo? Hi it's me, is it true what they say, you're leaving? yeah, I'm heading south, looking for a job.
+      Heading to Marseille? Yeah, and then further south. You want to cross the sea and go to Bechar? 
+      Yeah, and then further south. You go to Beni Abbes?`,
+      ``,
+      `Imagination exists.`,
+      `I finally did not go in there. <br> <br> Too much noise, <br> too many people.`,
+      ``,
+      ],
+
+      subtitlesImg: [
+      `Here is where I grew up, me, my kids, my nephews...`,// introduction
+      `Another picture, an animal`,
+      `I then turned around and took a few pictures to bring with me.`, // state 1
+      `You're heading to Marseille?`,
+      `My memories were grim`,
+      `Then I continued, to the end of the square, towards the church.`,
+      `I hesitated to get in or not, then I mustered the courage and walked in.`,
+      `I came out through the same door I went in, slowly. I sat down on the steps, amongst other people.`,
+      ``,
+      `I opened my eyes, stood up, and heading to my right walked towards home.`,
+      `Before leaving, I told myself that I had to take a moment to sit and give this place a proper goobye. 
+       I searched for a café around me.`,
+      `Slowly, I arrived to the last café of the square.`,
+      `I turned around, walked two or three steps to breathe more easily. <br> <br> I looked up towards this part of the sky that is my own.`,
+      ``,
+      ],
+
+      // need to change text color for contrast over images
+      subtitlesClass: [
+      'black-text',
+      'white-text',
+      'white-text-bold',
+      'black-text-bold',
+      'black-text',
+      'black-text',
+      'white-text-bold',
+      'white-text-bold',
+      '',
+      'white-text-bold',
+      'black-text-bold',
+      'white-text',
+      'white-text',
+      ],
+
       timeBeforeNewImageDisplayed : [25.6, 59, 80, 19.2, 16.5, 26, 40.5, 317, 112, 25, 98, 8.2, 31.5, 10.5],
       timeBeforeNewImageClickable : [10, 7, 11, 2, 2, 20, 25, 20, 2, 20, 18, 60, 25, 10],
       timeText1: 27, 
@@ -189,7 +249,9 @@ class State {
 
     // locals
     this.title = 'écoute';
-    this.instructions = '';
+    this.instructions = this.e.sParams.subtitles[this.id];
+    this.instructionsImg = this.e.sParams.subtitlesImg[this.id];
+    this.instructionsImgClass = this.e.sParams.subtitlesClass[this.id];
     this.streamUrl = utils.padDigits(this.id, 2) + '-streaming';
     this.image = soundworks.client.config.assetsDomain + 'images/' + this.id + '.jpg';
     this.timeBeforeNewImageDisplayed = this.e.sParams.timeBeforeNewImageDisplayed[this.id];
@@ -243,6 +305,9 @@ class State {
 
     // set callback to change stream / display image
     setTimeout( () => {
+      // display image subtitles
+      this.e.displayManager.instructionsImgClass = this.instructionsImgClass;
+      this.e.displayManager.instructionsImg = this.instructionsImg;
       // notify server
       this.e.send('osc', [client.index, this.id, 1]);
       // display image
@@ -271,6 +336,8 @@ class State {
     this.e.audioPlayerTouch.start(this.id,0,0);
     // hide banner
     document.getElementById("background-banner").style.display='none';
+    // hide subtitles
+    this.e.displayManager.instructionsImg = '';
     // stop stream
     this.audioStream.stop(0);
     // fade off image
@@ -311,13 +378,23 @@ class StateIntro extends State{
   constructor(experiment){
     super(experiment, 0);
     
+    // this.e.displayManager.instructions = `
+    // Mon histoire est vite racontée. Je suis née en Novembre 2331, ici à 
+    // Paris. Fille de parents anglais venus en France à la recherche d’une fortune 
+    // meilleure après la grande crise d’Angleterre, c’est maintenant mon tour de
+    // partir, de tout laisser, pour chercher une alternative à ce lieu sans espoir. 
+    // Voilà les derniers souvenirs que j'ai d'ici. 
+    // `;
+
     this.e.displayManager.instructions = `
-    Mon histoire est vite racontée. Je suis née en Novembre 2331, ici à 
-    Paris. Fille de parents anglais venus en France à la recherche d’une fortune 
-    meilleure après la grande crise d’Angleterre, c’est maintenant mon tour de
-    partir, de tout laisser, pour chercher une alternative à ce lieu sans espoir. 
-    Voilà les derniers souvenirs que j'ai d'ici. 
-    `;
+      My story is short to tell. I was born in November 2331, here in Paris.
+      Daughter of English parents who came in France looking for a better 
+      everyday fleeing the Great Depression, it's now my turn to go away 
+      and leave everything to seek an alternative to this hopeless place.
+      These are the last memories I have from here.
+    `;    
+
+    this.e.displayManager.instructionsImg = this.e.sParams.subtitlesImg[this.id];
   }
 
   start(){
@@ -340,13 +417,22 @@ class StateIntro extends State{
     // set callback to change stream / display image
     setTimeout( () => {
 
+      // // change text
+      // this.e.displayManager.instructions = `
+      // Des simples photos, des points de vue sur ce square qui m’est si cher. Pour
+      // suivre le fil rouge de mes souvenirs, tu devras me suivre, et littéralement
+      // te mettre à l'endroit d'où j'ai pris ces photos. Seulement une fois que
+      // tu auras trouvé le même point de vue de l’image, tu devras cliquer sur l’image
+      // et suivre mon parcours. Une image après l’autre, mon histoire.
+      // `;
+
       // change text
       this.e.displayManager.instructions = `
-      Des simples photos, des points de vue sur ce square qui m’est si cher. Pour
-      suivre le fil rouge de mes souvenirs, tu devras me suivre, et littéralement
-      te mettre à l'endroit d'où j'ai pris ces photos. Seulement une fois que
-      tu auras trouvé le même point de vue de l’image, tu devras cliquer sur l’image
-      et suivre mon parcours. Une image après l’autre, mon histoire.
+        A few pictures, viewpoints on this Square so dear to me. To follow 
+        the thread of my memories, you'll have to follow me and literally adopt
+        the viewpoint I had when I took these pictures. Only once you've reach 
+        its viewpoint will you click on an image and follow my journey. 
+        <br> <br> One image after the next, my story.
       `;
 
       setTimeout( () => {
@@ -446,6 +532,14 @@ class DisplayManager{
   set instructions(str){
     document.getElementById("foreground-instructions").innerHTML = str;    
   }
+
+  set instructionsImg(str){
+    document.getElementById("background-instructions").innerHTML = str;    
+  }  
+  
+  set instructionsImgClass(str){
+    document.getElementById("background-instructions").className = str;
+  }  
 
   set footer(str){
     document.getElementById("foreground-footer").innerHTML = str;    
