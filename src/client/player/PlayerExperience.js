@@ -62,7 +62,7 @@ export default class PlayerExperience extends soundworks.Experience {
     this.sParams = {
       subtitles: [
       ``, // introduction
-      // `Here is where I grew up, me, my kids, my nephews...`, // state 1
+      `Here is where I grew up, me, my kids, my nephews...`, // state 1
       `I think I read something about the couple who created this fountain, more than 3 centuries ago.
       I remember this sentence that the lady who made these sculptures, once full of colors and their feet in water, wrote.
       <br> <br> 
@@ -83,7 +83,7 @@ export default class PlayerExperience extends soundworks.Experience {
       ],
 
       subtitlesImg: [
-      `Here is where I grew up, me, my kids, my nephews...`,// introduction
+      `The first picture just showed up. A viewpoint so ordinary, declining.`,// introduction
       `Another picture, an animal`,
       `I then turned around and took a few pictures to bring with me.`, // state 1
       `You're heading to Marseille?`,
