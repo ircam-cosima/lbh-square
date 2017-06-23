@@ -117,12 +117,17 @@ export default class PlayerExperience extends soundworks.Experience {
       'white-text',
       ],
 
+      // these times are absolute, from the start of the current state's audio stream file
       timeBeforeNewImageDisplayed : [52.6, 59, 80, 19.2, 16.5, 26, 40.5, 317, 112, 25, 98, 8.2, 31.5, 10.5],
+      // these times are relative, from the moment the image is displayed:
       timeBeforeNewImageClickable : [10, 7, 11, 2, 2, 20, 25, 20, 2, 20, 18, 60, 25, 10],
+      // these times are relative, from the moment the image is displayed:
+      timeBeforeSubtitleImgDisplayed: [4, 4.5, 6, 3.5, 0.1, 4, 6.6, 3.5, 0.1, 3, 6.6, 3.2, 11, 0.1], // in sec
 
-      // debug: avoid waiting hours for tests
+      // // debug: avoid waiting hours for tests
       // timeBeforeNewImageDisplayed : [1,1,1,1,1,1,1,1,1,1,1,1,1,10.5],
       // timeBeforeNewImageClickable : [1,1,1,1,1,1,1,1,1,1,1,1,1,10],
+      // timeBeforeSubtitleImgDisplayed : [2,2,2,2,2,2,2,2,2,2,2,2,2,2], // in sec
     }
     this.numberOfStates = this.sParams.timeBeforeNewImageDisplayed.length - 1; // -1 to account for end state time
 
@@ -254,6 +259,7 @@ class State {
     this.image = soundworks.client.config.assetsDomain + 'images/' + this.id + '.jpg';
     this.timeBeforeNewImageDisplayed = this.e.sParams.timeBeforeNewImageDisplayed[this.id];
     this.timeBeforeNewImageClickable = this.e.sParams.timeBeforeNewImageClickable[this.id];
+    this.timeBeforeSubtitleImgDisplayed = this.e.sParams.timeBeforeSubtitleImgDisplayed[this.id];
     this.initOri = undefined;
 
     // init local audio stream
@@ -303,9 +309,6 @@ class State {
 
     // set callback to change stream / display image
     setTimeout( () => {
-      // display image subtitles
-      this.e.displayManager.instructionsImgClass = this.instructionsImgClass;
-      this.e.displayManager.instructionsImg = this.instructionsImg;
       // notify server
       this.e.send('osc', [client.index, this.id, 1]);
       // display image
@@ -318,6 +321,12 @@ class State {
         // setup touch callback
         this.setupTouchSurface();
       }, this.timeBeforeNewImageClickable * 1000);
+      // setup subtitles display callback
+      setTimeout( () => {
+        // display image subtitles
+        this.e.displayManager.instructionsImgClass = this.instructionsImgClass;
+        this.e.displayManager.instructionsImg = this.instructionsImg;
+      }, this.timeBeforeSubtitleImgDisplayed * 1000);      
 
     }, this.timeBeforeNewImageDisplayed * 1000);
 
@@ -378,6 +387,7 @@ class StateIntro extends State{
     
     this.sParams = {
       textTimes: [0.01, 17, 27, 41], // in sec
+      // textTimes: [0.01, 1, 1, 1], // in sec
 
       textFr:[
         `Mon histoire est vite racontée. Je suis née en Novembre 2331, ici à 
@@ -408,8 +418,6 @@ class StateIntro extends State{
       ],
     }; 
 
-    // prepare on-image subtitles
-    this.e.displayManager.instructionsImg = this.e.sParams.subtitlesImg[this.id];
   }
 
   start(){
@@ -451,6 +459,11 @@ class StateIntro extends State{
         // setup touch callback
         this.setupTouchSurface();
       }, this.timeBeforeNewImageClickable * 1000);
+      setTimeout( () => {
+        // display image subtitles
+        this.e.displayManager.instructionsImgClass = this.instructionsImgClass;
+        this.e.displayManager.instructionsImg = this.instructionsImg;
+      }, this.timeBeforeSubtitleImgDisplayed * 1000);
 
     }, (this.timeBeforeNewImageDisplayed) * 1000);
 
