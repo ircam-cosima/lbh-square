@@ -177,6 +177,9 @@ export default class PlayerExperience extends soundworks.Experience {
     // check if I've already undertaken part of the exp. lately (to propose the option to jump there directly)
     this.cookieState = Number(utils.getCookie('lastState'));
 
+    // debug: change init state
+    // this.stateId = 1; this.triggerNextState(); return;
+
     // propose to restart exp. from where left last time
     if( this.cookieState > 0 && this.cookieState < this.numberOfStates ){ this.displaySelectionScreen(); }
     // start introduction
@@ -221,8 +224,6 @@ export default class PlayerExperience extends soundworks.Experience {
   }
 
   triggerNextState() {
-    // debug: change init state
-    // if( this.stateId === 0 ){ this.stateId = 11; }
     // increment state id
     this.stateId += 1;
     // update cookie
