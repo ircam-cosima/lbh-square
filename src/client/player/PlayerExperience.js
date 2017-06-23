@@ -512,6 +512,7 @@ class DisplayManager{
   constructor(){
     // locals
     this.refreshRate = 20; // in ms
+    this.callback = undefined;
   }
 
   start(){
@@ -552,15 +553,24 @@ class DisplayManager{
       this.foreground.style.opacity = onOff;
       return;
     }
+    
+    // prepare fade mechanism: clear running fading interval if need be
+    if( this.callback !== undefined ){
+      clearInterval( this.callback );
+      this.callback = undefined;
+    }
 
     // progressive fade
     const step = (this.refreshRate / 1000 ) / fadeDuration;
     this.callback = setInterval( () => {
       let val = Number(this.foreground.style.opacity) + oneMinusOne*step;
+      // finished fade: set final value and clear interval
       if( val >= 1.0 || val <= 1e-3 ){ 
         this.foreground.style.opacity = (oneMinusOne === 1)? "1":"0";
         clearInterval( this.callback );
+        this.callback = undefined;
       }
+      // ongoing fade: set opacity with new value
       else{ this.foreground.style.opacity = String(val); }
     }, this.refreshRate);
   }
