@@ -96,7 +96,7 @@ export default class PlayerExperience extends soundworks.Experience {
       `Before leaving, I told myself that I had to take a moment to sit and give this place a proper goobye. 
        I searched for a café around me.`,
       `Slowly, I arrived to the last café of the square.`,
-      `I turned around, walked two or three steps to breathe more easily. <br> <br> I looked up towards this part of the sky that is my own.`,
+      `I turned around, walked two or three steps to breathe more easily. I looked up towards this part of the sky that is my own.`,
       ``,
       ],
 
