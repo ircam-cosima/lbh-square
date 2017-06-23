@@ -121,6 +121,8 @@ export default class PlayerExperience extends soundworks.Experience {
       timeBeforeNewImageDisplayed : [52.6, 59, 80, 19.2, 16.5, 26, 40.5, 317, 112, 25, 98, 8.2, 31.5, 10.5],
       // these times are relative, from the moment the image is displayed:
       timeBeforeNewImageClickable : [10, 7, 11, 2, 2, 20, 25, 20, 2, 20, 18, 60, 25, 10],
+      // these times are absolute, from the start of the current state's audio stream file
+      timeBeforeSubtitleDisplayed: [0.1, 2, 3.5, 0.1, 0.1, 0.1, 2.5, 6, 1, 2, 0.1, 3, 16, 0.1], // in sec, first is dummy for intro defines its own times
       // these times are relative, from the moment the image is displayed:
       timeBeforeSubtitleImgDisplayed: [4, 4.5, 6, 3.5, 0.1, 4, 6.6, 3.5, 0.1, 3, 6.6, 3.2, 11, 0.1], // in sec
 
@@ -260,6 +262,7 @@ class State {
     this.timeBeforeNewImageDisplayed = this.e.sParams.timeBeforeNewImageDisplayed[this.id];
     this.timeBeforeNewImageClickable = this.e.sParams.timeBeforeNewImageClickable[this.id];
     this.timeBeforeSubtitleImgDisplayed = this.e.sParams.timeBeforeSubtitleImgDisplayed[this.id];
+    this.timeBeforeSubtitleDisplayed = this.e.sParams.timeBeforeSubtitleDisplayed[this.id];
     this.initOri = undefined;
 
     // init local audio stream
@@ -284,7 +287,6 @@ class State {
     this.e.send('osc', [client.index, this.id, 0, this.e.sync.getSyncTime()]);
     // set state view
     this.e.displayManager.title = this.title;
-    this.e.displayManager.instructions = this.instructions;
     // setup motionInput
     this.setupMotionInput(true);
     // setup audio stream
@@ -306,6 +308,11 @@ class State {
     else{
       this.audioStream.start(0);
     }
+    // setup subtitles callback
+    setTimeout( () => {
+      // display subtitles
+      this.e.displayManager.instructions = this.instructions;
+    }, this.timeBeforeSubtitleDisplayed * 1000);      
 
     // set callback to change stream / display image
     setTimeout( () => {
@@ -343,8 +350,9 @@ class State {
     this.e.audioPlayerTouch.start(this.id,0,0);
     // hide banner
     document.getElementById("background-banner").style.display='none';
-    // hide subtitles
+    // clear subtitles
     this.e.displayManager.instructionsImg = '';
+    this.e.displayManager.instructions = '';
     // stop stream
     this.audioStream.stop(0);
     // fade off image
