@@ -210,8 +210,7 @@ export default class PlayerExperience extends soundworks.Experience {
       normY = event.clientY / event.view.innerHeight;
     }
     // fade off image
-    const imageFadeOffDuration = 1;
-    this.displayManager.setOpaque(1, 0);    
+    this.displayManager.setOpaque(1, 0);
     // remove touch callback
     this.surface.removeListener('touchstart', this.touchCallback);
     window.removeEventListener('click', this.touchCallback);
@@ -558,7 +557,7 @@ class DisplayManager{
     const step = (this.refreshRate / 1000 ) / fadeDuration;
     this.callback = setInterval( () => {
       let val = Number(this.foreground.style.opacity) + oneMinusOne*step;
-      if( val >= 1.0 || val <= 0 ){ 
+      if( val >= 1.0 || val <= 1e-3 ){ 
         this.foreground.style.opacity = (oneMinusOne === 1)? "1":"0";
         clearInterval( this.callback );
       }
