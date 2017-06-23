@@ -117,14 +117,12 @@ export default class PlayerExperience extends soundworks.Experience {
       'white-text',
       ],
 
-      timeBeforeNewImageDisplayed : [25.6, 59, 80, 19.2, 16.5, 26, 40.5, 317, 112, 25, 98, 8.2, 31.5, 10.5],
+      timeBeforeNewImageDisplayed : [52.6, 59, 80, 19.2, 16.5, 26, 40.5, 317, 112, 25, 98, 8.2, 31.5, 10.5],
       timeBeforeNewImageClickable : [10, 7, 11, 2, 2, 20, 25, 20, 2, 20, 18, 60, 25, 10],
-      timeText1: 27, 
 
       // debug: avoid waiting hours for tests
       // timeBeforeNewImageDisplayed : [1,1,1,1,1,1,1,1,1,1,1,1,1,10.5],
       // timeBeforeNewImageClickable : [1,1,1,1,1,1,1,1,1,1,1,1,1,10],
-      // timeText1: 1, 
     }
     this.numberOfStates = this.sParams.timeBeforeNewImageDisplayed.length - 1; // -1 to account for end state time
 
@@ -377,22 +375,39 @@ class StateIntro extends State{
   constructor(experiment){
     super(experiment, 0);
     
-    // this.e.displayManager.instructions = `
-    // Mon histoire est vite racontée. Je suis née en Novembre 2331, ici à 
-    // Paris. Fille de parents anglais venus en France à la recherche d’une fortune 
-    // meilleure après la grande crise d’Angleterre, c’est maintenant mon tour de
-    // partir, de tout laisser, pour chercher une alternative à ce lieu sans espoir. 
-    // Voilà les derniers souvenirs que j'ai d'ici. 
-    // `;
+    this.sParams = {
+      textTimes: [0.01, 17, 27, 41], // in sec
 
-    this.e.displayManager.instructions = `
-      My story is short to tell. I was born in November 2331, here in Paris.
-      Daughter of English parents who came in France looking for a better 
-      everyday fleeing the Great Depression, it's now my turn to go away 
-      and leave everything to seek an alternative to this hopeless place.
-      These are the last memories I have from here.
-    `;    
+      textFr:[
+        `Mon histoire est vite racontée. Je suis née en Novembre 2331, ici à 
+        Paris. Fille de parents anglais venus en France à la recherche d’une fortune 
+        meilleure après la grande crise d’Angleterre,`,
+        `c’est maintenant mon tour de
+        partir, de tout laisser, pour chercher une alternative à ce lieu sans espoir. 
+        Voilà les derniers souvenirs que j'ai d'ici.`,
+        `Des simples photos, des points de vue sur ce square qui m’est si cher. Pour
+        suivre le fil rouge de mes souvenirs, tu devras me suivre, et littéralement
+        te mettre à l'endroit d'où j'ai pris ces photos.`,
+        `Seulement une fois que tu auras trouvé le même point de vue de l’image, 
+        tu devras cliquer sur l’image et suivre mon parcours. Une image après 
+        l’autre, mon histoire.`
+      ],
 
+      textEn:[
+        `My story is short to tell. I was born in November 2331, here in Paris.
+        Daughter of English parents who came in France looking for a better 
+        everyday fleeing the great depression,`,
+        `it's now my turn to go away and leave everything to seek an alternative 
+        to this hopeless place. These are the last memories I have from here.`,
+        `A few pictures, viewpoints on this Square so dear to me. To follow 
+        the thread of my memories, you'll have to follow me and literally adopt
+        the viewpoint I had when I took these pictures.`,
+        `Only once you've reach its viewpoint will you click on an image and 
+        follow my journey. One image after the next, my story.`
+      ],
+    }; 
+
+    // prepare on-image subtitles
     this.e.displayManager.instructionsImg = this.e.sParams.subtitlesImg[this.id];
   }
 
@@ -413,44 +428,30 @@ class StateIntro extends State{
     // start audio 
     this.audioStream.start(0);
 
+    // setup main text and subtitles change callbacks
+    for( let i = 0; i < this.sParams.textTimes.length; i++ ){
+      setTimeout( () => {
+        // display text
+        this.e.displayManager.instructions = this.sParams.textFr[i] + '<br> <br>' + this.sParams.textEn[i];
+      }, this.sParams.textTimes[i] * 1000 );
+    }
+
     // set callback to change stream / display image
     setTimeout( () => {
-
-      // // change text
-      // this.e.displayManager.instructions = `
-      // Des simples photos, des points de vue sur ce square qui m’est si cher. Pour
-      // suivre le fil rouge de mes souvenirs, tu devras me suivre, et littéralement
-      // te mettre à l'endroit d'où j'ai pris ces photos. Seulement une fois que
-      // tu auras trouvé le même point de vue de l’image, tu devras cliquer sur l’image
-      // et suivre mon parcours. Une image après l’autre, mon histoire.
-      // `;
-
-      // change text
-      this.e.displayManager.instructions = `
-        A few pictures, viewpoints on this Square so dear to me. To follow 
-        the thread of my memories, you'll have to follow me and literally adopt
-        the viewpoint I had when I took these pictures. Only once you've reach 
-        its viewpoint will you click on an image and follow my journey. 
-        <br> <br> One image after the next, my story.
-      `;
-
+      // notify server
+      this.e.send('osc', [client.index, this.id, 1]);
+      // display image
+      this.e.displayManager.setImg(this.image);
+      this.e.displayManager.setOpaque(0, 2);
+      // setup touch callback after block time
       setTimeout( () => {
-        // notify server
-        this.e.send('osc', [client.index, this.id, 1]);
-        // display image
-        this.e.displayManager.setImg(this.image);
-        this.e.displayManager.setOpaque(0, 2);
-        // setup touch callback after block time
-        setTimeout( () => {
-          // un-hide banner
-          document.getElementById("background-banner").style.display='block';      
-          // setup touch callback
-          this.setupTouchSurface();
-        }, this.timeBeforeNewImageClickable * 1000);
+        // un-hide banner
+        document.getElementById("background-banner").style.display='block';      
+        // setup touch callback
+        this.setupTouchSurface();
+      }, this.timeBeforeNewImageClickable * 1000);
 
-      }, (this.timeBeforeNewImageDisplayed) * 1000);
-
-    }, this.e.sParams.timeText1 * 1000);
+    }, (this.timeBeforeNewImageDisplayed) * 1000);
 
   }
 }
