@@ -10,7 +10,8 @@ class StateEnd extends State {
 
   start() {
     // notify server
-    this.e.send('osc', [client.index, this.id, 0, this.e.sync.getSyncTime()]);
+    const syncTime = this.e.sync.getSyncTime();
+    this.e.send('osc', [client.index, this.id, 0, syncTime]);
     // set state view
     this.e.displayManager.title = this.title;
     this.e.displayManager.instructions = this.instructions;
@@ -24,7 +25,7 @@ class StateEnd extends State {
     // start audio stream
     this.audioStream.start(0);
     // setup callback
-    setTimeout( () => {
+    setTimeout(() => {
       // credits
       this.e.displayManager.instructions = `
         Concept et Création: Lorenzo Bianchi Hoesch <br> <br>
@@ -34,11 +35,13 @@ class StateEnd extends State {
         Trompette et voix: Amir el Saffar <br>
         Water Games: West Gaua
       `;
-      setTimeout( () => {
+
+      setTimeout(() => {
         // touch callback to restart experiment
         this.setupTouchSurface();
         this.e.displayManager.footer = "toucher l'écran pour accéder à la page du projet";
-      }, this.timeBeforeNewImageClickable * 1000 );
+      }, this.timeBeforeNewImageClickable * 1000);
+
     }, this.timeBeforeNewImageDisplayed * 1000);
   }
 

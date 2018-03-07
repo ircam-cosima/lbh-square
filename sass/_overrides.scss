@@ -123,14 +123,57 @@ $secondFont: Trattatello;
   clear: left;
   width: 200px;
 
-} 
+}
 
 .bkg-img {
     // background-size: cover;
     background-size: auto 100%; // make sure one always sees all image height
-    background-repeat: no-repeat;    
+    background-repeat: no-repeat;
 }
 
 br {
     line-height: 5%;
 }
+
+
+
+
+
+
+
+// new styles
+
+#background-image,
+#background-color {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#background-image {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+#choice {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+
+  #restart, #continue {
+    box-sizing: border-box;
+    width: 100%;
+    height: 50%;
+    border: 4px solid white;
+    background-color: transparent;
+    color: white;
+  }
+}
+
+
+
+

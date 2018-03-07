@@ -59,22 +59,12 @@ p {
 .foreground {
   position: relative;
   z-index: 1;
-  background-color: $backgroundColor;
-}
-
-img {
-    image-orientation: from-image;
 }
 
 .background {
   position: absolute;
   top: 0;
   left: 0;
-  background-repeat:no-repeat;
-  background-position:center center;
-  background-size: cover; 
-  background-image: "url('../images/1.JPG')";
-  image-orientation: 0deg;
 }
 
 .fit-container {
@@ -142,29 +132,35 @@ p, .normal {
 
 .btn {
   background-color: $backgroundColor;
-  border: 1px solid $textColor;
+  border: $borderSize solid $textColor;
   border-radius: $borderRadius;
   color: $textColor;
   padding: 6px 0;
   font-size: 1rem;
   display: block;
-  @include transition(background-color 50ms);
   letter-spacing: 0.05em;
 
-  &:active {
+  &:active, &.active {
     background-color: $textColor;
+    color: $backgroundColor;
   }
 
   &:focus {
     outline: none;
   }
 
-  &.unselected, &.disabled, &[disabled] {
+  &.disabled, &[disabled] {
     opacity: 0.5;
   }
 
-  &.selected {
-    opacity: 1;
+  &.pushed {
+    background-color: $textColor;
+    color: $backgroundColor;
+  }
+
+  &.released {
+    background-color: $backgroundColor;
+    color: $textColor;
   }
 }
 
@@ -185,4 +181,3 @@ p, .normal {
 .soft-blink {
   @include animation('soft-blink 3.6s ease-in-out infinite');
 }
-

@@ -1,7 +1,9 @@
 import 'source-map-support/register'; // enable sourcemaps in node
 import path from 'path';
+import slugify from 'slugify';
 import * as soundworks from 'soundworks/server';
 import PlayerExperience from './PlayerExperience';
+import appConfig from '../shared/app-config';
 
 const configName = process.env.ENV || 'default';
 const configPath = path.join(__dirname, 'config', configName);
@@ -33,14 +35,28 @@ soundworks.server.setClientConfigDefinition((clientType, config, httpRequest) =>
   };
 });
 
-// create the experience
-// activities must be mapped to client types:
-// - the `'player'` clients (who take part in the scenario by connecting to the
-//   server through the root url) need to communicate with the `checkin` (see
-// `src/server/playerExperience.js`) and the server side `playerExperience`.
-// - we could also map activities to additional client types (thus defining a
-//   route (url) of the following form: `/${clientType}`)
-const experience = new PlayerExperience('player');
+// parse all states to create controllers
+const sharedParams = soundworks.server.require('shared-params');
+
+sharedParams.addBoolean('debug-mode', 'Debug mode', false);
+
+appConfig.states.forEach(state => {
+  const name = slugify(state.title);
+  const label = state.title;
+  const options = state.events.map((event, index) => {
+    return `[${index}] - ${event.type} (${event.time}s)`;
+  });
+
+  sharedParams.addEnum(name, label, options);
+});
+
+// get all stream files from app configuration
+const streamFiles = appConfig.states.map(state => path.join('public', state.stream.file));
+streamFiles.push(path.join('public', appConfig.common.fallbackStream.file));
+
+// launch experiences
+const experience = new PlayerExperience('player', streamFiles);
+const controller = new soundworks.ControllerExperience('controller');
 
 // start application
 soundworks.server.start();

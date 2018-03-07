@@ -1,8 +1,7 @@
 // import client side soundworks and player experience
 import * as soundworks from 'soundworks/client';
-import PlayerExperience from './PlayerExperience';
+// import PlayerExperience from './PlayerExperience';
 import serviceViews from '../shared/serviceViews';
-import appConfig from '../../shared/app-config';
 
 function bootstrap() {
   // initialize the client with configuration received
@@ -19,7 +18,7 @@ function bootstrap() {
   });
 
   // create client side (player) experience and start the client
-  const experience = new PlayerExperience(config, appConfig);
+  const experience = new soundworks.ControllerExperience(config.assetsDomain);
   soundworks.client.start();
 }
 

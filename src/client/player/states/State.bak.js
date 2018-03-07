@@ -1,6 +1,10 @@
+import * as soundworks from 'soundworks/client';
 import * as utils from '../misc/utils';
 import StereoPanner from '../audio/StereoPanner';
 import AudioStream from '../audio/AudioStream';
+
+const audioContext = soundworks.audioContext;
+const client = soundworks.audioContext;
 
 class State {
   constructor(experiment, id) {
@@ -22,11 +26,15 @@ class State {
     this.initOri = undefined;
 
     // init local audio stream
-    this.audioStream = new AudioStream(this.e, this.e.bufferInfos);
-    this.audioStream.sync = false;
+    // this.audioStream = new AudioStream(this.e, this.e.bufferInfos);
+    this.audioStream = this.e.audioStreamManager.getAudioStream();
 
     if ([7, 6, 5].indexOf(this.id) >= 0)
       this.audioStream.sync = true;
+    else
+      this.audioStream.sync = false;
+
+    this.audioStream.loop = false;
 
     // init channel splitter / merger used in audio panning
     this.stereoPanner = new StereoPanner();
@@ -51,7 +59,8 @@ class State {
     this.audioStream.url = this.streamUrl;
     this.audioStream.loop = false;
     // setup 'on end of audio stream' callback
-    this.audioStream.onended = () => {
+    this.audioStream.onended = function() {
+      // start fallback stream
       this.url = streamLoopFileName;
       this.loop = true;
       this.start(0);
@@ -62,6 +71,7 @@ class State {
       // get quantization offset
       let period = 2.76;
       const offset = this.e.sync.getSyncTime() % period; // mod sound period for quantization
+
       this.audioStream.start(offset);
     } else {
       this.audioStream.start(0);

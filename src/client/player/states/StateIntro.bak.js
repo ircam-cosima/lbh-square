@@ -1,3 +1,4 @@
+import { client } from 'soundworks/client';
 import State from './State';
 
 class StateIntro extends State {
@@ -40,27 +41,30 @@ class StateIntro extends State {
 
   start() {
     // notify server
-    this.e.send('osc', [client.index, this.id, 0, this.e.sync.getSyncTime()]);
+    const syncTime = this.e.sync.getSyncTime();
+    this.e.send('osc', [client.index, this.id, 0, syncTime]);
     // setup motionInput
     this.setupMotionInput(true);
     // setup audio
     this.audioStream.url = this.streamUrl;
     this.audioStream.loop = false;
     // setup 'on end of audio stream' callback
-    this.audioStream.onended = function(){
-      this.url = streamLoopFileName;
-      this.loop = true;
-      this.start(0);
+    this.audioStream.onended = function() {
+      // this is a f****** fallback!!
+      // this.url = streamLoopFileName;
+      // this.loop = true;
+      // this.start(0);
     }
+
     // start audio
     this.audioStream.start(0);
 
     // setup main text and subtitles change callbacks
     for( let i = 0; i < this.sParams.textTimes.length; i++ ){
-      setTimeout( () => {
+      setTimeout(() => {
         // display text
-        this.e.displayManager.instructions = this.sParams.textFr[i] + '<br> <br>' + this.sParams.textEn[i];
-      }, this.sParams.textTimes[i] * 1000 );
+        this.e.displayManager.instructions = this.sParams.textFr[i] + '<br><br>' + this.sParams.textEn[i];
+      }, this.sParams.textTimes[i] * 1000);
     }
 
     // set callback to change stream / display image

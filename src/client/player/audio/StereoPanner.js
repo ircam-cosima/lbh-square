@@ -1,3 +1,5 @@
+import { audioContext } from 'soundworks/client';
+
 class StereoPanner {
   constructor() {
     // locals
@@ -27,12 +29,16 @@ class StereoPanner {
     this.gainRR.connect(this.merger, 0, 1);
   }
 
-  get in() {
+  get input() {
     return this.splitter;
   }
 
   connect(audioNode) {
     this.merger.connect(audioNode);
+  }
+
+  disconnect() {
+    this.merger.disconnect();
   }
 
   inverseChannels(onOff) {
