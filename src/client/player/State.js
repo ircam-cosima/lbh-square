@@ -126,7 +126,7 @@ class State {
         view.setBackgroundImage(event.placeholder, event.url);
         break;
       case 'text':
-        view.setTextContent(event.placeholder, event.content);
+        view.setTextContent(event.placeholder, event.content, event.classes);
         break;
       case 'fade-in':
         const fadeInDuration = silent ? 0 : event.duration;

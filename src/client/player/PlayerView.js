@@ -33,14 +33,11 @@ const template = `
     <div id="background-color" class="fit-container"></div>
   </div>
   <div class="foreground">
-    <div class="section-top flex-middle">
-      <div id="top"></div>
+    <div class="section-top flex-middle" id="top">
     </div>
-    <div class="section-center flex-middle">
-      <div id="center"></div>
+    <div class="section-center flex-middle" id="center">
     </div>
-    <div class="section-bottom flex-middle">
-      <div id="bottom"></div>
+    <div class="section-bottom flex-middle" id="bottom">
     </div>
   </div>
   <% if (state === 'choice') { %>
@@ -54,6 +51,7 @@ const template = `
 class PlayerView extends soundworks.SegmentedView {
   constructor(model) {
     super(template, model, {}, {
+      id: 'experience',
       ratios: {
         '.section-top': 0.1,
         '.section-center': 0.8,
@@ -74,9 +72,9 @@ class PlayerView extends soundworks.SegmentedView {
   }
 
   clear() {
-    this.$placeholders['top'].innerHTML = '';
-    this.$placeholders['center'].innerHTML = '';
-    this.$placeholders['bottom'].innerHTML = '';
+    this.setTextContent('top', '');
+    this.setTextContent('center', '');
+    this.setTextContent('bottom', '');
     this.$placeholders['top'].style.opacity = 1;
     this.$placeholders['center'].style.opacity = 1;
     this.$placeholders['bottom'].style.opacity = 1;
@@ -84,7 +82,7 @@ class PlayerView extends soundworks.SegmentedView {
   }
 
   setId(id) {
-    this.$el.id = 'state-${id}';
+    this.$el.dataset.id = `state-${id}`;
   }
 
   setBackgroundColor(placeholder, color) {
@@ -95,28 +93,42 @@ class PlayerView extends soundworks.SegmentedView {
     this.$placeholders[placeholder].style.backgroundImage = `url(${url})`;
   }
 
-  setTextContent(placeholder, content) {
-    this.$placeholders[placeholder].innerHTML = content;
+  setTextContent(placeholder, content, classes = []) {
+    const $el = this.$placeholders[placeholder]
+    const forbiddenClasses = ['section-top', 'section-center', 'section-bottom', 'flex-middle'];
+
+    for (let i = $el.classList.length - 1; i >= 0; i--) {
+      const className = $el.classList.item(i);
+      console.log(className);
+
+      if (forbiddenClasses.indexOf(className) === -1)
+        $el.classList.remove(className);
+    }
+
+    classes.forEach(className => $el.classList.add(className));
+
+    $el.innerHTML = `<p>${content}</p>`;
   }
 
   fadeIn(placeholder, duration) {
     const $el = this.$placeholders[placeholder];
+
     $el.style.transition = `opacity ${duration}s`;
     $el.style.opacity = 1;
   }
 
   fadeOut(placeholder, duration) {
     const $el = this.$placeholders[placeholder];
+
     $el.style.transition = `opacity ${duration}s`;
     $el.style.opacity = 0;
   }
 
   setEvent(placeholder, callback) {
-    console.log(client.platform.interaction);
     let key = client.platform.interaction === 'touch' ? 'touchstart' : 'mousedown';
 
     if (placeholder !== 'screen')
-      key += ` #${placeholder}`
+      key += ` #${placeholder}`;
 
     this.installEvents({ [key]: callback }, true);
   }

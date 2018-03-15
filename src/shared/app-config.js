@@ -1,5 +1,10 @@
 const config = {
 
+  environment: {
+    osc: true, // forward informations to max patch
+    wakeLock: true, // `true` for creations, `false` for production
+  },
+
   common: {
     txt: {
       restartStr: 'Recommencer du début',
@@ -42,7 +47,7 @@ const config = {
           time: 1.7, // 0.01
           type: 'text',
           placeholder: 'center',
-          classes: ['white', 'align-center'],
+          // classes: ['color-red'],
           content: `
             Mon histoire est vite racontée. Je suis née en Novembre 2331, ici à
             Paris. Fille de parents anglais venus en France à la recherche d’une fortune
@@ -57,7 +62,7 @@ const config = {
           time: 16.8, // 17
           type: 'text',
           placeholder: 'center',
-          classes: ['white', 'align-center'],
+          // classes: ['white', 'align-center'],
           content: `
             c’est maintenant mon tour de
             partir, de tout laisser, pour chercher une alternative à ce lieu sans espoir.
@@ -71,7 +76,7 @@ const config = {
           time: 26.8, // 27
           type: 'text',
           placeholder: 'center',
-          classes: ['white', 'align-center'],
+          // classes: ['white', 'align-center'],
           content: `
             De simples photos, des points de vue sur ce square qui m’est si cher. Pour
             suivre le fil rouge de mes souvenirs, tu devras me suivre, et littéralement
@@ -86,7 +91,7 @@ const config = {
           time: 41,
           type: 'text',
           placeholder: 'center',
-          classes: ['white', 'align-center'],
+          // classes: ['white', 'align-center'],
           content: `
             Seulement une fois que tu auras trouvé le même point de vue de l’image,
             tu devras cliquer sur l’image et suivre mon parcours. Une image après
@@ -96,6 +101,7 @@ const config = {
             follow my journey. One image after the next, my story.
           `,
         },
+
         {
           time: 52.6,
           type: 'text',
@@ -118,7 +124,7 @@ const config = {
           time: 56.6,
           type: 'text',
           placeholder: 'top',
-          classes: ['black'],
+          classes: ['gradient'],
           content: `The first photo just showed up. A viewpoint so ordinary, declining.`
         },
         {
@@ -187,7 +193,7 @@ const config = {
           time: 63.5,
           type: 'text',
           placeholder: 'top',
-          classes: ['black'],
+          classes: ['gradient'],
           content: `Another photo, an animal`,
         },
         {

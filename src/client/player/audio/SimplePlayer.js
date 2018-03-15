@@ -2,12 +2,10 @@ import { audioContext } from 'soundworks/client';
 
 class SimplePlayer {
   constructor(bufferList) {
-    this.bufferList = bufferList
+    this.bufferList = bufferList;
   }
 
-  connect(destination) {
-
-  }
+  // connect(destination) {}
 
   trigger(bufferId) {
     const buffer = this.bufferList[bufferId];

@@ -64,33 +64,14 @@ class PlayerExperience extends soundworks.Experience {
       common: this.appConfig.common.txt,
     });
 
-    // as show can be async, we make sure that the view is actually rendered
     this.show().then(() => {
-      // init locals
-      // this.audioPlayerTouch = new AudioPlayer(this.audioBufferManager.data.touch);
-      // this.displayManager.start();
-      // this.displayManager.setOpaque(1, 0);
-
-      // check if I've already undertaken part of the exp. lately (to propose the option to jump there directly)
-      // this.cookieState = Number(utils.getCookie('lastState'));
-      // @debug: change init state
-      // this.stateId = 1; this.triggerNextState(); return;
-
-      // propose to restart exp. from where left last time
-      // if (this.cookieState > 0 && this.cookieState < this.numberOfStates) 
-      //   this.displaySelectionScreen();
-      // else // start introduction
-      //   this.startIntro();
-
       this.transport = new audio.Transport();
       this.playControl = new audio.PlayControl(this.transport);
 
       this.currentStateIndex = null;
       this.state = null;
 
-      // init debug
-      // listen for controller for debugging / test
-
+      // init debug - listen for controller for debugging / test
       this.debugMode = false;
 
       this.sharedParams.addParamListener('debug-mode', value => {
@@ -102,7 +83,7 @@ class PlayerExperience extends soundworks.Experience {
         const name = slugify(state.title);
 
         this.sharedParams.addParamListener(name, value => {
-          if (!this.debugMode)
+          if (!this.debugMode || !value)
             return;
 
           console.log('sharedParams', value, this.debugMode);
@@ -120,28 +101,29 @@ class PlayerExperience extends soundworks.Experience {
       });
 
       const storedStateIndex = parseInt(window.localStorage.getItem(localStorageId));
-      console.log('storedStateIndex:', storedStateIndex);
 
-      if (Number.isInteger(storedStateIndex)) {
-        this.view.model.state = 'choice';
-        this.view.render();
+      if (!this.debugMode) {
+        if (Number.isInteger(storedStateIndex)) {
+          this.view.model.state = 'choice';
+          this.view.render();
 
-        this.view.installEvents({
-          'click #restart': () => {
-            this.view.installEvents({}, true);
-            this.view.model.state = 'experience';
-            this.view.render();
-            this.setState(0);
-          },
-          'click #continue': () => {
-            this.view.installEvents({}, true);
-            this.view.model.state = 'experience';
-            this.view.render();
-            this.setState(storedStateIndex);
-          },
-        }, true);
-      } else {
-        this.setState(0);
+          this.view.installEvents({
+            'click #restart': () => {
+              this.view.installEvents({}, true);
+              this.view.model.state = 'experience';
+              this.view.render();
+              this.setState(0);
+            },
+            'click #continue': () => {
+              this.view.installEvents({}, true);
+              this.view.model.state = 'experience';
+              this.view.render();
+              this.setState(storedStateIndex);
+            },
+          }, true);
+        } else {
+          this.setState(0);
+        }
       }
     });
   }
@@ -159,7 +141,6 @@ class PlayerExperience extends soundworks.Experience {
     }
 
     if (stateIndex < config.states.length) {
-      // @todo - check if its the end...
       const stateConfig = config.states[stateIndex];
       const commonConfig = config.common;
 
@@ -167,60 +148,12 @@ class PlayerExperience extends soundworks.Experience {
       this.state.enter();
 
       window.localStorage.setItem(localStorageId, this.currentStateIndex);
+      console.log('[localStorage] set stateIndex:', this.currentStateIndex);
     } else {
       console.log('this is the end...');
-
       window.localStorage.removeItem(localStorageId);
     }
   }
-
-  // function for restart option (from last state or from start)
-  // displaySelectionScreen() {
-  //   // display image
-  //   this.displayManager.setImg(soundworks.client.config.assetsDomain + 'images/' + 'start-options.jpg');
-  //   this.displayManager.setOpaque(0, 0.3);
-  //   // setup touch surface
-  //   this.surface = new soundworks.TouchSurface(this.view.$el);
-  //   this.surface.addListener('touchstart', this.touchCallback);
-  //   window.addEventListener('click', this.touchCallback);
-  // }
-
-  // // touch callback for restart option (from last state or from start)
-  // touchCallback(id, normX, normY) {
-  //   // handle click scenario (id is then a MouseEvent, normX and normY are not defined)
-  //   if (id.button !== undefined) {
-  //     let event = id;
-  //     normY = event.clientY / event.view.innerHeight;
-  //   }
-
-  //   // fade off image
-  //   this.displayManager.setOpaque(1, 0);
-  //   // remove touch callback
-  //   this.surface.removeListener('touchstart', this.touchCallback);
-  //   window.removeEventListener('click', this.touchCallback);
-  //   // trigger from start
-  //   if (normY < 0.5) { 
-  //     this.startIntro();
-  //   } else {
-  //     this.stateId = this.cookieState - 1;
-  //     this.triggerNextState();
-  //   }
-  // }
-
-  // triggerNextState() {
-  //   // increment state id
-  //   this.stateId += 1;
-  //   // update cookie
-  //   utils.setCookie('lastState', this.stateId, numDaysCookieValid);
-  //   // trigger next state
-  //   if (this.stateId < this.numberOfStates) {
-  //     this.s = new State(this, this.stateId);
-  //     this.s.start();
-  //   } else {
-  //     this.s = new StateEnd(this); this.s.start();
-  //   }
-  // }
-
 }
 
 export default PlayerExperience;

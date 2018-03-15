@@ -17,12 +17,15 @@ html, body, div, span, h1, h2, h3, h4, h5, h6, p, a, button, input, option, sele
   vertical-align: baseline;
 }
 
-body {
-  line-height: 1;
+html {
+
 }
 
-ol, ul {
-  list-style: none;
+body {
+  font-family: $mainFont;
+  line-height: normal;
+  color: $textColor;
+  font-size: 62.5%;
 }
 
 html, body {
@@ -31,15 +34,12 @@ html, body {
   background-color: $backgroundColor;
 }
 
-body {
-  font-family: $mainFont;
-  font-size: 62.5%;
-  line-height: normal;
-  color: $textColor;
-}
-
 h1, h2, h3, h4, h5, h6 {
   font-weight: bold;
+}
+
+ol, ul {
+  list-style: none;
 }
 
 p {
