@@ -10,13 +10,6 @@ const audio = soundworks.audio;
 // should be somewhere else, even if not a big deal
 const localStorageId = 'lbh-square';
 
-
-// import * as utils from './misc/utils';
-// import './misc/googleAnalytics'
-
-// const streamLoopFileName = '14-streaming-loop-infinite';
-// const numDaysCookieValid = 1; // number of days cookies are valid (for restarting exp. not from beginning)
-
 class PlayerExperience extends soundworks.Experience {
   constructor(envConfig, appConfig) {
     super();
@@ -24,34 +17,46 @@ class PlayerExperience extends soundworks.Experience {
     this.envConfig = envConfig;
     this.appConfig = appConfig;
 
-    // services
-    // this.platform = this.require('platform', { features: ['web-audio', 'wake-lock'] });
-    this.platform = this.require('platform', { features: ['web-audio'] });
-    console.warn('REMOVED PLATFORM WAVE-LOCK FOR DEBUG ON CHROME (100%CPU..)');
+    const features = ['web-audio'];
 
+    if (appConfig.environment.wakeLock)
+      features.push('wake-lock');
+
+    // services
+    this.platform = this.require('platform', { features: features });
     this.sync = this.require('sync');
     this.checkin = this.require('checkin', { showDialog: false });
     this.sharedParams = this.require('shared-params');
     this.motionInput = this.require('motion-input', {
       descriptors: ['deviceorientation'],
     });
+
     this.audioStreamManager = this.require('audio-stream-manager', {
       monitorInterval: 1,
       requiredAdvanceThreshold: 10,
     });
 
     const triggerAudioBuffers = {};
+    const backgroundImages = [];
 
     this.appConfig.states.forEach(state => {
       state.events.forEach(event => {
         if (event.triggerAudio)
           triggerAudioBuffers[event.triggerAudio.id] = event.triggerAudio.file;
+
+        if (event.type === 'background-image')
+          backgroundImages.push(event.url);
       });
     });
 
     this.audioBufferManager = this.require('audio-buffer-manager', {
       assetsDomain: this.envConfig.assetsDomain,
       files: triggerAudioBuffers,
+    });
+
+
+    this.imagesLoader = this.require('images-loader', {
+      files: backgroundImages,
     });
   }
 
@@ -61,7 +66,7 @@ class PlayerExperience extends soundworks.Experience {
     this.simplePlayer = new SimplePlayer(this.audioBufferManager.data);
     this.view = new PlayerView({
       state: 'experience',
-      common: this.appConfig.common.txt,
+      txt: this.appConfig.txt.restartPage,
     });
 
     this.show().then(() => {
@@ -75,7 +80,6 @@ class PlayerExperience extends soundworks.Experience {
       this.debugMode = false;
 
       this.sharedParams.addParamListener('debug-mode', value => {
-        console.log('debug-mode', value)
         this.debugMode = value;
       });
 
@@ -86,7 +90,6 @@ class PlayerExperience extends soundworks.Experience {
           if (!this.debugMode || !value)
             return;
 
-          console.log('sharedParams', value, this.debugMode);
           // get event index from value
           const getPrefix = /^\[[0-9]+\]/;
           const cleanPrefix = /\[|\]/g;
@@ -130,10 +133,9 @@ class PlayerExperience extends soundworks.Experience {
 
   // setup and start introduction (text + reading voice)
   setState(stateIndex) {
-    console.log('setState', stateIndex);
-
     this.currentStateIndex = stateIndex;
     const config = this.appConfig;
+    // console.log('setState', stateIndex);
 
     if (this.state) {
       this.state.exit();
@@ -148,7 +150,6 @@ class PlayerExperience extends soundworks.Experience {
       this.state.enter();
 
       window.localStorage.setItem(localStorageId, this.currentStateIndex);
-      console.log('[localStorage] set stateIndex:', this.currentStateIndex);
     } else {
       console.log('this is the end...');
       window.localStorage.removeItem(localStorageId);

@@ -610,37 +610,30 @@ const serviceViews = {
           </div>
           <div class="section-bottom"></div>
         <% } else { %>
-          <div class="section-top flex-center">
-              <p class="small">
-                <b><%= globals.appName %></b>
-                <br />
-                <i class="small">by Lorenzo Bianchi Hoesch</i>
-                <b><br /><br />
-                EXPÉRIENCE À FAIRE AU CASQUE <br /> <br />
-                </b>
-                <i class="fa fa-headphones fa-4x" aria-hidden="true"></i>
-              </p>      
+          <div class="section-top flex-middle">
+              <p>
+                <span class="title"><%= globals.title %></span>
+                <span class="subtitle"><%= globals.subtitle %></span>
+              </p>
           </div>
-          <div class="section-center flex-middle">
-              <p class="small">
-              Si tu es sur ton téléphone:
-              <br /> <br />
-                Désactive la mise en veille.
-                <br />
-                Bloque l’écran en mode <i>portrait</i>.
-                <br />
-                Active le mode vibreur.
-                <br />
-                Branche les ecouteurs et ajuste le volume.
-                <br /> <br />
-                <i>si le son est très bruité au début, recharge la page</i>
-               </i> </p>
+          <div class="section-center flex-center">
+            <div>
+              <p class="fa fa-headphones" aria-hidden="true"></p>
+              <p class="instructions-header">
+                <%= globals.instructionsHeader %>
+              </p>
+              <ul class="instructions">
+                <% for (let key in globals.instructions) { %>
+                  <li class="instruction"><%= globals.instructions[key] %></li>
+                <% } %>
+              </ul>
+            </div>
           </div>
-          <div class="section-bottom flex-center">
+          <div class="section-bottom flex-middle">
             <% if (checking === true) { %>
             <p class="small soft-blink"><%= checkingMessage %></p>
             <% } else if (hasAuthorizations === true) { %>
-            <p class="small soft-blink"><%= instructions %></p>
+            <p class="small soft-blink"><%= globals.touchToStart %></p>
             <% } %>
           </div>
         <% } %>
@@ -650,8 +643,6 @@ const serviceViews = {
         isCompatible: null,
         hasAuthorizations: null,
         checking: false,
-        intro: '',
-        instructions: 'Touche l\'écran pour commencer',
         checkingMessage: 'Please wait while checking compatiblity',
         errorCompatibleMessage: 'Sorry,<br />Your device is not compatible with the application.',
         errorHooksMessage: `Sorry,<br />The application didn't obtain the necessary authorizations.`,

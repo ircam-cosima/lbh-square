@@ -61,6 +61,9 @@ class State {
     this.commonConfig = commonConfig;
     this.eventEngine = new EventEngine(this, this.stateConfig.events);
 
+    this.initialOrientation = null;
+    this.motionInputCallback = this.motionInputCallback.bind(this);
+
     this._createStream(0);
   }
 
@@ -84,28 +87,33 @@ class State {
   }
 
   enter() {
-    const { playControl, transport, view } = this.experience;
+    const { playControl, transport, view, motionInput } = this.experience;
 
     view.setId(this.index);
     transport.add(this.eventEngine);
     playControl.start();
 
     this.audioStream.start(0);
+
+    if (motionInput.isAvailable('deviceorientation'))
+      motionInput.addListener('deviceorientation', this.motionInputCallback);
   }
 
   exit() {
-    const { playControl, transport } = this.experience;
+    const { playControl, transport, motionInput } = this.experience;
     playControl.stop();
 
     if (this.eventEngine.master)
       transport.remove(this.eventEngine);
+
+    if (motionInput.isAvailable('deviceorientation'))
+      motionInput.removeListener('deviceorientation', this.motionInputCallback);
 
     this.audioStream.stop(0);
     this.stereoPanner.disconnect();
   }
 
   seek(position) {
-    console.log('no seek');
     this.experience.playControl.seek(position);
 
     this.audioStream.stop(0);
@@ -146,14 +154,29 @@ class State {
           });
         }
         break;
+      case 'trigger-audio':
+        if (!silent)
+          this.experience.simplePlayer.trigger(event.id);
+        break;
     }
 
-    // in case of 'trigger-next-state' event type,
-    // we want to want for the interaction
+    // for 'trigger-next-state' event type, we wait for the interaction
     if (event.type !== 'trigger-next-state' && !silent) {
       if (event.triggerAudio)
         this.experience.simplePlayer.trigger(event.triggerAudio.id);
     }
+  }
+
+  motionInputCallback(data) {
+    const orientation = data[0];
+
+    if (this.initialOrientation === null)
+      this.initialOrientation = orientation;
+
+    // get reverse orientation state (is subject facing opposite dir.
+    // from when current state started)
+    const inverseChannels = Math.cos((orientation - this.initialOrientation) / 180 * Math.PI) < 0;
+    this.stereoPanner.inverseChannels(inverseChannels);
   }
 }
 

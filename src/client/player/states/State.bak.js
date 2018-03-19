@@ -156,7 +156,7 @@ class State {
       this.initOri = data[0];
 
     // get reverse orientation state (is subject facing opposite dir.
-    // from when they clicked on img, i.e. current state started)
+    // from when current state started)
     let rev = Math.cos( (data[0] - this.initOri) * (Math.PI / 180)) < 0;
     this.stereoPanner.inverseChannels(rev);
   }

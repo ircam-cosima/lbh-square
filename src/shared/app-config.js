@@ -5,11 +5,27 @@ const config = {
     wakeLock: true, // `true` for creations, `false` for production
   },
 
-  common: {
-    txt: {
-      restartStr: 'Recommencer du début',
-      continueStr: 'Reprendre la lecture',
+  txt: {
+    home: {
+      title: 'SQUARE',
+      subtitle: 'by Lorenzo Bianchi Hoesh',
+      useHeadphones: 'EXPÉRIENCE À FAIRE AU CASQUE',
+
+      instructionsHeader: 'Merci de :',
+      instructions: {
+        wakeLock: 'désactiver la mise en veille',
+        headphones: 'brancher vos écouteurs',
+        volume: 'ajuster le volume',
+      },
+      touchToStart: 'Toucher l\'écran pour commencer',
     },
+    restartPage: {
+      restart: 'Recommencer du début',
+      continue: 'Reprendre la lecture',
+    },
+  },
+
+  common: {
     fallbackStream: {
       id: '14-streaming-loop-infinite',
       file: 'streams/14-streaming-loop-infinite.wav',
@@ -33,9 +49,15 @@ const config = {
       events: [
         {
           time: 0,
+          type: 'fade-out',
+          placeholder: 'background-color',
+          duration: 0,
+        },
+        {
+          time: 0,
           type: 'background-color',
           placeholder: 'background-color',
-          color: '#454545',
+          color: '#272727',
         },
         {
           time: 0,
@@ -158,6 +180,12 @@ const config = {
       },
       // list of events
       events: [
+        {
+          time: 0,
+          type: 'background-color',
+          placeholder: 'background-color',
+          color: '#272727',
+        },
         {
           time: 0,
           type: 'fade-in',

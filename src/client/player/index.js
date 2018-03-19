@@ -2,6 +2,8 @@
 import * as soundworks from 'soundworks/client';
 import PlayerExperience from './PlayerExperience';
 import serviceViews from '../shared/serviceViews';
+import ImagesLoader from '../shared/services/ImagesLoader';
+
 import appConfig from '../../shared/app-config';
 
 function bootstrap() {
@@ -16,6 +18,13 @@ function bootstrap() {
   soundworks.client.setServiceInstanciationHook((id, instance) => {
     if (serviceViews.has(id))
       instance.view = serviceViews.get(id, config);
+
+    // use audio buffer manager view for images loader
+    if (id === 'service:images-loader')
+      instance.view = serviceViews.get('service:audio-buffer-manager', config);
+
+    if (id === 'service:platform')
+      instance.view = serviceViews.get('service:platform', appConfig.txt.home);
   });
 
   // create client side (player) experience and start the client

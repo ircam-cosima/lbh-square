@@ -42,8 +42,8 @@ const template = `
   </div>
   <% if (state === 'choice') { %>
   <div id="choice">
-    <button id="restart"><%= common.restartStr %></button>
-    <button id="continue"><%= common.continueStr %></button>
+    <button id="restart"><%= txt.restart %></button>
+    <button id="continue"><%= txt.continue %></button>
   </div>
   <% } %>
 `;
@@ -78,7 +78,6 @@ class PlayerView extends soundworks.SegmentedView {
     this.$placeholders['top'].style.opacity = 1;
     this.$placeholders['center'].style.opacity = 1;
     this.$placeholders['bottom'].style.opacity = 1;
-    this.$placeholders['background-image'].style.backgroundImage = 'none';
   }
 
   setId(id) {
@@ -94,12 +93,12 @@ class PlayerView extends soundworks.SegmentedView {
   }
 
   setTextContent(placeholder, content, classes = []) {
-    const $el = this.$placeholders[placeholder]
+    const $el = this.$placeholders[placeholder];
+    // classes that should never be removed
     const forbiddenClasses = ['section-top', 'section-center', 'section-bottom', 'flex-middle'];
 
     for (let i = $el.classList.length - 1; i >= 0; i--) {
       const className = $el.classList.item(i);
-      console.log(className);
 
       if (forbiddenClasses.indexOf(className) === -1)
         $el.classList.remove(className);

@@ -5,40 +5,32 @@
 
 ## refactoring
 
-- panning / orientation
-- services instructions
-- first screens
-- end screen
+- panning / orientation - ok
+- - mise en veille -> à checker
+  + mettre un flag dans la config - ok
+https://css-tricks.com/design-considerations-text-images/
+- overlay linear gradient - ok
+- event trigger-audio - ok
+- preload images - ok
+- services instructions - ok
 
-- relation to Max?
-- flag for osc
+- end screen
+- restart at state + event
+
+- flag for osc (won't have a max patch in most cases)
+
+## first page
 
 - branche les ecouteurs - cf. icone plus claire
-- mise en veille -> à checker
-  + mettre un flag dans la config
-
 - lock mode portrait => check problem avec compass
-- mode vibreur () - on vire
-- son buité -> on vire
+- mode vibreur () - on vire - ok
+- son buité -> on vire - ok
 
-- event trigger-audio
+## new events
+
 - event video
 - event vibrate
+- event redirect (or text-event is enough)
 
-https://css-tricks.com/design-considerations-text-images/
-- overlay linear gradient
-
-```
-.module {
-  background: 
-    linear-gradient(
-      to bottom,
-      rgba(0, 0, 0, 0),
-      rgba(0, 0, 0, 0.6)
-    ),
-    url(skyscrapers.jpg);
-}
-```
-
-
+## 
 - reimplement all states
