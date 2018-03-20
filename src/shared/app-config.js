@@ -1,8 +1,13 @@
 const config = {
 
   environment: {
-    osc: true, // forward informations to max patch
-    wakeLock: true, // `true` for creations, `false` for production
+    // forward informations to max patch
+    // set to false if no external max patch
+    osc: true,
+    // hack to keep devices awake
+    // `true` for creations, `false` for production
+    // update home instructions accordingly
+    wakeLock: true,
   },
 
   txt: {
@@ -35,7 +40,9 @@ const config = {
   },
 
   states: [
-    // state 0
+    // ----------------------------------------------------------------------
+    // INTRO
+    // ----------------------------------------------------------------------
     {
       title: 'intro',
 
@@ -132,15 +139,15 @@ const config = {
         },
         {
           time: 52.6,
-          type: 'fade-out',
-          placeholder: 'background-color',
-          duration: 2,
-        },
-        {
-          time: 52.6,
           type: 'background-image',
           placeholder: 'background-image',
           url: './images/0.jpg',
+        },
+        {
+          time: 52.6,
+          type: 'fade-out',
+          placeholder: 'background-color',
+          duration: 2,
         },
         {
           time: 56.6,
@@ -168,7 +175,9 @@ const config = {
       ]
     },
 
-    // state 1
+    // ----------------------------------------------------------------------
+    // STATE 1
+    // ----------------------------------------------------------------------
     {
       title: 'Here is...',
 
@@ -206,15 +215,15 @@ const config = {
         },
         {
           time: 59,
-          type: 'fade-out',
-          placeholder: 'background-color',
-          duration: 2,
-        },
-        {
-          time: 59,
           type: 'background-image',
           placeholder: 'background-image',
           url: './images/1.jpg',
+        },
+        {
+          time: 59,
+          type: 'fade-out',
+          placeholder: 'background-color',
+          duration: 2,
         },
         {
           time: 63.5,
@@ -242,7 +251,9 @@ const config = {
       ]
     },
 
-    // end state
+    // ----------------------------------------------------------------------
+    // END STATE
+    // ----------------------------------------------------------------------
     {
       title: 'Credits',
 
@@ -308,7 +319,7 @@ const config = {
           type: 'text',
           placeholder: 'bottom',
           classes: ['banner'],
-          content: `<a href="http://forumnet.ircam.fr/event/square-installation-interactive-lorenzo-bianchi-hoesch/">Accéder à la page du project</a>`,
+          content: `<a href="http://forumnet.ircam.fr/event/square-installation-interactive-lorenzo-bianchi-hoesch/">Plus d'informations</a>`,
         },
       ]
     },

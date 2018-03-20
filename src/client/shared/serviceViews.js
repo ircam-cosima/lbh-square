@@ -618,6 +618,7 @@ const serviceViews = {
           </div>
           <div class="section-center flex-center">
             <div>
+              <p class="use-headphones"><%= globals.useHeadphones %></p>
               <p class="fa fa-headphones" aria-hidden="true"></p>
               <p class="instructions-header">
                 <%= globals.instructionsHeader %>

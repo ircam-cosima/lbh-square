@@ -16,6 +16,12 @@
     font-style: italic;
   }
 
+  .use-headphones {
+    margin-bottom: 16px;
+    font-size: 1rem;
+    font-weight: bold;
+  }
+
   .fa-headphones {
     font-size: 8em;
   }
@@ -82,8 +88,13 @@
     }
 
     #restart {
-      background-color: #ffffff;
-      color: #000000;
+      background-color: #303030;
+      color: #ffffff;
+    }
+
+    #continue {
+      background-color: #202020;
+      color: #ffffff;
     }
   }
 
@@ -105,7 +116,7 @@
   }
 
   .banner {
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(10, 10, 10, 0.5);
     @include animation('blink 5.6s ease-in-out infinite');
   }
 
@@ -117,7 +128,7 @@
       font-size: 0.8rem;
 
       &.first {
-        // font-size: 1rem;
+        font-size: 0.9rem;
       }
     }
 

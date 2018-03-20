@@ -18,9 +18,10 @@ class EventEngine extends audio.TimeEngine {
     const currentEvent = this.events[this.currentIndex];
     const now = audioContext.currentTime;
     const dt = time - now;
+    const currentIndex = this.currentIndex; // copy for setTimeout
     // defer execution to be more precise
     setTimeout(() => {
-      this.state.handleEvent(currentEvent);
+      this.state.handleEvent(currentEvent, currentIndex);
     }, dt * 1000);
 
     this.currentIndex += 1;
@@ -38,9 +39,12 @@ class EventEngine extends audio.TimeEngine {
       const next = this.events[i + 1];
 
       if (position >= event.time) {
-        if (next && position >= next.time) {
+        // apply event silently, and test next event
+        if (next && position > next.time) {
           // recreate whole time line from beginning of the state
-          this.state.handleEvent(event, true);
+          this.state.handleEvent(event, i, true);
+
+        // if several event at same position, we pass here too
         } else {
           // we found the current index
           this.currentIndex = i;
@@ -54,11 +58,13 @@ class EventEngine extends audio.TimeEngine {
 }
 
 class State {
-  constructor(index, experience, stateConfig, commonConfig) {
+  constructor(index, experience, stateConfig, commonConfig, isLast) {
     this.index = index;
     this.experience = experience;
     this.stateConfig = stateConfig;
     this.commonConfig = commonConfig;
+    this.isLast = isLast;
+
     this.eventEngine = new EventEngine(this, this.stateConfig.events);
 
     this.initialOrientation = null;
@@ -113,7 +119,8 @@ class State {
     this.stereoPanner.disconnect();
   }
 
-  seek(position) {
+  seek(eventIndex) {
+    const position = this.stateConfig.events[eventIndex].time;
     this.experience.playControl.seek(position);
 
     this.audioStream.stop(0);
@@ -123,7 +130,7 @@ class State {
     this.audioStream.start(position);
   }
 
-  handleEvent(event, silent = false) {
+  handleEvent(event, eventIndex, silent = false) {
     const view = this.experience.view;
 
     switch (event.type) {
@@ -164,6 +171,14 @@ class State {
     if (event.type !== 'trigger-next-state' && !silent) {
       if (event.triggerAudio)
         this.experience.simplePlayer.trigger(event.triggerAudio.id);
+    }
+
+    // is we are in the last state, we delete the saved progression
+    if (!silent) {
+      if (!this.isLast)
+        this.experience.saveProgression(this.index, eventIndex);
+      else
+        this.experience.deleteProgression();
     }
   }
 

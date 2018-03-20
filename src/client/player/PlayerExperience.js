@@ -96,17 +96,14 @@ class PlayerExperience extends soundworks.Experience {
           const prefix = getPrefix.exec(value)[0];
           const eventIndex = parseInt(prefix.replace(cleanPrefix, ''));
 
-          this.setState(stateIndex);
-
-          const time = state.events[eventIndex].time;
-          this.state.seek(time);
+          this.setState(stateIndex, eventIndex);
         });
       });
 
-      const storedStateIndex = parseInt(window.localStorage.getItem(localStorageId));
+      const progression = this.retrieveProgression();
 
       if (!this.debugMode) {
-        if (Number.isInteger(storedStateIndex)) {
+        if (progression !== null) {
           this.view.model.state = 'choice';
           this.view.render();
 
@@ -121,39 +118,55 @@ class PlayerExperience extends soundworks.Experience {
               this.view.installEvents({}, true);
               this.view.model.state = 'experience';
               this.view.render();
-              this.setState(storedStateIndex);
+              this.setState(progression.stateIndex, progression.eventIndex);
             },
           }, true);
         } else {
           this.setState(0);
         }
       }
+
     });
   }
 
   // setup and start introduction (text + reading voice)
-  setState(stateIndex) {
+  setState(stateIndex, eventIndex = 0) {
     this.currentStateIndex = stateIndex;
     const config = this.appConfig;
-    // console.log('setState', stateIndex);
 
     if (this.state) {
       this.state.exit();
       this.view.clear();
     }
 
-    if (stateIndex < config.states.length) {
-      const stateConfig = config.states[stateIndex];
-      const commonConfig = config.common;
+    const stateConfig = config.states[stateIndex];
+    const commonConfig = config.common;
+    const isLast = (stateIndex === config.states.length - 1);
 
-      this.state = new State(stateIndex, this, stateConfig, commonConfig);
-      this.state.enter();
+    this.state = new State(stateIndex, this, stateConfig, commonConfig, isLast);
+    this.state.enter();
 
-      window.localStorage.setItem(localStorageId, this.currentStateIndex);
-    } else {
-      console.log('this is the end...');
-      window.localStorage.removeItem(localStorageId);
-    }
+    if (eventIndex !== 0)
+      this.state.seek(eventIndex);
+  }
+
+  saveProgression(stateIndex, eventIndex) {
+    const store = JSON.stringify({ stateIndex, eventIndex });
+    window.localStorage.setItem(localStorageId, store);
+  }
+
+  retrieveProgression() {
+    let store = null;
+
+    try {
+      store = JSON.parse(window.localStorage.getItem(localStorageId));
+    } catch(err) {}
+
+    return store;
+  }
+
+  deleteProgression() {
+    window.localStorage.removeItem(localStorageId);
   }
 }
 

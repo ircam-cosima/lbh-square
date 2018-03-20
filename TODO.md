@@ -15,8 +15,10 @@ https://css-tricks.com/design-considerations-text-images/
 - services instructions - ok
 - osc flag (won't have a max patch in most cases) - ok
 - end screen - ok
+- cleaned seek - ok
+- restart at state + event - ok
 
-- restart at state + event
+
 - sync streams
 
 ## first page - ok
