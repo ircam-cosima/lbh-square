@@ -75,9 +75,10 @@ class State {
 
   _createStream() {
     this.audioStream = this.experience.audioStreamManager.getAudioStream();
-    this.audioStream.sync = this.stateConfig.stream.sync;
+    this.audioStream.sync = false;
     this.audioStream.loop = this.stateConfig.stream.loop;
     this.audioStream.url = this.stateConfig.stream.id;
+    this.audioStream.periodic = !!this.stateConfig.stream.period;
 
     this.audioStream.onended = () => {
       this.audioStream.url = this.commonConfig.fallbackStream.id;
@@ -99,7 +100,13 @@ class State {
     transport.add(this.eventEngine);
     playControl.start();
 
-    this.audioStream.start(0);
+    if (this.stateConfig.stream.period) {
+      const syncTime = this.experience.sync.getSyncTime();
+      const offset = syncTime % this.stateConfig.stream.period;
+      this.audioStream.start(offset);
+    } else {
+      this.audioStream.start(0);
+    }
 
     if (motionInput.isAvailable('deviceorientation'))
       motionInput.addListener('deviceorientation', this.motionInputCallback);

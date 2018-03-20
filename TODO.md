@@ -17,9 +17,7 @@ https://css-tricks.com/design-considerations-text-images/
 - end screen - ok
 - cleaned seek - ok
 - restart at state + event - ok
-
-
-- sync streams
+- sync streams on underlying period - ok
 
 ## first page - ok
 

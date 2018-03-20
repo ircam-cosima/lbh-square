@@ -34,7 +34,6 @@ const config = {
     fallbackStream: {
       id: '14-streaming-loop-infinite',
       file: 'streams/14-streaming-loop-infinite.wav',
-      sync: false,
       loop: true,
     },
   },
@@ -49,7 +48,6 @@ const config = {
       stream: {
         id: '00-streaming',
         file: 'streams/00-streaming.wav',
-        sync: false,
         loop: false,
       },
       // list of events
@@ -184,7 +182,6 @@ const config = {
       stream: {
         id: '01-streaming',
         file: 'streams/01-streaming.wav',
-        sync: false,
         loop: false,
       },
       // list of events
@@ -252,6 +249,70 @@ const config = {
     },
 
     // ----------------------------------------------------------------------
+    // STATE 5
+    // ----------------------------------------------------------------------
+    {
+      title: 'Then I continued',
+
+      stream: {
+        id: '05-streaming',
+        file: 'streams/05-streaming.wav',
+        loop: false,
+        period: 2.76,
+      },
+      // list of events
+      events: [
+        {
+          time: 0,
+          type: 'background-color',
+          placeholder: 'background-color',
+          color: '#272727',
+        },
+        {
+          time: 0,
+          type: 'fade-in',
+          placeholder: 'background-color',
+          duration: 1,
+        },
+        {
+          time: 26,
+          type: 'background-image',
+          placeholder: 'background-image',
+          url: './images/5.jpg',
+        },
+        {
+          time: 26,
+          type: 'fade-out',
+          placeholder: 'background-color',
+          duration: 2,
+        },
+        {
+          time: 28,
+          type: 'text',
+          placeholder: 'top',
+          classes: ['gradient'],
+          content: `Then I continued, to the end of the square, towards the church.`,
+        },
+        {
+          time: 46,
+          type: 'text',
+          placeholder: 'bottom',
+          classes: ['banner'],
+          content: `toucher l'écran une fois la position atteinte`
+        },
+        {
+          time: 46,
+          type: 'trigger-next-state',
+          placeholder: 'screen',
+          triggerAudio: {
+            id: 'touch-1',
+            file: 'sounds/touch/06-click-image.mp3',
+          }
+        },
+      ]
+    },
+
+    // ----------------------------------------------------------------------
     // END STATE
     // ----------------------------------------------------------------------
     {
@@ -260,7 +321,6 @@ const config = {
       stream: {
         id: '13-streaming',
         file: 'streams/13-streaming.wav',
-        sync: false,
         loop: false,
       },
       // list of events
