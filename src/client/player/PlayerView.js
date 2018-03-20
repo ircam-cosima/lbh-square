@@ -44,6 +44,7 @@ class PlayerView extends soundworks.SegmentedView {
     this.$placeholders['bottom'] = this.$el.querySelector('#bottom');
     this.$placeholders['background-color'] = this.$el.querySelector('#background-color');
     this.$placeholders['background-image'] = this.$el.querySelector('#background-image');
+    this.$placeholders['background-video'] = this.$el.querySelector('#background-video');
   }
 
   clear() {

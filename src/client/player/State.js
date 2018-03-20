@@ -172,6 +172,12 @@ class State {
         if (!silent)
           this.experience.simplePlayer.trigger(event.id);
         break;
+      case 'vibrate':
+        console.log(event);
+        if (!silent) {
+          window.navigator.vibrate(event.pattern);
+        }
+        break;
     }
 
     // for 'trigger-next-state' event type, we wait for the interaction

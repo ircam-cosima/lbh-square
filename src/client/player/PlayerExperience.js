@@ -17,7 +17,7 @@ class PlayerExperience extends soundworks.Experience {
     this.envConfig = envConfig;
     this.appConfig = appConfig;
 
-    const features = ['web-audio'];
+    const features = ['web-audio', 'vibrate'];
 
     if (appConfig.environment.wakeLock)
       features.push('wake-lock');

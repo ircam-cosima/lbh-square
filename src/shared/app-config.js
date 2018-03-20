@@ -294,6 +294,12 @@ const config = {
           content: `Then I continued, to the end of the square, towards the church.`,
         },
         {
+          // example of vibrate event (won't work on iOS)
+          time: 29,
+          type: 'vibrate',
+          pattern: [1000, 1000, 1000, 1000, 1000, 1000], // in ms
+        },
+        {
           time: 46,
           type: 'text',
           placeholder: 'bottom',

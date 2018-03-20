@@ -21,16 +21,15 @@ https://css-tricks.com/design-considerations-text-images/
 
 ## first page - ok
 
-- branche les ecouteurs - cf. icone plus claire
-- lock mode portrait => check problem avec compass
+- branche les ecouteurs - cf. icone plus claire ??
+- lock mode portrait => check problem avec compass ??
 - mode vibreur () - on vire - ok
 - son buité -> on vire - ok
 
 ## new events
 
-- event video
-- event vibrate
-- event redirect (or text-event is enough)
+- event video (use gifs, cannot start on iOS)
+- event vibrate (same, needs user gesture) - ok
 
 ## 
 - reimplement all states

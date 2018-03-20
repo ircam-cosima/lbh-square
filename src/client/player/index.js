@@ -27,6 +27,20 @@ function bootstrap() {
       instance.view = serviceViews.get('service:platform', appConfig.txt.home);
   });
 
+  const vibrateHook = {
+    id: 'vibrate',
+    check: function() {
+      return true; // can't break application
+    },
+    interactionHook: function() {
+      window.navigator.vibrate(1);
+      return Promise.resolve(true);
+    }
+  };
+
+  const platform = soundworks.client.require('platform');
+  platform.addFeatureDefinition(vibrateHook);
+
   // create client side (player) experience and start the client
   const experience = new PlayerExperience(config, appConfig);
   soundworks.client.start();
