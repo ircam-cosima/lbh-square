@@ -196,7 +196,6 @@ const config = {
           time: 2, // 0.01
           type: 'text',
           placeholder: 'center',
-          classes: ['white', 'align-center'],
           content: `Here is where I grew up, me, my kids, my nephews...`,
         },
         {
@@ -239,6 +238,77 @@ const config = {
             id: 'touch-1',
             file: 'sounds/touch/02-click-image.mp3',
           }
+        },
+      ]
+    },
+
+    // end state
+    {
+      title: 'Credits',
+
+      stream: {
+        id: '13-streaming',
+        file: 'streams/13-streaming.wav',
+        sync: false,
+        loop: false,
+      },
+      // list of events
+      events: [
+        {
+          time: 0,
+          type: 'background-color',
+          placeholder: 'background-color',
+          color: '#272727',
+        },
+        {
+          time: 0,
+          type: 'fade-in',
+          placeholder: 'background-color',
+          duration: 1,
+        },
+        {
+          time: 1.2,
+          type: 'text',
+          placeholder: 'top',
+          classes: ['large', 'bold'],
+          content: `SQUARE`,
+        },
+        {
+          time: 10.5, // 0.01
+          type: 'text',
+          placeholder: 'center',
+          classes: ['white', 'align-center'],
+          content: `
+            <dl>
+              <dt class="first">Concept et Création :</dt>
+              <dd class="first">Lorenzo Bianchi Hoesch</dd>
+
+              <dt>Développement :</dt>
+              <dd>
+                David Poirier-Quinot<br />
+                Benjamin Matuszewski
+              </dd>
+
+              <dt>Voix principale :</dt>
+              <dd>Deborah Lopatin</dd>
+
+              <dt>Violon :</dt>
+              <dd>Szuhwa Wu</dd>
+
+              <dt>Trompette et voix :</dt>
+              <dd>Amir el Saffar</dd>
+
+              <dt>Water Games :</dt>
+              <dd>West Gaua</dd>
+            </dl>
+          `,
+        },
+        {
+          time: 20,
+          type: 'text',
+          placeholder: 'bottom',
+          classes: ['banner'],
+          content: `<a href="http://forumnet.ircam.fr/event/square-installation-interactive-lorenzo-bianchi-hoesch/">Accéder à la page du project</a>`,
         },
       ]
     },

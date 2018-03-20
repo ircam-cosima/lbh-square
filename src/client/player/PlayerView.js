@@ -2,31 +2,6 @@ import * as soundworks from 'soundworks/client';
 
 const client = soundworks.client;
 
-// @todo - remove
-// const template = `
-//   <div class="background bkg-img" id="background">
-//     <div class="bottom" id="background-banner" style="display:none" align="center">
-//       <p class="soft-blink-2 black-text-banner">toucher l'écran une fois la position atteinte</p>
-//     </div>
-//     <div class="middle flex-middle">
-//       <p class="black-text" id="background-instructions"></p>
-//     </div>
-//     <canvas id="backgroundCanvas">
-//     </canvas>
-//   </div>
-//   <div class="foreground" id="foreground">
-//     <div class="section-top flex-middle">
-//       <p class="big" id="foreground-title"><%= title %></p>
-//     </div>
-//     <div class="section-center flex-middle">
-//       <p class="medium" id="foreground-instructions"><%= instructions %></p>
-//     </div>
-//     <div class="section-bottom flex-middle soft-blink">
-//       <p class="small" id="foreground-footer"></p>
-//     </div>
-//   </div>
-// `;
-
 const template = `
   <div class="background fit-container">
     <div id="background-image" class="fit-container"></div>
@@ -106,7 +81,7 @@ class PlayerView extends soundworks.SegmentedView {
 
     classes.forEach(className => $el.classList.add(className));
 
-    $el.innerHTML = `<p>${content}</p>`;
+    $el.innerHTML = `<div>${content}</div>`;
   }
 
   fadeIn(placeholder, duration) {

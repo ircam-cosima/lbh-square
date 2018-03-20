@@ -13,13 +13,13 @@ https://css-tricks.com/design-considerations-text-images/
 - event trigger-audio - ok
 - preload images - ok
 - services instructions - ok
+- osc flag (won't have a max patch in most cases) - ok
+- end screen - ok
 
-- end screen
 - restart at state + event
+- sync streams
 
-- flag for osc (won't have a max patch in most cases)
-
-## first page
+## first page - ok
 
 - branche les ecouteurs - cf. icone plus claire
 - lock mode portrait => check problem avec compass

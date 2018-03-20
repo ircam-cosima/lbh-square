@@ -50,12 +50,8 @@ appConfig.states.forEach(state => {
   sharedParams.addEnum(name, label, options);
 });
 
-// get all stream files from app configuration
-const streamFiles = appConfig.states.map(state => path.join('public', state.stream.file));
-streamFiles.push(path.join('public', appConfig.common.fallbackStream.file));
-
 // launch experiences
-const experience = new PlayerExperience('player', streamFiles);
+const experience = new PlayerExperience('player', appConfig);
 const controller = new soundworks.ControllerExperience('controller');
 
 // start application
