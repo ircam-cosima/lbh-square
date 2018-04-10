@@ -18,6 +18,7 @@ https://css-tricks.com/design-considerations-text-images/
 - cleaned seek - ok
 - restart at state + event - ok
 - sync streams on underlying period - ok
+- event vibrate (same, needs user gesture) - ok
 
 ## first page - ok
 
@@ -29,7 +30,6 @@ https://css-tricks.com/design-considerations-text-images/
 ## new events
 
 - event video (use gifs, cannot start on iOS)
-- event vibrate (same, needs user gesture) - ok
 
 ## 
 - reimplement all states
