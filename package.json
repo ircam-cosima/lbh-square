@@ -7,7 +7,7 @@
   ],
   "description": "Square, L Bianchi H., IRCAM Residency (2017). Soundworks based application.",
   "license": "BSD-3-Clause",
-  "version": "1.2.0",
+  "version": "1.1.0",
   "scripts": {
     "minify": "node ./bin/runner --minify",
     "prewatch": "npm run transpile",
