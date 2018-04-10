@@ -20,41 +20,40 @@ const appConfig = {
 
 this.sParams = {
   subtitles: [
-  ``, // introduction
-  `Here is where I grew up, me, my kids, my nephews...`, // state 1
-  `I think I read something about the couple who created this fountain, more than 3 centuries ago.
-  I remember this sentence that the lady who made these sculptures, once full of colors and their feet in water, wrote.
-  <br> <br>
-  "I am blind, my sculptures are my eyes, imagination is the rainbow, hapyness is the imagination, imagination exists."`,
-  ``,
-  ``,
-  ``,
-  `There is no synagogue, church, polis, ethnic community, that does not deserve to be abandonned.`,
-  `It's here, taking this picture, that I made my mind to leave.`,
-  `I closed my eyes to get used not to see this place anymore. <br> <br> I'm blind.`,
-  `Allo? Hi it's me, is it true what they say, you're leaving? yeah, I'm heading south, looking for a job.
-  Heading to Marseille? Yeah, and then further south. You want to cross the sea and go to Bechar?
-  Yeah, and then further south. You go to Beni Abbes?`,
-  ``,
-  `Imagination exists`,
+    ``, // introduction
+    `Here is where I grew up, me, my kids, my nephews...`, // state 1
+    `I think I read something about the couple who created this fountain, more than 3 centuries ago.
+    I remember this sentence that the lady who made these sculptures, once full of colors and their feet in water, wrote.
+    <br> <br>
+    "I am blind, my sculptures are my eyes, imagination is the rainbow, hapyness is the imagination, imagination exists."`,
+    ``,
+    ``,
+    ``,
+    `There is no synagogue, church, polis, ethnic community, that does not deserve to be abandonned.`,
+    `It's here, taking this picture, that I made my mind to leave.`,
+    `I closed my eyes to get used not to see this place anymore. <br> <br> I'm blind.`,
+    `Allo? Hi it's me, is it true what they say, you're leaving? yeah, I'm heading south, looking for a job.
+    Heading to Marseille? Yeah, and then further south. You want to cross the sea and go to Bechar?
+    Yeah, and then further south. You go to Beni Abbes?`,
+    ``,
+    `Imagination exists`,
   `I finally did not go in there. <br> <br> Too much noise, <br> too many people.`,
   ``,
   ],
 
   subtitlesImg: [
-  `The first photo just showed up. A viewpoint so ordinary, declining.`,// introduction
-  `Another photo, an animal`,
-  `I then turned around and took a few pictures to bring with me.`, // state 1
-  `You're heading to Marseille?`,
-  `My memories were grim`,
-  `Then I continued, to the end of the square, towards the church.`,
-  `I hesitated to get in or not, then I mustered the courage and walked in.`,
-  `I came out through the same door I went in, slowly. I sat down on the steps, amongst other people.`,
-  ``,
-  `I opened my eyes, stood up, and heading to my right walked towards home.`,
-  `Before leaving, I told myself that I had to take a moment to sit and give this place a proper goobye.
-   I searched for a café around me.`,
-  `Slowly, I arrived to the last café of the square.`,
+    `The first photo just showed up. A viewpoint so ordinary, declining.`,// introduction
+    `Another photo, an animal`,
+    `I then turned around and took a few pictures to bring with me.`, // state 1
+    `You're heading to Marseille?`,
+    `My memories were grim`,
+    `Then I continued, to the end of the square, towards the church.`,
+    `I hesitated to get in or not, then I mustered the courage and walked in.`,
+    `I came out through the same door I went in, slowly. I sat down on the steps, amongst other people.`,
+    ``,
+    `I opened my eyes, stood up, and heading to my right walked towards home.`,
+    `Before leaving, I told myself that I had to take a moment to sit and give this place a proper goobye. I searched for a café around me.`,
+    `Slowly, I arrived to the last café of the square.`,
   `I turned around, walked two or three steps to breathe more easily. I looked up towards this part of the sky that is my own.`,
   ``,
   ],
@@ -76,14 +75,80 @@ this.sParams = {
     'white-text',
   ],
 
+
   // these times are absolute, from the start of the current state's audio stream file
-  timeBeforeNewImageDisplayed : [52.6, 59, 80, 19.2, 16.5, 26, 40.5, 317, 112, 25, 98, 8.2, 31.5, 10.5],
-  // these times are relative, from the moment the image is displayed:
-  timeBeforeNewImageClickable : [10, 7, 11, 2, 2, 20, 25, 20, 2, 20, 18, 60, 25, 10],
+  timeBeforeSubtitleDisplayed: [
+      0.1,
+      2,
+      3.5,
+      0.1,
+      0.1,
+      0.1,
+      2.5,
+      6,
+      1,
+      2,
+      0.1,
+      3,
+      16,
+    0.1
+  ], // in sec, first is dummy for intro defines its own times
+
   // these times are absolute, from the start of the current state's audio stream file
-  timeBeforeSubtitleDisplayed: [0.1, 2, 3.5, 0.1, 0.1, 0.1, 2.5, 6, 1, 2, 0.1, 3, 16, 0.1], // in sec, first is dummy for intro defines its own times
+  timeBeforeNewImageDisplayed : [
+      52.6,
+      59,
+      80,
+      19.2,
+      16.5,
+      26,
+      40.5,
+      317,
+      112,
+      25,
+      98,
+      8.2,
+    31.5,
+    10.5
+  ],
+
+
   // these times are relative, from the moment the image is displayed:
-  timeBeforeSubtitleImgDisplayed: [4, 4.5, 6, 3.5, 0.1, 4, 6.6, 3.5, 0.1, 3, 6.6, 3.2, 11, 0.1], // in sec
+  timeBeforeSubtitleImgDisplayed: [
+      4,
+      4.5,
+      6,
+      3.5,
+      0.1,
+      4,
+      6.6,
+      3.5,
+      0.1,
+      3,
+      6.6,
+      3.2,
+      11,
+    0.1
+  ], // in sec
+
+  // these times are relative, from the moment the image is displayed:
+  timeBeforeNewImageClickable : [
+      10,
+      7,
+      11,
+      2,
+      2,
+      20,
+      25,
+      20,
+      2,
+      20,
+      18,
+      60,
+      25,
+    10
+  ],
+
 }
 
 

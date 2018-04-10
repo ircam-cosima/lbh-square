@@ -53,8 +53,9 @@ appConfig.states.forEach(state => {
 // launch experiences
 const experience = new PlayerExperience('player', appConfig);
 
-if (config.env !== 'production')
+if (config.env !== 'production') {
   const controller = new soundworks.ControllerExperience('controller');
+}
 
 // start application
 soundworks.server.start();
