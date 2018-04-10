@@ -4,6 +4,20 @@
 
 > See [soundworks-template repository](https://github.com/collective-soundworks/soundworks-template) for detail on how to use the Soundworks framework.
 
+# Clients
+
+## development vs production
+
+For working purpose, a controller is available at `http://your.ip/controller`.
+This client should ***never*** be accessible in production. 
+
+To do that:
+
+- switch the `env` from `development` to `production` in the `src/server/config/your-config.js`.
+- retranspile `npm run transpile`
+- run the srever with such command `ENV=you-config node dist/server/index.js`
+
+
 # Useful Links
 
 Project website: http://forumnet.ircam.fr/fr/event/square
