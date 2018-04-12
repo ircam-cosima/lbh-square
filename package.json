@@ -5,7 +5,7 @@
     "David Poirier-Quinot",
     "Benjamin Matuszewski"
   ],
-  "description": "Square, L Bianchi H., IRCAM Residency (2017). Soundworks based application.",
+  "description": "Square, L Bianchi H. - IRCAM Residency (2017). Soundworks based application.",
   "license": "BSD-3-Clause",
   "version": "1.1.0",
   "scripts": {
@@ -22,7 +22,6 @@
   "dependencies": {
     "babel-runtime": "^6.6.1",
     "debug": "^2.6.4",
-    "node-audio-slicer": "0.0.6",
     "slugify": "^1.2.9",
     "soundworks": "collective-soundworks/soundworks#v2.1.4",
     "source-map-support": "^0.4.0"
