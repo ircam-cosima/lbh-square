@@ -33,7 +33,10 @@ function bootstrap() {
       return true; // can't break application
     },
     interactionHook: function() {
-      window.navigator.vibrate(1);
+      // check for vibrate API (not in Safari)
+      if( window.navigator.vibrate !== undefined ) {
+        window.navigator.vibrate(1);
+      }
       return Promise.resolve(true);
     }
   };

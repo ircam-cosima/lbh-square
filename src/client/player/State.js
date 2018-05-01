@@ -175,7 +175,10 @@ class State {
       case 'vibrate':
         console.log(event);
         if (!silent) {
-          window.navigator.vibrate(event.pattern);
+          // check for vibrate API (not in Safari)
+          if( window.navigator.vibrate !== undefined ) {
+            window.navigator.vibrate(event.pattern);
+          }
         }
         break;
     }
