@@ -14,19 +14,19 @@ const config = {
     home: {
       title: 'SQUARE',
       subtitle: 'by Lorenzo Bianchi Hoesh',
-      useHeadphones: 'EXPÉRIENCE À FAIRE AU CASQUE',
+      useHeadphones: 'EXPÉRIENCE À FAIRE AU CASQUE <br> (USE HEADPHONES)',
 
-      instructionsHeader: 'Merci de :',
+      instructionsHeader: 'Merci de (Please):',
       instructions: {
-        wakeLock: 'désactiver la mise en veille',
-        headphones: 'brancher vos écouteurs',
-        volume: 'ajuster le volume',
+        wakeLock: 'désactiver la mise en veille <br> (disable sleep mode)',
+        // headphones: 'brancher vos écouteurs',
+        // volume: 'ajuster le volume',
       },
-      touchToStart: 'Toucher l\'écran pour commencer',
+      touchToStart: 'Toucher l\'écran pour commencer <br> (Touch the screen to start)',
     },
     restartPage: {
-      restart: 'Recommencer du début',
-      continue: 'Reprendre la lecture',
+      restart: 'Recommencer du début <br> (Start from beginning)',
+      continue: 'Reprendre la lecture <br> (Resume playback)',
     },
   },
 
@@ -36,6 +36,7 @@ const config = {
       file: 'streams/14-streaming-loop-infinite.wav',
       loop: true,
     },
+    enableSubtitles: true
   },
 
   states: [
@@ -72,7 +73,7 @@ const config = {
         },
         {
           time: 1.7, // 0.01
-          type: 'text',
+          type: 'text-subtitle',
           placeholder: 'center',
           // classes: ['color-red'],
           content: `
@@ -87,7 +88,7 @@ const config = {
         },
         {
           time: 16.8, // 17
-          type: 'text',
+          type: 'text-subtitle',
           placeholder: 'center',
           // classes: ['white', 'align-center'],
           content: `
@@ -101,7 +102,7 @@ const config = {
         },
         {
           time: 26.8, // 27
-          type: 'text',
+          type: 'text-subtitle',
           placeholder: 'center',
           // classes: ['white', 'align-center'],
           content: `
@@ -116,7 +117,7 @@ const config = {
         },
         {
           time: 41,
-          type: 'text',
+          type: 'text-subtitle',
           placeholder: 'center',
           // classes: ['white', 'align-center'],
           content: `
@@ -149,7 +150,7 @@ const config = {
         },
         {
           time: 56.6,
-          type: 'text',
+          type: 'text-subtitle',
           placeholder: 'top',
           classes: ['gradient'],
           content: `The first photo just showed up. A viewpoint so ordinary, declining.`
@@ -159,7 +160,7 @@ const config = {
           type: 'text',
           placeholder: 'bottom',
           classes: ['banner'],
-          content: `toucher l'écran une fois la position atteinte`
+          content: `toucher l'écran une fois la position atteinte <br> (touch the screen once you reached this place)`
         },
         {
           time: 66.6,
@@ -200,13 +201,25 @@ const config = {
         },
         {
           time: 2, // 0.01
-          type: 'text',
+          type: 'text-subtitle',
           placeholder: 'center',
           content: `Here is where I grew up, me, my kids, my nephews...`,
         },
         {
+          time: 6,
+          type: 'text',
+          placeholder: 'top',
+          content: `Écoute (Listen)`,
+        },
+        {
           time: 59,
           type: 'text',
+          placeholder: 'top',
+          content: '',
+        },
+        {
+          time: 59,
+          type: 'text-subtitle',
           placeholder: 'center',
           content: '',
         },
@@ -224,7 +237,7 @@ const config = {
         },
         {
           time: 63.5,
-          type: 'text',
+          type: 'text-subtitle',
           placeholder: 'top',
           classes: ['gradient'],
           content: `Another photo, an animal`,
@@ -234,7 +247,7 @@ const config = {
           type: 'text',
           placeholder: 'bottom',
           classes: ['banner'],
-          content: `toucher l'écran une fois la position atteinte`
+          content: `toucher l'écran une fois la position atteinte <br> (touch the screen once you reached this place)`
         },
         {
           time: 66,
@@ -275,7 +288,7 @@ const config = {
         },
         {
           time: 3.5, // 0.01
-          type: 'text',
+          type: 'text-subtitle',
           placeholder: 'center',
           content: `
             I think I read something about the couple who created this fountain, more than 3 centuries ago.
@@ -285,8 +298,20 @@ const config = {
           `,
         },
         {
+          time: 30,
+          type: 'text',
+          placeholder: 'top',
+          content: `Écoute (Listen)`,
+        },
+        {
           time: 80,
           type: 'text',
+          placeholder: 'top',
+          content: '',
+        },
+        {
+          time: 80,
+          type: 'text-subtitle',
           placeholder: 'center',
           content: '',
         },
@@ -304,7 +329,7 @@ const config = {
         },
         {
           time: 86,
-          type: 'text',
+          type: 'text-subtitle',
           placeholder: 'top',
           classes: ['gradient'],
           content: `I then turned around and took a few pictures to bring with me.`,
@@ -314,7 +339,7 @@ const config = {
           type: 'text',
           placeholder: 'bottom',
           classes: ['banner'],
-          content: `toucher l'écran une fois la position atteinte`
+          content: `toucher l'écran une fois la position atteinte <br> (touch the screen once you reached this place)`
         },
         {
           time: 91,
@@ -354,6 +379,18 @@ const config = {
           duration: 1,
         },
         {
+          time: 3,
+          type: 'text',
+          placeholder: 'top',
+          content: `Écoute (Listen)`,
+        },
+        {
+          time: 19.2,
+          type: 'text',
+          placeholder: 'top',
+          content: '',
+        },
+        {
           time: 19.2,
           type: 'text',
           placeholder: 'center',
@@ -376,7 +413,7 @@ const config = {
           type: 'text',
           placeholder: 'bottom',
           classes: ['banner'],
-          content: `toucher l'écran une fois la position atteinte`
+          content: `toucher l'écran une fois la position atteinte <br> (touch the screen once you reached this place)`
         },
         {
           time: 21.2,
@@ -389,7 +426,7 @@ const config = {
         },
         {
           time: 22.7,
-          type: 'text',
+          type: 'text-subtitle',
           placeholder: 'top',
           classes: ['gradient'],
           content: `You're heading to Marseille?`,
@@ -423,6 +460,18 @@ const config = {
           duration: 1,
         },
         {
+          time: 3,
+          type: 'text',
+          placeholder: 'top',
+          content: `Écoute (Listen)`,
+        },
+        {
+          time: 16.5,
+          type: 'text',
+          placeholder: 'top',
+          content: '',
+        },
+        {
           time: 16.5,
           type: 'text',
           placeholder: 'center',
@@ -442,7 +491,7 @@ const config = {
         },
         {
           time: 16.6,
-          type: 'text',
+          type: 'text-subtitle',
           placeholder: 'top',
           classes: ['gradient'],
           content: `My memories were grim`,
@@ -452,7 +501,7 @@ const config = {
           type: 'text',
           placeholder: 'bottom',
           classes: ['banner'],
-          content: `toucher l'écran une fois la position atteinte`
+          content: `toucher l'écran une fois la position atteinte <br> (touch the screen once you reached this place)`
         },
         {
           time: 18.6,
@@ -493,6 +542,18 @@ const config = {
           duration: 1,
         },
         {
+          time: 3,
+          type: 'text',
+          placeholder: 'top',
+          content: `Écoute (Listen)`,
+        },
+        {
+          time: 26,
+          type: 'text',
+          placeholder: 'top',
+          content: '',
+        },
+        {
           time: 26,
           type: 'background-image',
           placeholder: 'background-image',
@@ -506,7 +567,7 @@ const config = {
         },
         {
           time: 30,
-          type: 'text',
+          type: 'text-subtitle',
           placeholder: 'top',
           classes: ['gradient'],
           content: `Then I continued, to the end of the square, towards the church.`,
@@ -516,7 +577,7 @@ const config = {
           type: 'text',
           placeholder: 'bottom',
           classes: ['banner'],
-          content: `toucher l'écran une fois la position atteinte`
+          content: `toucher l'écran une fois la position atteinte <br> (touch the screen once you reached this place)`
         },
         {
           time: 46,
@@ -558,9 +619,21 @@ const config = {
         },
         {
           time: 2.5, // 0.01
-          type: 'text',
+          type: 'text-subtitle',
           placeholder: 'center',
           content: `There is no synagogue, church, polis, ethnic community, that does not deserve to be abandonned.`,
+        },
+        {
+          time: 13,
+          type: 'text',
+          placeholder: 'top',
+          content: `Écoute (Listen)`,
+        },
+        {
+          time: 40.5,
+          type: 'text',
+          placeholder: 'top',
+          content: '',
         },
         {
           time: 40.5, // 0.01
@@ -582,7 +655,7 @@ const config = {
         },
         {
           time: 47.1,
-          type: 'text',
+          type: 'text-subtitle',
           placeholder: 'top',
           classes: ['gradient'],
           content: `I hesitated to get in or not, then I mustered the courage and walked in.`,
@@ -593,7 +666,7 @@ const config = {
           type: 'text',
           placeholder: 'bottom',
           classes: ['banner'],
-          content: `toucher l'écran une fois la position atteinte`
+          content: `toucher l'écran une fois la position atteinte <br> (touch the screen once you reached this place)`
         },
         {
           time: 65.5,
@@ -635,9 +708,21 @@ const config = {
         },
         {
           time: 6, // 0.01
-          type: 'text',
+          type: 'text-subtitle',
           placeholder: 'center',
-          content: `It's here, taking this picture, that I made my mind to leave.`,
+          content: `It's here, taking this picture, that I made up my mind to leave.`,
+        },
+        {
+          time: 15,
+          type: 'text',
+          placeholder: 'top',
+          content: `Écoute (Listen)`,
+        },
+        {
+          time: 317,
+          type: 'text',
+          placeholder: 'top',
+          content: '',
         },
         {
           time: 317, // 0.01
@@ -659,7 +744,7 @@ const config = {
         },
         {
           time: 320.5,
-          type: 'text',
+          type: 'text-subtitle',
           placeholder: 'top',
           classes: ['gradient'],
           content: `I came out through the same door I went in, slowly. I sat down on the steps, amongst other people.`,
@@ -670,7 +755,7 @@ const config = {
           type: 'text',
           placeholder: 'bottom',
           classes: ['banner'],
-          content: `toucher l'écran une fois la position atteinte`
+          content: `toucher l'écran une fois la position atteinte <br> (touch the screen once you reached this place)`
         },
         {
           time: 337,
@@ -712,9 +797,21 @@ const config = {
         },
         {
           time: 1, // 0.01
-          type: 'text',
+          type: 'text-subtitle',
           placeholder: 'center',
           content: `I closed my eyes to get used not to see this place anymore.<br /><br />I'm blind.`,
+        },
+        {
+          time: 12,
+          type: 'text',
+          placeholder: 'top',
+          content: `Écoute (Listen)`,
+        },
+        {
+          time: 112,
+          type: 'text',
+          placeholder: 'top',
+          content: '',
         },
         {
           time: 112, // 0.01
@@ -744,7 +841,7 @@ const config = {
           type: 'text',
           placeholder: 'bottom',
           classes: ['banner'],
-          content: `toucher l'écran une fois la position atteinte`
+          content: `toucher l'écran une fois la position atteinte <br> (touch the screen once you reached this place)`
         },
         {
           time: 115,
@@ -785,7 +882,7 @@ const config = {
         },
         {
           time: 2, // 0.01
-          type: 'text',
+          type: 'text-subtitle',
           placeholder: 'center',
           content: `
             Allo? Hi it's me, is it true what they say, you're leaving?<br />
@@ -816,17 +913,23 @@ const config = {
         },
         {
           time: 28,
-          type: 'text',
+          type: 'text-subtitle',
           placeholder: 'top',
           classes: ['gradient'],
           content: `I opened my eyes, stood up, and heading to my right walked towards home.`,
+        },
+        {
+          time: 37,
+          type: 'text',
+          placeholder: 'top',
+          content: `Écoute (Listen)`,
         },
         {
           time: 45,
           type: 'text',
           placeholder: 'bottom',
           classes: ['banner'],
-          content: `toucher l'écran une fois la position atteinte`
+          content: `toucher l'écran une fois la position atteinte <br> (touch the screen once you reached this place)`
         },
         {
           time: 45,
@@ -866,6 +969,18 @@ const config = {
           duration: 1,
         },
         {
+          time: 3,
+          type: 'text',
+          placeholder: 'top',
+          content: `Écoute (Listen)`,
+        },
+        {
+          time: 98,
+          type: 'text',
+          placeholder: 'top',
+          content: '',
+        },
+        {
           time: 98,
           type: 'text',
           placeholder: 'center',
@@ -885,7 +1000,7 @@ const config = {
         },
         {
           time: 104.6,
-          type: 'text',
+          type: 'text-subtitle',
           placeholder: 'top',
           classes: ['gradient'],
           content: `
@@ -896,7 +1011,7 @@ const config = {
           type: 'text',
           placeholder: 'bottom',
           classes: ['banner'],
-          content: `toucher l'écran une fois la position atteinte`
+          content: `toucher l'écran une fois la position atteinte <br> (touch the screen once you reached this place)`
         },
         {
           time: 116,
@@ -938,7 +1053,7 @@ const config = {
         },
         {
           time: 3, // 0.01
-          type: 'text',
+          type: 'text-subtitle',
           placeholder: 'center',
           content: `Imagination exists`,
         },
@@ -962,17 +1077,29 @@ const config = {
         },
         {
           time: 11.4,
-          type: 'text',
+          type: 'text-subtitle',
           placeholder: 'top',
           classes: ['gradient'],
           content: `Slowly, I arrived to the last café of the square.`,
+        },
+        {
+          time: 19,
+          type: 'text',
+          placeholder: 'top',
+          content: `Écoute (Listen)`,
+        },
+        {
+          time: 68.2,
+          type: 'text',
+          placeholder: 'top',
+          content: '',
         },
         {
           time: 68.2,
           type: 'text',
           placeholder: 'bottom',
           classes: ['banner'],
-          content: `toucher l'écran une fois la position atteinte`
+          content: `toucher l'écran une fois la position atteinte <br> (touch the screen once you reached this place)`
         },
         {
           time: 68.2,
@@ -1013,13 +1140,25 @@ const config = {
         },
         {
           time: 16, // 0.01
-          type: 'text',
+          type: 'text-subtitle',
           placeholder: 'center',
           content: `
             I finally did not go in there.<br><br>
             Too much noise,<br>
             too many people.
           `,
+        },
+        {
+          time: 25,
+          type: 'text',
+          placeholder: 'top',
+          content: `Écoute (Listen)`,
+        },
+        {
+          time: 31.5,
+          type: 'text',
+          placeholder: 'top',
+          content: '',
         },
         {
           time: 31.5,
@@ -1041,7 +1180,7 @@ const config = {
         },
         {
           time: 42.5,
-          type: 'text',
+          type: 'text-subtitle',
           placeholder: 'top',
           classes: ['gradient'],
           content: `I turned around, walked two or three steps to breathe more easily. I looked up towards this part of the sky that is my own.`,
@@ -1051,7 +1190,7 @@ const config = {
           type: 'text',
           placeholder: 'bottom',
           classes: ['banner'],
-          content: `toucher l'écran une fois la position atteinte`
+          content: `toucher l'écran une fois la position atteinte <br> (touch the screen once you reached this place)`
         },
         {
           time: 56.5,

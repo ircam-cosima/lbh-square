@@ -147,6 +147,11 @@ class State {
       case 'background-image':
         view.setBackgroundImage(event.placeholder, event.url);
         break;
+      case 'text-subtitle':
+        if (this.commonConfig.enableSubtitles){
+          view.setTextContent(event.placeholder, event.content, event.classes);
+        }
+        break;
       case 'text':
         view.setTextContent(event.placeholder, event.content, event.classes);
         break;
