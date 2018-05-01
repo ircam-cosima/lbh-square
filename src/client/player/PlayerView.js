@@ -54,6 +54,8 @@ class PlayerView extends soundworks.SegmentedView {
     this.$placeholders['top'].style.opacity = 1;
     this.$placeholders['center'].style.opacity = 1;
     this.$placeholders['bottom'].style.opacity = 1;
+    // make sure client can't click twice (during trigger-next-state event)
+    this.installEvents({}, true);
   }
 
   setId(id) {
