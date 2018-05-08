@@ -23,7 +23,7 @@
     "babel-runtime": "^6.6.1",
     "debug": "^2.6.4",
     "slugify": "^1.2.9",
-    "soundworks": "collective-soundworks/soundworks#v2.1.4",
+    "soundworks": "collective-soundworks/soundworks#v2.1.6",
     "source-map-support": "^0.4.0"
   },
   "devDependencies": {
