@@ -32,6 +32,7 @@ class PlayerExperience extends soundworks.Experience {
     });
 
     this.audioStreamManager = this.require('audio-stream-manager', {
+      assetsDomain: this.envConfig.assetsDomain,
       monitorInterval: 1,
       requiredAdvanceThreshold: 10,
     });
@@ -44,8 +45,10 @@ class PlayerExperience extends soundworks.Experience {
         if (event.triggerAudio)
           triggerAudioBuffers[event.triggerAudio.id] = event.triggerAudio.file;
 
-        if (event.type === 'background-image')
+        if (event.type === 'background-image') {
+          event.url = this.envConfig.assetsDomain + event.url;
           backgroundImages.push(event.url);
+        }
       });
     });
 
@@ -53,7 +56,6 @@ class PlayerExperience extends soundworks.Experience {
       assetsDomain: this.envConfig.assetsDomain,
       files: triggerAudioBuffers,
     });
-
 
     this.imagesLoader = this.require('images-loader', {
       assetsDomain: this.envConfig.assetsDomain,
