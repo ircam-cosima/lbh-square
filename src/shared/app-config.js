@@ -3,7 +3,7 @@ const config = {
   environment: {
     // forward informations to max patch
     // set to false if no external max patch
-    osc: true,
+    osc: false,
     // hack to keep devices awake
     // `true` for creations, `false` for production
     // update home instructions accordingly
