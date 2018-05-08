@@ -3,6 +3,21 @@ import { Service, serviceManager } from 'soundworks/client';
 const SERVICE_ID = 'service:images-loader';
 
 
+function prefixPaths(pathList, prefix) {
+  // test absolute urls (or protocol relative)
+  const isAbsolute = /^https?:\/\/|^\/\//i;
+
+  pathList = pathList.map((path) => {
+    if (isAbsolute.test(path) || prefix === '/')
+      return path;
+    else
+      return prefix + path;
+  });
+
+  return pathList;
+}
+
+
 class ImagesLoader extends Service {
   constructor() {
     super(SERVICE_ID, false);
@@ -10,6 +25,7 @@ class ImagesLoader extends Service {
     const defaults = {
       files: [],
       viewPriority: 3,
+      assetsDomain: '',
     };
 
     this.configure(defaults);
@@ -28,7 +44,7 @@ class ImagesLoader extends Service {
   }
 
   loadImages() {
-    const images = this.options.files;
+    const images = prefixPaths(this.options.files, this.options.assetsDomain);
 
     const promises = images.map(src => {
       return new Promise((resolve, reject) => {

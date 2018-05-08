@@ -56,6 +56,7 @@ class PlayerExperience extends soundworks.Experience {
 
 
     this.imagesLoader = this.require('images-loader', {
+      assetsDomain: this.envConfig.assetsDomain,
       files: backgroundImages,
     });
   }
