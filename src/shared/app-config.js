@@ -13,7 +13,7 @@ const config = {
   txt: {
     home: {
       title: 'SQUARE',
-      subtitle: 'by Lorenzo Bianchi Hoesh',
+      subtitle: 'by Lorenzo Bianchi Hoesch',
       useHeadphones: 'EXPÉRIENCE À FAIRE AU CASQUE <br> (USE HEADPHONES)',
 
       instructionsHeader: 'Merci de (Please):',
