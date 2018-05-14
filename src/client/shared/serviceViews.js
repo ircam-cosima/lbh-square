@@ -618,8 +618,13 @@ const serviceViews = {
           </div>
           <div class="section-center flex-center">
             <div>
-              <p class="use-headphones"><%= globals.useHeadphones %></p>
+              <ul class="instructions">
+                <% for (let key in globals.instructions) { %>
+                  <li class="instruction"><%= globals.instructions[key] %></li>
+                <% } %>
+              </ul>
               <p class="fa fa-headphones" aria-hidden="true"></p>
+              <!--
               <p class="instructions-header">
                 <%= globals.instructionsHeader %>
               </p>
@@ -628,6 +633,8 @@ const serviceViews = {
                   <li class="instruction"><%= globals.instructions[key] %></li>
                 <% } %>
               </ul>
+              -->
+              <p class="use-headphones"><%= globals.useHeadphones %></p>
             </div>
           </div>
           <div class="section-bottom flex-middle">
