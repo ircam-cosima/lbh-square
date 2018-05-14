@@ -13,7 +13,7 @@ const config = {
   txt: {
     home: {
       title: 'SQUARE',
-      subtitle: 'by Lorenzo Bianchi Hoesh',
+      subtitle: 'by Lorenzo Bianchi Hoesch',
       useHeadphones: 'EXPÉRIENCE À FAIRE AU CASQUE <br> (USE HEADPHONES)',
 
       instructionsHeader: 'Merci de (Please):',
@@ -32,8 +32,8 @@ const config = {
 
   common: {
     fallbackStream: {
-      id: '14-streaming-loop-infinite',
-      file: 'streams/14-streaming-loop-infinite.wav',
+      id: '13-streaming-loop-infinite',
+      file: 'streams/13-streaming-loop-infinite.wav',
       loop: true,
     },
     enableSubtitles: true
@@ -47,8 +47,8 @@ const config = {
       title: 'Intro',
 
       stream: {
-        id: '00-streaming',
-        file: 'streams/00-streaming.wav',
+        id: '00-discours-deborah-DEF',
+        file: 'streams/00-discours-deborah-DEF.wav',
         loop: false,
       },
       // list of events
@@ -106,17 +106,17 @@ const config = {
           placeholder: 'center',
           // classes: ['white', 'align-center'],
           content: `
-            De simples photos, des points de vue sur ce square qui m’est si cher. Pour
-            suivre le fil rouge de mes souvenirs, tu devras me suivre, et littéralement
+            De simples photos. 
+            Pour suivre le fil rouge de mes souvenirs, tu devras me suivre, et littéralement
             te mettre à l'endroit d'où j'ai pris ces photos.
             <br /><br />
-            A few pictures, viewpoints on this Square so dear to me. To follow
-            the thread of my memories, you'll have to follow me and literally adopt
+            A few pictures. 
+            To follow the thread of my memories, you'll have to follow me and literally adopt
             the viewpoint I had when I took these pictures.
           `,
         },
         {
-          time: 41,
+          time: 38,
           type: 'text-subtitle',
           placeholder: 'center',
           // classes: ['white', 'align-center'],
@@ -151,19 +151,26 @@ const config = {
         {
           time: 56.6,
           type: 'text-subtitle',
-          placeholder: 'top',
+          placeholder: 'center',
           classes: ['gradient'],
-          content: `The first photo just showed up. A viewpoint so ordinary, declining.`
+          content: `The first photo just showed up.`
         },
         {
-          time: 66.6,
+          time: 60,
+          type: 'text-subtitle',
+          placeholder: 'center',
+          classes: ['gradient'],
+          content: ``
+        },
+        {
+          time: 60,
           type: 'text',
           placeholder: 'bottom',
           classes: ['banner'],
           content: `toucher l'écran une fois la position atteinte <br> (touch the screen once you reached this place)`
         },
         {
-          time: 66.6,
+          time: 60,
           type: 'trigger-next-state',
           placeholder: 'screen',
           triggerAudio: {
@@ -178,12 +185,454 @@ const config = {
     // STATE 1
     // ----------------------------------------------------------------------
     {
-      title: 'Where I grew',
+      title: 'Discours Lorenzo',
 
       stream: {
-        id: '01-streaming',
-        file: 'streams/01-streaming.wav',
+        id: '01-discours-lorenzo-DEF',
+        file: 'streams/01-discours-lorenzo-DEF.wav',
         loop: false,
+      },
+      // list of events
+      events: [
+        {
+          time: 0,
+          type: 'background-color',
+          placeholder: 'background-color',
+          color: '#272727',
+        },
+        {
+          time: 0,
+          type: 'fade-in',
+          placeholder: 'background-color',
+          duration: 1,
+        },
+        {
+          time: 2,
+          type: 'text',
+          placeholder: 'top',
+          content: `Écoute (Listen)`,
+        },
+        {
+          time: 9,
+          type: 'background-image',
+          placeholder: 'background-image',
+          url: './images/01.jpg',
+        },
+        {
+          time: 11,
+          type: 'fade-out',
+          placeholder: 'background-color',
+          duration: 5,
+        },
+        {
+          time: 12,
+          type: 'text',
+          placeholder: 'top',
+          content: ``,
+        },
+        {
+          time: 13,
+          type: 'text-subtitle',
+          placeholder: 'center',
+          content: `Another photo`,
+        },
+          {
+          time: 20,
+          type: 'text-subtitle',
+          placeholder: 'center',
+          content: `follow me! don't listen to the people around you! 
+          i want to show you something that is just here, fourth room to the right`
+                   
+        },
+        {
+          time: 93,
+          type: 'text-subtitle',
+          placeholder: 'center',
+          content: ``
+                   
+        },
+        {
+          time: 93,
+          type: 'text',
+          placeholder: 'bottom',
+          classes: ['banner'],
+          content: `toucher l'écran une fois la position atteinte <br> (touch the screen once you reached this place)`
+        },
+        {
+          time: 93,
+          type: 'trigger-next-state',
+          placeholder: 'screen',
+          triggerAudio: {
+            id: 'touch-1',
+            file: 'sounds/touch/01-click-image.mp3',
+          }
+        },
+      ]
+    },
+
+    // ----------------------------------------------------------------------
+    // STATE 2
+    // ----------------------------------------------------------------------
+    {
+      title: '02-beuys-dehors',
+
+      stream: {
+        id: '02-beuys-dehors-DEF',
+        file: 'streams/02-beuys-dehors-DEF.wav',
+        loop: false,
+      },
+      // list of events
+      events: [
+        {
+          time: 0,
+          type: 'background-color',
+          placeholder: 'background-color',
+          color: '#272727',
+        },
+        {
+          time: 0,
+          type: 'fade-in',
+          placeholder: 'background-color',
+          duration: 1,
+        },
+        {
+          time: 2,
+          type: 'text',
+          placeholder: 'center',
+          content: `I hesitated to get in or not, then I mustered the courage and walked in.`,
+        },
+        {
+          time: 10,
+          type: 'text-subtitle',
+          placeholder: 'center',
+          content: '',
+        },
+        {
+          time: 8,
+          type: 'background-image',
+          placeholder: 'background-image',
+          url: './images/02.jpg',
+        },
+        {
+          time: 8,
+          type: 'fade-out',
+          placeholder: 'background-color',
+          duration: 5,
+        },
+        {
+          time: 36,
+          type: 'text',
+          placeholder: 'bottom',
+          classes: ['banner'],
+          content: `toucher l'écran une fois la position atteinte <br> (touch the screen once you reached this place)`
+        },
+        {
+          time: 36,
+          type: 'trigger-next-state',
+          placeholder: 'screen',
+          triggerAudio: {
+            id: 'touch-1',
+            file: 'sounds/touch/02-click-image.mp3',
+          }
+        },
+      ]
+    },
+
+    // ----------------------------------------------------------------------
+    // STATE 3
+    // ----------------------------------------------------------------------
+    {
+      title: '03-beuys-dedans',
+
+      stream: {
+        id: '03-beuys-dedans-DEF',
+        file: 'streams/03-beuys-dedans-DEF.wav',
+        loop: false,
+      },
+      // list of events
+      events: [
+        {
+          time: 0,
+          type: 'background-color',
+          placeholder: 'background-color',
+          color: '#272727',
+        },
+        {
+          time: 0,
+          type: 'fade-in',
+          placeholder: 'background-color',
+          duration: 1,
+        },
+        {
+          time: 1,
+          type: 'text-subtitle',
+          placeholder: 'center',
+          content: `this is one of my dearest memories.`
+        },
+        {
+          time: 10,
+          type: 'text-subtitle',
+          placeholder: 'center',
+          content: ``
+        },
+        {
+          time: 52,
+          type: 'text-subtitle',
+          placeholder: 'center',
+          content: `put your headphones`
+        },
+           {
+          time: 55.7, // 0.01
+          type: 'text-subtitle',
+          placeholder: 'center',
+          content: `Imagination exists`,
+        },
+        {
+          time: 60,
+          type: 'text-subtitle',
+          placeholder: 'center',
+          content: ``
+        },
+        {
+          time: 75,
+          type: 'text',
+          placeholder: 'top',
+          content: ``,
+        },
+        {
+          time: 75,
+          type: 'background-image',
+          placeholder: 'background-image',
+          url: './images/03.jpg',
+        },
+        {
+          time: 78,
+          type: 'fade-out',
+          placeholder: 'background-color',
+          duration: 5,
+        },
+        {
+          time: 86,
+          type: 'text-subtitle',
+          placeholder: 'center',
+          content: `I came out through the same door I went in, doubting about everything`
+        },
+        {
+          time: 100,
+          type: 'text-subtitle',
+          placeholder: 'center',
+          content: ``
+        },
+        {
+          time: 105,
+          type: 'text-subtitle',
+          placeholder: 'center',
+          content: `there's another object i would like to show you, we just go in the next room`
+        },
+        {
+          time: 140,
+          type: 'text-subtitle',
+          placeholder: 'center',
+          content: ``
+        },
+        {
+          time: 141,
+          type: 'text',
+          placeholder: 'bottom',
+          classes: ['banner'],
+          content: `toucher l'écran une fois la position atteinte <br> (touch the screen once you reached this place)`
+        },
+        {
+          time: 141,
+          type: 'trigger-next-state',
+          placeholder: 'screen',
+          triggerAudio: {
+            id: 'touch-1',
+            file: 'sounds/touch/03-click-image.mp3',
+          }
+        },
+      ]
+    },
+
+    // ----------------------------------------------------------------------
+    // STATE 4
+    // ----------------------------------------------------------------------
+    {
+      title: '04-nauman-dehors',
+
+      stream: {
+        id: '04-Nauman-dehors-DEF',
+        file: 'streams/04-Nauman-dehors-DEF.wav',
+        loop: false,
+      },
+      // list of events
+      events: [
+        {
+          time: 0,
+          type: 'background-color',
+          placeholder: 'background-color',
+          color: '#272727',
+        },
+        {
+          time: 0,
+          type: 'fade-in',
+          placeholder: 'background-color',
+          duration: 1,
+        },
+        {
+          time: 3,
+          type: 'text',
+          placeholder: 'center',
+          content: `when i say go, we enter, and i suggest you to put a hand on the wall during the corridor`,
+        },
+        {
+          time: 19.2,
+          type: 'text',
+          placeholder: 'center', 
+          content: '',
+        },
+        {
+          time: 16.5,
+          type: 'text',
+          placeholder: 'center',
+          content: '',
+        },
+        {
+          time: 32,
+          type: 'background-image',
+          placeholder: 'background-image',
+          url: './images/04.jpg',
+        },
+        {
+          time: 35,
+          type: 'fade-out',
+          placeholder: 'background-color',
+          duration: 5,
+        },
+         {
+          time: 37,
+          type: 'text',
+          placeholder: 'center', 
+          content: 'here is something i would like to forget'
+        },
+         {
+          time: 40,
+          type: 'text',
+          placeholder: 'center', 
+          content: ''
+        },
+        {
+          time: 40,
+          type: 'text',
+          placeholder: 'bottom',
+          classes: ['banner'],
+          content: `toucher l'écran une fois la position atteinte <br> (touch the screen once you reached this place)`
+        },
+        {
+          time: 40,
+          type: 'trigger-next-state',
+          placeholder: 'screen',
+          triggerAudio: {
+            id: 'touch-1',
+            file: 'sounds/touch/04-click-image.mp3',
+          }
+        },
+      ]
+    },
+
+    // ----------------------------------------------------------------------
+    // STATE 5
+    // ----------------------------------------------------------------------
+    {
+      title: '05-nauman-dedans',
+
+      stream: {
+        id: '05-Nauman-dedans-DEF',
+        file: 'streams/05-Nauman-dedans-DEF.wav',
+        loop: false,
+        period: 2.76,
+      },
+      // list of events
+      events: [
+        {
+          time: 0,
+          type: 'background-color',
+          placeholder: 'background-color',
+          color: '#272727',
+        },
+        {
+          time: 0,
+          type: 'fade-in',
+          placeholder: 'background-color',
+          duration: 1,
+        },
+        {
+          time: 3,
+          type: 'text',
+          placeholder: 'top',
+          content: `Écoute (Listen)`,
+        },
+        {
+          time: 26,
+          type: 'text',
+          placeholder: 'top',
+          content: '',
+        },
+        {
+          time: 75,
+          type: 'background-image',
+          placeholder: 'background-image',
+          url: './images/05.jpg',
+        },
+        {
+          time: 75,
+          type: 'fade-out',
+          placeholder: 'background-color',
+          duration: 5,
+        },
+        {
+          time: 80,
+          type: 'text',
+          placeholder: 'center',
+          content: `keep following me, there's a thing that you must see.
+          let's go to the window, we are going to put our hand on the glass`,
+        },
+        {
+          time: 154,
+          type: 'text',
+          placeholder: 'top',
+          content: '',
+        },
+        {
+          time: 154,
+          type: 'text',
+          placeholder: 'bottom',
+          classes: ['banner'],
+          content: `toucher l'écran une fois la position atteinte <br> (touch the screen once you reached this place)`
+        },
+        {
+          time: 154,
+          type: 'trigger-next-state',
+          placeholder: 'screen',
+          triggerAudio: {
+            id: 'touch-1',
+            file: 'sounds/touch/05-click-image.mp3',
+          }
+        },
+      ]
+    },
+
+    // ----------------------------------------------------------------------
+    // STATE 6
+    // ----------------------------------------------------------------------
+    {
+      title: '06-fenetre',
+
+      stream: {
+        id: '06-fenetre-DEF',
+        file: 'streams/06-fenetre-DEF.wav',
+        loop: false,
+        period: 2.76,
       },
       // list of events
       events: [
@@ -203,473 +652,94 @@ const config = {
           time: 2, // 0.01
           type: 'text-subtitle',
           placeholder: 'center',
-          content: `Here is where I grew up, me, my kids, my nephews...`,
+          content: `It's here, taking this picture, that I made up my mind to leave.`,
         },
         {
-          time: 6,
-          type: 'text',
-          placeholder: 'top',
-          content: `Écoute (Listen)`,
-        },
-        {
-          time: 59,
-          type: 'text',
-          placeholder: 'top',
-          content: '',
-        },
-        {
-          time: 59,
+          time: 7, // 0.01
           type: 'text-subtitle',
           placeholder: 'center',
-          content: '',
+          content: `I use to live here, in the little courtyard that you can see down on the left. My home`,
         },
         {
-          time: 59,
-          type: 'background-image',
-          placeholder: 'background-image',
-          url: './images/01.jpg',
-        },
-        {
-          time: 59,
-          type: 'fade-out',
-          placeholder: 'background-color',
-          duration: 2,
-        },
-        {
-          time: 63.5,
-          type: 'text-subtitle',
-          placeholder: 'top',
-          classes: ['gradient'],
-          content: `Another photo, an animal`,
-        },
-        {
-          time: 66,
-          type: 'text',
-          placeholder: 'bottom',
-          classes: ['banner'],
-          content: `toucher l'écran une fois la position atteinte <br> (touch the screen once you reached this place)`
-        },
-        {
-          time: 66,
-          type: 'trigger-next-state',
-          placeholder: 'screen',
-          triggerAudio: {
-            id: 'touch-1',
-            file: 'sounds/touch/01-click-image.mp3',
-          }
-        },
-      ]
-    },
-
-    // ----------------------------------------------------------------------
-    // STATE 2
-    // ----------------------------------------------------------------------
-    {
-      title: 'The fountain',
-
-      stream: {
-        id: '02-streaming',
-        file: 'streams/02-streaming.wav',
-        loop: false,
-      },
-      // list of events
-      events: [
-        {
-          time: 0,
-          type: 'background-color',
-          placeholder: 'background-color',
-          color: '#272727',
-        },
-        {
-          time: 0,
-          type: 'fade-in',
-          placeholder: 'background-color',
-          duration: 1,
-        },
-        {
-          time: 3.5, // 0.01
+          time: 14, // 0.01
           type: 'text-subtitle',
           placeholder: 'center',
-          content: `
-            I think I read something about the couple who created this fountain, more than 3 centuries ago.
-            I remember this sentence that the lady who made these sculptures, once full of colors and their feet in water, wrote.
-            <br> <br>
-            "I am blind, my sculptures are my eyes, imagination is the rainbow, hapyness is the imagination, imagination exists."
-          `,
+          content: `I use to come here, and, watching my house from here, i use to put my hands on the cold glass`,
         },
         {
-          time: 30,
-          type: 'text',
-          placeholder: 'top',
-          content: `Écoute (Listen)`,
-        },
-        {
-          time: 80,
-          type: 'text',
-          placeholder: 'top',
-          content: '',
-        },
-        {
-          time: 80,
+          time: 20, // 0.01
           type: 'text-subtitle',
           placeholder: 'center',
-          content: '',
+          content: `try`,
         },
         {
-          time: 80,
-          type: 'background-image',
-          placeholder: 'background-image',
-          url: './images/02.jpg',
-        },
-        {
-          time: 80,
-          type: 'fade-out',
-          placeholder: 'background-color',
-          duration: 2,
-        },
-        {
-          time: 86,
-          type: 'text-subtitle',
-          placeholder: 'top',
-          classes: ['gradient'],
-          content: `I then turned around and took a few pictures to bring with me.`,
-        },
-        {
-          time: 91,
-          type: 'text',
-          placeholder: 'bottom',
-          classes: ['banner'],
-          content: `toucher l'écran une fois la position atteinte <br> (touch the screen once you reached this place)`
-        },
-        {
-          time: 91,
-          type: 'trigger-next-state',
-          placeholder: 'screen',
-          triggerAudio: {
-            id: 'touch-1',
-            file: 'sounds/touch/02-click-image.mp3',
-          }
-        },
-      ]
-    },
-
-    // ----------------------------------------------------------------------
-    // STATE 3
-    // ----------------------------------------------------------------------
-    {
-      title: 'Heading to Marseille',
-
-      stream: {
-        id: '03-streaming',
-        file: 'streams/03-streaming.wav',
-        loop: false,
-      },
-      // list of events
-      events: [
-        {
-          time: 0,
-          type: 'background-color',
-          placeholder: 'background-color',
-          color: '#272727',
-        },
-        {
-          time: 0,
-          type: 'fade-in',
-          placeholder: 'background-color',
-          duration: 1,
-        },
-        {
-          time: 3,
-          type: 'text',
-          placeholder: 'top',
-          content: `Écoute (Listen)`,
-        },
-        {
-          time: 19.2,
-          type: 'text',
-          placeholder: 'top',
-          content: '',
-        },
-        {
-          time: 19.2,
-          type: 'text',
-          placeholder: 'center',
-          content: '',
-        },
-        {
-          time: 19.2,
-          type: 'background-image',
-          placeholder: 'background-image',
-          url: './images/03.jpg',
-        },
-        {
-          time: 19.2,
-          type: 'fade-out',
-          placeholder: 'background-color',
-          duration: 2,
-        },
-        {
-          time: 21.2,
-          type: 'text',
-          placeholder: 'bottom',
-          classes: ['banner'],
-          content: `toucher l'écran une fois la position atteinte <br> (touch the screen once you reached this place)`
-        },
-        {
-          time: 21.2,
-          type: 'trigger-next-state',
-          placeholder: 'screen',
-          triggerAudio: {
-            id: 'touch-1',
-            file: 'sounds/touch/03-click-image.mp3',
-          }
-        },
-        {
-          time: 22.7,
-          type: 'text-subtitle',
-          placeholder: 'top',
-          classes: ['gradient'],
-          content: `You're heading to Marseille?`,
-        },
-      ]
-    },
-
-    // ----------------------------------------------------------------------
-    // STATE 4
-    // ----------------------------------------------------------------------
-    {
-      title: 'My memories were',
-
-      stream: {
-        id: '04-streaming',
-        file: 'streams/04-streaming.wav',
-        loop: false,
-      },
-      // list of events
-      events: [
-        {
-          time: 0,
-          type: 'background-color',
-          placeholder: 'background-color',
-          color: '#272727',
-        },
-        {
-          time: 0,
-          type: 'fade-in',
-          placeholder: 'background-color',
-          duration: 1,
-        },
-        {
-          time: 3,
-          type: 'text',
-          placeholder: 'top',
-          content: `Écoute (Listen)`,
-        },
-        {
-          time: 16.5,
-          type: 'text',
-          placeholder: 'top',
-          content: '',
-        },
-        {
-          time: 16.5,
-          type: 'text',
-          placeholder: 'center',
-          content: '',
-        },
-        {
-          time: 16.5,
-          type: 'background-image',
-          placeholder: 'background-image',
-          url: './images/04.jpg',
-        },
-        {
-          time: 16.5,
-          type: 'fade-out',
-          placeholder: 'background-color',
-          duration: 2,
-        },
-        {
-          time: 16.6,
-          type: 'text-subtitle',
-          placeholder: 'top',
-          classes: ['gradient'],
-          content: `My memories were grim`,
-        },
-        {
-          time: 16.6,
-          type: 'text',
-          placeholder: 'bottom',
-          classes: ['banner'],
-          content: `toucher l'écran une fois la position atteinte <br> (touch the screen once you reached this place)`
-        },
-        {
-          time: 18.6,
-          type: 'trigger-next-state',
-          placeholder: 'screen',
-          triggerAudio: {
-            id: 'touch-1',
-            file: 'sounds/touch/04-click-image.mp3',
-          }
-        },
-      ]
-    },
-
-    // ----------------------------------------------------------------------
-    // STATE 5
-    // ----------------------------------------------------------------------
-    {
-      title: 'Then I continued',
-
-      stream: {
-        id: '05-streaming',
-        file: 'streams/05-streaming.wav',
-        loop: false,
-        period: 2.76,
-      },
-      // list of events
-      events: [
-        {
-          time: 0,
-          type: 'background-color',
-          placeholder: 'background-color',
-          color: '#272727',
-        },
-        {
-          time: 0,
-          type: 'fade-in',
-          placeholder: 'background-color',
-          duration: 1,
-        },
-        {
-          time: 3,
-          type: 'text',
-          placeholder: 'top',
-          content: `Écoute (Listen)`,
-        },
-        {
-          time: 26,
-          type: 'text',
-          placeholder: 'top',
-          content: '',
-        },
-        {
-          time: 26,
-          type: 'background-image',
-          placeholder: 'background-image',
-          url: './images/05.jpg',
-        },
-        {
-          time: 26,
-          type: 'fade-out',
-          placeholder: 'background-color',
-          duration: 2,
-        },
-        {
-          time: 30,
-          type: 'text-subtitle',
-          placeholder: 'top',
-          classes: ['gradient'],
-          content: `Then I continued, to the end of the square, towards the church.`,
-        },
-        {
-          time: 46,
-          type: 'text',
-          placeholder: 'bottom',
-          classes: ['banner'],
-          content: `toucher l'écran une fois la position atteinte <br> (touch the screen once you reached this place)`
-        },
-        {
-          time: 46,
-          type: 'trigger-next-state',
-          placeholder: 'screen',
-          triggerAudio: {
-            id: 'touch-1',
-            file: 'sounds/touch/05-click-image.mp3',
-          }
-        },
-      ]
-    },
-
-    // ----------------------------------------------------------------------
-    // STATE 6
-    // ----------------------------------------------------------------------
-    {
-      title: 'There is no...',
-
-      stream: {
-        id: '06-streaming',
-        file: 'streams/06-streaming.wav',
-        loop: false,
-        period: 2.76,
-      },
-      // list of events
-      events: [
-        {
-          time: 0,
-          type: 'background-color',
-          placeholder: 'background-color',
-          color: '#272727',
-        },
-        {
-          time: 0,
-          type: 'fade-in',
-          placeholder: 'background-color',
-          duration: 1,
-        },
-        {
-          time: 2.5, // 0.01
+          time: 21, // 0.01
           type: 'text-subtitle',
           placeholder: 'center',
-          content: `There is no synagogue, church, polis, ethnic community, that does not deserve to be abandonned.`,
+          content: `3`,
         },
         {
-          time: 13,
-          type: 'text',
-          placeholder: 'top',
-          content: `Écoute (Listen)`,
+          time: 22, // 0.01
+          type: 'text-subtitle',
+          placeholder: 'center',
+          content: `2`,
         },
         {
-          time: 40.5,
-          type: 'text',
-          placeholder: 'top',
-          content: '',
+          time: 23, // 0.01
+          type: 'text-subtitle',
+          placeholder: 'center',
+          content: `1`,
         },
         {
-          time: 40.5, // 0.01
-          type: 'text',
+          time: 24, // 0.01
+          type: 'text-subtitle',
+          placeholder: 'center',
+          content: `go`,
+        },
+        {
+          time: 27, // 0.01
+          type: 'text-subtitle',
           placeholder: 'center',
           content: ``,
         },
         {
-          time: 40.5,
+          time: 42.6, // 0.01
+          type: 'text-subtitle',
+          placeholder: 'center',
+          content: `I closed my eyes to get used not to see this place anymore.<br /><br />I'm blind.`,
+        },
+        {
+          time: 52.6, // 0.01
+          type: 'text-subtitle',
+          placeholder: 'center',
+          content: ``,
+        },
+        {
+          time: 100,
           type: 'background-image',
           placeholder: 'background-image',
           url: './images/06.jpg',
         },
         {
-          time: 40.5,
+          time: 100,
           type: 'fade-out',
           placeholder: 'background-color',
-          duration: 2,
+          duration: 5,
+        },
+          {
+          time: 100,
+          type: 'vibrate',
+          pattern: [500, 500, 500, 500, 500, 500], // in ms
         },
         {
-          time: 47.1,
-          type: 'text-subtitle',
-          placeholder: 'top',
-          classes: ['gradient'],
-          content: `I hesitated to get in or not, then I mustered the courage and walked in.`,
-        },
-
-        {
-          time: 65.5,
+          time: 105.6,
           type: 'text',
           placeholder: 'bottom',
           classes: ['banner'],
           content: `toucher l'écran une fois la position atteinte <br> (touch the screen once you reached this place)`
         },
         {
-          time: 65.5,
+          time: 105.6,
           type: 'trigger-next-state',
           placeholder: 'screen',
           triggerAudio: {
@@ -684,11 +754,11 @@ const config = {
     // STATE 7
     // ----------------------------------------------------------------------
     {
-      title: `It's here`,
+      title: `07-telephone`,
 
       stream: {
-        id: '07-streaming',
-        file: 'streams/07-streaming.wav',
+        id: '07-telephone-DEF',
+        file: 'streams/07-telephone-DEF.wav',
         loop: false,
         period: 2.76,
       },
@@ -707,58 +777,90 @@ const config = {
           duration: 1,
         },
         {
-          time: 6, // 0.01
-          type: 'text-subtitle',
+          time: 2.7,
+          type: 'text',
           placeholder: 'center',
-          content: `It's here, taking this picture, that I made up my mind to leave.`,
+          content: `Allo? Hi it's me, is it true what they say, you're leaving?<br />
+            Yeah, I'm heading south, looking for a job.<br />
+            Heading to Marseille?<br />
+            Yeah, and then further south.<br />
+            You want to cross the sea and go to Bechar?<br />
+            Yeah, and then further south.<br />
+            You go to Beni Abbes?`,
+        },
+          {
+          time: 22.4,
+          type: 'text',
+          placeholder: 'center',
+          content: `you go to El Cairo?'`,
         },
         {
-          time: 15,
+          time: 23.4,
           type: 'text',
-          placeholder: 'top',
-          content: `Écoute (Listen)`,
+          placeholder: 'center',
+          content: `you go to El Cairo?'`,
         },
         {
-          time: 317,
-          type: 'text',
-          placeholder: 'top',
-          content: '',
-        },
-        {
-          time: 317, // 0.01
-          type: 'text',
+          time: 25,
+          type: 'text', 
           placeholder: 'center',
           content: ``,
         },
         {
-          time: 317,
+          time: 26,
+          type: 'text-subtitle',
+          placeholder: 'center',
+          classes: ['gradient'],
+          content: `I opened my eyes, and almost running i walked towards home.`,
+        },
+        {
+          time: 30,
+          type: 'text-subtitle',
+          placeholder: 'center',
+          classes: ['gradient'],
+          content: ``,
+        },
+        {
+          time: 30,
           type: 'background-image',
           placeholder: 'background-image',
           url: './images/07.jpg',
         },
         {
-          time: 317,
+          time: 30,
           type: 'fade-out',
           placeholder: 'background-color',
-          duration: 2,
+          duration: 5,
         },
         {
-          time: 320.5,
+          time: 66,
           type: 'text-subtitle',
-          placeholder: 'top',
+          placeholder: 'center',
           classes: ['gradient'],
-          content: `I came out through the same door I went in, slowly. I sat down on the steps, amongst other people.`,
-        },
-
+          content: `L’ironie consiste en avoir continué à appeler le 3eme monde ainsi, 
+          même si maintenant est troisième car le plus évolué, tandis que notre premier est 
+          resté premier et primordial.
+          <br /><br />,
+          The irony is that we kept calling the 3rd world like that 
+          even if now is third because is the most evolved, while our first is
+          stayed first and primordial.`
+         }, 
+         {
+          time: 100,
+          type: 'text-subtitle',
+          placeholder: 'center',
+          classes: ['gradient'],
+          content: ``
+        }, 
         {
-          time: 337,
+          time: 150.6,
           type: 'text',
           placeholder: 'bottom',
           classes: ['banner'],
           content: `toucher l'écran une fois la position atteinte <br> (touch the screen once you reached this place)`
         },
         {
-          time: 337,
+          time: 150.6,
           type: 'trigger-next-state',
           placeholder: 'screen',
           triggerAudio: {
@@ -774,11 +876,11 @@ const config = {
     // STATE 8
     // ----------------------------------------------------------------------
     {
-      title: `I closed my eyes`,
+      title: `08-escalier`,
 
       stream: {
-        id: '08-streaming',
-        file: 'streams/08-streaming.wav',
+        id: '08-escalier-DEF',
+        file: 'streams/08-escalier-DEF.wav',
         loop: false,
       },
       // list of events
@@ -796,55 +898,53 @@ const config = {
           duration: 1,
         },
         {
-          time: 1, // 0.01
-          type: 'text-subtitle',
-          placeholder: 'center',
-          content: `I closed my eyes to get used not to see this place anymore.<br /><br />I'm blind.`,
-        },
-        {
-          time: 12,
-          type: 'text',
-          placeholder: 'top',
-          content: `Écoute (Listen)`,
-        },
-        {
-          time: 112,
-          type: 'text',
-          placeholder: 'top',
-          content: '',
-        },
-        {
-          time: 112, // 0.01
-          type: 'text',
-          placeholder: 'center',
-          content: ``,
-        },
-        {
-          time: 112,
+          time: 4,
           type: 'background-image',
           placeholder: 'background-image',
           url: './images/08.jpg',
         },
         {
-          time: 112,
+          time: 4,
           type: 'fade-out',
           placeholder: 'background-color',
-          duration: 2,
+          duration: 3,
         },
         {
-          time: 112,
-          type: 'vibrate',
-          pattern: [500, 500, 500, 500, 500, 500], // in ms
+          time: 6.8,
+          type: 'text',
+          placeholder: 'top',
+          content: `we go up the stairs`,
         },
         {
-          time: 115,
+          time: 11.6,
+          type: 'text',
+          placeholder: 'top',
+          content: ``,
+        },
+        {
+          time: 11.7,
+          type: 'text',
+          placeholder: 'top',
+          content: `Mon père me disait tout le temps: il n'y a aucune synagogue, église, communauté ethnique, qui ne merite pas d'etre abandonée.
+          <br /><br />
+          My father always told me: There is no synagogue, church, polis, ethnic community, that does not deserve to be abandonned`,
+        },
+        {
+          time: 28,
+          type: 'text',
+          placeholder: 'top',
+          content: ``,
+        },
+          
+        {
+          time: 70,
           type: 'text',
           placeholder: 'bottom',
           classes: ['banner'],
           content: `toucher l'écran une fois la position atteinte <br> (touch the screen once you reached this place)`
         },
         {
-          time: 115,
+          time: 70,
           type: 'trigger-next-state',
           placeholder: 'screen',
           triggerAudio: {
@@ -859,11 +959,11 @@ const config = {
     // STATE 9
     // ----------------------------------------------------------------------
     {
-      title: 'Phone call',
+      title: '09-escalier-Hall',
 
       stream: {
-        id: '09-streaming',
-        file: 'streams/09-streaming.wav',
+        id: '09-escalier-Hall-DEF',
+        file: 'streams/09-escalier-Hall-DEF.wav',
         loop: false,
       },
       // list of events
@@ -881,58 +981,53 @@ const config = {
           duration: 1,
         },
         {
-          time: 2, // 0.01
-          type: 'text-subtitle',
-          placeholder: 'center',
-          content: `
-            Allo? Hi it's me, is it true what they say, you're leaving?<br />
-            Yeah, I'm heading south, looking for a job.<br />
-            Heading to Marseille?<br />
-            Yeah, and then further south.<br />
-            You want to cross the sea and go to Bechar?<br />
-            Yeah, and then further south.<br />
-            You go to Beni Abbes?`,
-        },
-        {
-          time: 25,
-          type: 'text',
-          placeholder: 'center',
-          content: '',
-        },
-        {
-          time: 25,
+          time: 2,
           type: 'background-image',
           placeholder: 'background-image',
           url: './images/09.jpg',
         },
         {
-          time: 25,
+          time: 2,
           type: 'fade-out',
           placeholder: 'background-color',
-          duration: 2,
+          duration: 5,
         },
-        {
-          time: 28,
-          type: 'text-subtitle',
-          placeholder: 'top',
-          classes: ['gradient'],
-          content: `I opened my eyes, stood up, and heading to my right walked towards home.`,
-        },
-        {
-          time: 37,
+        {     
+          time: 2,
           type: 'text',
           placeholder: 'top',
-          content: `Écoute (Listen)`,
+          classes: ['gradient'],
+          content: `we go to the terrace`,
         },
         {
-          time: 45,
+          time: 14,
+          type: 'text',
+          placeholder: 'top',
+          content: ``,
+        },
+        {     
+          time: 14,
+          type: 'text',
+          placeholder: 'top',
+          classes: ['gradient'],
+          content: `Too much noise,<br>
+            too many people.`,
+        },
+        {
+          time: 21,
+          type: 'text',
+          placeholder: 'top',
+          content: ``,
+        },
+        {
+          time: 18,
           type: 'text',
           placeholder: 'bottom',
           classes: ['banner'],
           content: `toucher l'écran une fois la position atteinte <br> (touch the screen once you reached this place)`
         },
         {
-          time: 45,
+          time: 18,
           type: 'trigger-next-state',
           placeholder: 'screen',
           triggerAudio: {
@@ -947,11 +1042,11 @@ const config = {
     // STATE 10
     // ----------------------------------------------------------------------
     {
-      title: 'The café',
+      title: '10-porte',
 
       stream: {
-        id: '10-streaming',
-        file: 'streams/10-streaming.wav',
+        id: '10-porte-DEF',
+        file: 'streams/10-porte-DEF.wav',
         loop: false,
       },
       // list of events
@@ -970,51 +1065,58 @@ const config = {
         },
         {
           time: 3,
-          type: 'text',
-          placeholder: 'top',
-          content: `Écoute (Listen)`,
-        },
-        {
-          time: 98,
-          type: 'text',
-          placeholder: 'top',
-          content: '',
-        },
-        {
-          time: 98,
-          type: 'text',
-          placeholder: 'center',
-          content: '',
-        },
-        {
-          time: 98,
           type: 'background-image',
           placeholder: 'background-image',
           url: './images/10.jpg',
         },
         {
-          time: 98,
+          time: 3,
           type: 'fade-out',
           placeholder: 'background-color',
-          duration: 2,
+          duration: 5,
         },
         {
-          time: 104.6,
+          time: 3.6,
+          type: 'text-subtitle',
+          placeholder: 'top',
+          classes: ['gradient'],
+          content: `it's here, let's go out and watch `
+        },
+        {
+          time: 10,
           type: 'text-subtitle',
           placeholder: 'top',
           classes: ['gradient'],
           content: `
-            Before leaving, I told myself that I had to take a moment to sit and give this place a proper goobye. I searched for a café around me.`,
+            Before leaving, I told myself that I had to take a moment to sit and give this place a proper goobye.`,
         },
         {
-          time: 116,
+          time: 18.5, // 0.01
+          type: 'text-subtitle',
+          placeholder: 'top',
+          classes: ['gradient'],
+          content: `
+            I think I read something about the couple who created this fountain, more than 3 centuries ago. (you are wrong, it is not this fountain)
+            I remember this sentence that the lady who made these sculptures, once full of colors and their feet in water, wrote.
+            <br> <br>
+            "I am blind, my sculptures are my eyes, imagination is the rainbow, happyness is the imagination, imagination exists."`,
+        },
+        {
+          time: 43, // 0.01
+          type: 'text-subtitle',
+          placeholder: 'top',
+          classes: ['gradient'],
+          content: ``,
+        },
+        {
+          time: 45,
           type: 'text',
           placeholder: 'bottom',
           classes: ['banner'],
           content: `toucher l'écran une fois la position atteinte <br> (touch the screen once you reached this place)`
         },
         {
-          time: 116,
+          time: 45,
           type: 'trigger-next-state',
           placeholder: 'screen',
           triggerAudio: {
@@ -1030,11 +1132,11 @@ const config = {
     // STATE 11
     // ----------------------------------------------------------------------
     {
-      title: 'Phone call',
+      title: '11-vue',
 
       stream: {
-        id: '11-streaming',
-        file: 'streams/11-streaming.wav',
+        id: '11-vue-DEF',
+        file: 'streams/11-vue-DEF.wav',
         loop: false,
       },
       // list of events
@@ -1052,57 +1154,39 @@ const config = {
           duration: 1,
         },
         {
-          time: 3, // 0.01
-          type: 'text-subtitle',
-          placeholder: 'center',
-          content: `Imagination exists`,
-        },
-        {
-          time: 8.2,
-          type: 'text',
-          placeholder: 'center',
-          content: '',
-        },
-        {
-          time: 8.2,
+          time: 70,
           type: 'background-image',
           placeholder: 'background-image',
           url: './images/11.jpg',
         },
         {
-          time: 8.2,
+          time: 70,
           type: 'fade-out',
           placeholder: 'background-color',
-          duration: 2,
+          duration: 5,
         },
         {
-          time: 11.4,
+          time: 86,
           type: 'text-subtitle',
-          placeholder: 'top',
+          placeholder: 'center',
+          content: `I turned around, walked two or three steps to breathe more easily. I looked up towards this part of the sky that is my own.`,
+        },
+          {
+          time: 103,
+          type: 'text-subtitle',
+          placeholder: 'center',
           classes: ['gradient'],
-          content: `Slowly, I arrived to the last café of the square.`,
+          content: ``,
         },
         {
-          time: 19,
-          type: 'text',
-          placeholder: 'top',
-          content: `Écoute (Listen)`,
-        },
-        {
-          time: 68.2,
-          type: 'text',
-          placeholder: 'top',
-          content: '',
-        },
-        {
-          time: 68.2,
+          time: 103.2,
           type: 'text',
           placeholder: 'bottom',
           classes: ['banner'],
           content: `toucher l'écran une fois la position atteinte <br> (touch the screen once you reached this place)`
         },
         {
-          time: 68.2,
+          time: 103.2,
           type: 'trigger-next-state',
           placeholder: 'screen',
           triggerAudio: {
@@ -1114,105 +1198,15 @@ const config = {
     },
 
     // ----------------------------------------------------------------------
-    // STATE 12
+    // STATE 12 - ciel
     // ----------------------------------------------------------------------
-    {
-      title: 'Phone call',
+      
+      {
+      title: '12-ciel',
 
       stream: {
-        id: '12-streaming',
-        file: 'streams/12-streaming.wav',
-        loop: false,
-      },
-      // list of events
-      events: [
-        {
-          time: 0,
-          type: 'background-color',
-          placeholder: 'background-color',
-          color: '#272727',
-        },
-        {
-          time: 0,
-          type: 'fade-in',
-          placeholder: 'background-color',
-          duration: 1,
-        },
-        {
-          time: 16, // 0.01
-          type: 'text-subtitle',
-          placeholder: 'center',
-          content: `
-            I finally did not go in there.<br><br>
-            Too much noise,<br>
-            too many people.
-          `,
-        },
-        {
-          time: 25,
-          type: 'text',
-          placeholder: 'top',
-          content: `Écoute (Listen)`,
-        },
-        {
-          time: 31.5,
-          type: 'text',
-          placeholder: 'top',
-          content: '',
-        },
-        {
-          time: 31.5,
-          type: 'text',
-          placeholder: 'center',
-          content: '',
-        },
-        {
-          time: 31.5,
-          type: 'background-image',
-          placeholder: 'background-image',
-          url: './images/12.jpg',
-        },
-        {
-          time: 31.5,
-          type: 'fade-out',
-          placeholder: 'background-color',
-          duration: 2,
-        },
-        {
-          time: 42.5,
-          type: 'text-subtitle',
-          placeholder: 'top',
-          classes: ['gradient'],
-          content: `I turned around, walked two or three steps to breathe more easily. I looked up towards this part of the sky that is my own.`,
-        },
-        {
-          time: 56.5,
-          type: 'text',
-          placeholder: 'bottom',
-          classes: ['banner'],
-          content: `toucher l'écran une fois la position atteinte <br> (touch the screen once you reached this place)`
-        },
-        {
-          time: 56.5,
-          type: 'trigger-next-state',
-          placeholder: 'screen',
-          triggerAudio: {
-            id: 'touch-1',
-            file: 'sounds/touch/12-click-image.mp3',
-          }
-        },
-      ]
-    },
-
-    // ----------------------------------------------------------------------
-    // STATE 13 - END STATE
-    // ----------------------------------------------------------------------
-    {
-      title: 'Credits',
-
-      stream: {
-        id: '13-streaming',
-        file: 'streams/13-streaming.wav',
+        id: '12-ciel-DEF',
+        file: 'streams/12-ciel-DEF.wav',
         loop: false,
       },
       // list of events
@@ -1234,7 +1228,7 @@ const config = {
           type: 'text',
           placeholder: 'top',
           classes: ['large', 'bold'],
-          content: `SQUARE`,
+          content: `SQUARE #2`,
         },
         {
           time: 10.5,
@@ -1260,9 +1254,7 @@ const config = {
 
               <dt>Trompette et voix :</dt>
               <dd>Amir el Saffar</dd>
-
-              <dt>Water Games :</dt>
-              <dd>West Gaua</dd>
+              
             </dl>
           `,
         },
