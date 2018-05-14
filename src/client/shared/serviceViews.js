@@ -619,7 +619,7 @@ const serviceViews = {
           <div class="section-center flex-center">
             <div>
               <ul class="instructions">
-                <% for (let key in globals.instructions) { %>
+                <% for (var key in globals.instructions) { %>
                   <li class="instruction"><%= globals.instructions[key] %></li>
                 <% } %>
               </ul>
@@ -629,7 +629,7 @@ const serviceViews = {
                 <%= globals.instructionsHeader %>
               </p>
               <ul class="instructions">
-                <% for (let key in globals.instructions) { %>
+                <% for (var key in globals.instructions) { %>
                   <li class="instruction"><%= globals.instructions[key] %></li>
                 <% } %>
               </ul>
