@@ -12,7 +12,7 @@ const config = {
 
   txt: {
     home: {
-      title: 'SQUARE',
+      title: 'SQUARE#2',
       subtitle: 'by Lorenzo Bianchi Hoesch',
       useHeadphones: 'EXPÉRIENCE À FAIRE AU CASQUE <br> (USE HEADPHONES)',
 
@@ -122,12 +122,20 @@ const config = {
           // classes: ['white', 'align-center'],
           content: `
             Seulement une fois que tu auras trouvé le même point de vue de l’image,
-            tu devras cliquer sur l’image et suivre mon parcours. Une image après
-            l’autre, mon histoire.
+            tu devras cliquer sur l’image et suivre mon parcours.
             <br /><br />
             Only once you've reach its viewpoint will you click on an image and
-            follow my journey. One image after the next, my story.
-          `,
+            follow my journey. ` ,
+        },
+        {
+          time: 48.2,
+          type: 'text-subtitle',
+          placeholder: 'center',
+          // classes: ['white', 'align-center'],
+          content: `Une image après
+            l’autre, mon histoire.
+            <br /><br />
+            One image after the next, my story.`,
         },
 
         {
@@ -151,14 +159,14 @@ const config = {
         {
           time: 56.6,
           type: 'text-subtitle',
-          placeholder: 'center',
+          placeholder: 'top',
           classes: ['gradient'],
           content: `The first photo just showed up.`
         },
         {
           time: 60,
           type: 'text-subtitle',
-          placeholder: 'center',
+          placeholder: 'top',
           classes: ['gradient'],
           content: ``
         },
@@ -233,13 +241,14 @@ const config = {
         {
           time: 13,
           type: 'text-subtitle',
-          placeholder: 'center',
+          classes: ['gradient'],
+          placeholder: 'top',
           content: `Another photo`,
         },
           {
           time: 20,
           type: 'text-subtitle',
-          placeholder: 'center',
+          placeholder: 'top',
           content: `follow me! don't listen to the people around you! 
           i want to show you something that is just here, fourth room to the right`
                    
@@ -298,13 +307,14 @@ const config = {
         {
           time: 2,
           type: 'text',
-          placeholder: 'center',
+          placeholder: 'top',
+          classes: ['gradient'],
           content: `I hesitated to get in or not, then I mustered the courage and walked in.`,
         },
         {
           time: 10,
           type: 'text-subtitle',
-          placeholder: 'center',
+          placeholder: 'top',
           content: '',
         },
         {
@@ -366,38 +376,32 @@ const config = {
         {
           time: 1,
           type: 'text-subtitle',
-          placeholder: 'center',
+          placeholder: 'top',
           content: `this is one of my dearest memories.`
         },
         {
           time: 10,
           type: 'text-subtitle',
-          placeholder: 'center',
+          placeholder: 'top',
           content: ``
         },
         {
           time: 52,
           type: 'text-subtitle',
-          placeholder: 'center',
+          placeholder: 'top',
           content: `put your headphones`
         },
            {
           time: 55.7, // 0.01
           type: 'text-subtitle',
-          placeholder: 'center',
+          placeholder: 'top',
           content: `Imagination exists`,
         },
         {
           time: 60,
           type: 'text-subtitle',
-          placeholder: 'center',
-          content: ``
-        },
-        {
-          time: 75,
-          type: 'text',
           placeholder: 'top',
-          content: ``,
+          content: ``
         },
         {
           time: 75,
@@ -414,25 +418,27 @@ const config = {
         {
           time: 86,
           type: 'text-subtitle',
-          placeholder: 'center',
+          placeholder: 'top',
+          classes: ['gradient'],
           content: `I came out through the same door I went in, doubting about everything`
         },
         {
           time: 100,
           type: 'text-subtitle',
-          placeholder: 'center',
+          placeholder: 'top',
           content: ``
         },
         {
           time: 105,
           type: 'text-subtitle',
-          placeholder: 'center',
+          placeholder: 'top',
+          classes: ['gradient'],
           content: `there's another object i would like to show you, we just go in the next room`
         },
         {
           time: 140,
           type: 'text-subtitle',
-          placeholder: 'center',
+          placeholder: 'top',
           content: ``
         },
         {
@@ -482,19 +488,13 @@ const config = {
         {
           time: 3,
           type: 'text',
-          placeholder: 'center',
+          placeholder: 'top',
           content: `when i say go, we enter, and i suggest you to put a hand on the wall during the corridor`,
         },
         {
           time: 19.2,
           type: 'text',
-          placeholder: 'center', 
-          content: '',
-        },
-        {
-          time: 16.5,
-          type: 'text',
-          placeholder: 'center',
+          placeholder: 'top', 
           content: '',
         },
         {
@@ -512,13 +512,14 @@ const config = {
          {
           time: 37,
           type: 'text',
-          placeholder: 'center', 
+          placeholder: 'top', 
+          classes: ['gradient'],
           content: 'here is something i would like to forget'
         },
          {
           time: 40,
           type: 'text',
-          placeholder: 'center', 
+          placeholder: 'top', 
           content: ''
         },
         {
@@ -591,9 +592,10 @@ const config = {
           duration: 5,
         },
         {
-          time: 80,
+          time: 86,
           type: 'text',
-          placeholder: 'center',
+          placeholder: 'top',
+          classes: ['gradient'],
           content: `keep following me, there's a thing that you must see.
           let's go to the window, we are going to put our hand on the glass`,
         },
@@ -651,67 +653,69 @@ const config = {
         {
           time: 2, // 0.01
           type: 'text-subtitle',
-          placeholder: 'center',
+          placeholder: 'top',
+          classes: ['gradient'],
           content: `It's here, taking this picture, that I made up my mind to leave.`,
         },
         {
           time: 7, // 0.01
           type: 'text-subtitle',
-          placeholder: 'center',
+          placeholder: 'top',
+          classes: ['gradient'],
           content: `I use to live here, in the little courtyard that you can see down on the left. My home`,
         },
         {
           time: 14, // 0.01
           type: 'text-subtitle',
-          placeholder: 'center',
-          content: `I use to come here, and, watching my house from here, i use to put my hands on the cold glass`,
+          placeholder: 'top',
+          content: `I used to come here, and, watching my house from here, i used to put my hands on the cold glass`,
         },
         {
           time: 20, // 0.01
           type: 'text-subtitle',
-          placeholder: 'center',
+          placeholder: 'top',
           content: `try`,
         },
         {
           time: 21, // 0.01
           type: 'text-subtitle',
-          placeholder: 'center',
+          placeholder: 'top',
           content: `3`,
         },
         {
           time: 22, // 0.01
           type: 'text-subtitle',
-          placeholder: 'center',
+          placeholder: 'top',
           content: `2`,
         },
         {
           time: 23, // 0.01
           type: 'text-subtitle',
-          placeholder: 'center',
+          placeholder: 'top',
           content: `1`,
         },
         {
           time: 24, // 0.01
           type: 'text-subtitle',
-          placeholder: 'center',
+          placeholder: 'top',
           content: `go`,
         },
         {
           time: 27, // 0.01
           type: 'text-subtitle',
-          placeholder: 'center',
+          placeholder: 'top',
           content: ``,
         },
         {
           time: 42.6, // 0.01
           type: 'text-subtitle',
-          placeholder: 'center',
+          placeholder: 'top',
           content: `I closed my eyes to get used not to see this place anymore.<br /><br />I'm blind.`,
         },
         {
-          time: 52.6, // 0.01
+          time: 50, // 0.01
           type: 'text-subtitle',
-          placeholder: 'center',
+          placeholder: 'top',
           content: ``,
         },
         {
@@ -732,14 +736,14 @@ const config = {
           pattern: [500, 500, 500, 500, 500, 500], // in ms
         },
         {
-          time: 105.6,
+          time: 104,
           type: 'text',
           placeholder: 'bottom',
           classes: ['banner'],
           content: `toucher l'écran une fois la position atteinte <br> (touch the screen once you reached this place)`
         },
         {
-          time: 105.6,
+          time: 104,
           type: 'trigger-next-state',
           placeholder: 'screen',
           triggerAudio: {
@@ -779,44 +783,48 @@ const config = {
         {
           time: 2.7,
           type: 'text',
-          placeholder: 'center',
+          placeholder: 'top',
           content: `Allo? Hi it's me, is it true what they say, you're leaving?<br />
-            Yeah, I'm heading south, looking for a job.<br />
-            Heading to Marseille?<br />
-            Yeah, and then further south.<br />
-            You want to cross the sea and go to Bechar?<br />
+            Yeah, I'm heading south, looking for a job`,
+        },
+        {
+          time: 11,
+          type: 'text',
+          placeholder: 'top',
+          content: `Heading to Marseille?<br />
+            Yeah, and then further south.`,
+        },
+        {
+          time: 15.1,
+          type: 'text',
+          placeholder: 'top',
+          content: `You want to cross the sea and go to Bechar?<br />
             Yeah, and then further south.<br />
             You go to Beni Abbes?`,
         },
           {
-          time: 22.4,
+          time: 23,
           type: 'text',
-          placeholder: 'center',
-          content: `you go to El Cairo?'`,
-        },
-        {
-          time: 23.4,
-          type: 'text',
-          placeholder: 'center',
-          content: `you go to El Cairo?'`,
+          placeholder: 'top',
+          content: `you go to El Cairo?'`
         },
         {
           time: 25,
           type: 'text', 
-          placeholder: 'center',
+          placeholder: 'top',
           content: ``,
         },
         {
           time: 26,
           type: 'text-subtitle',
-          placeholder: 'center',
+          placeholder: 'top',
           classes: ['gradient'],
           content: `I opened my eyes, and almost running i walked towards home.`,
         },
         {
           time: 30,
           type: 'text-subtitle',
-          placeholder: 'center',
+          placeholder: 'top',
           classes: ['gradient'],
           content: ``,
         },
@@ -835,7 +843,7 @@ const config = {
         {
           time: 66,
           type: 'text-subtitle',
-          placeholder: 'center',
+          placeholder: 'top',
           classes: ['gradient'],
           content: `L’ironie consiste en avoir continué à appeler le 3eme monde ainsi, 
           même si maintenant est troisième car le plus évolué, tandis que notre premier est 
@@ -848,7 +856,7 @@ const config = {
          {
           time: 100,
           type: 'text-subtitle',
-          placeholder: 'center',
+          placeholder: 'top',
           classes: ['gradient'],
           content: ``
         }, 
@@ -913,6 +921,7 @@ const config = {
           time: 6.8,
           type: 'text',
           placeholder: 'top',
+           classes: ['gradient'],
           content: `we go up the stairs`,
         },
         {
@@ -925,9 +934,10 @@ const config = {
           time: 11.7,
           type: 'text',
           placeholder: 'top',
+           classes: ['gradient'],
           content: `Mon père me disait tout le temps: il n'y a aucune synagogue, église, communauté ethnique, qui ne merite pas d'etre abandonée.
           <br /><br />
-          My father always told me: There is no synagogue, church, polis, ethnic community, that does not deserve to be abandonned`,
+          My father always told me: There is no synagogue, church, ethnic community, that does not deserve to be abandonned`,
         },
         {
           time: 28,
@@ -1088,7 +1098,8 @@ const config = {
           placeholder: 'top',
           classes: ['gradient'],
           content: `
-            Before leaving, I told myself that I had to take a moment to sit and give this place a proper goobye.`,
+            Before leaving, I told myself that I had to take a moment to sit 
+            and give this place a proper goobye.`,
         },
         {
           time: 18.5, // 0.01
@@ -1096,9 +1107,23 @@ const config = {
           placeholder: 'top',
           classes: ['gradient'],
           content: `
-            I think I read something about the couple who created this fountain, more than 3 centuries ago. (you are wrong, it is not this fountain)
+            I think I read something about the couple who created this fountain, more than 3 centuries ago. (you are wrong, it is not this fountain)`,
+        },
+        {
+          time: 26.8, // 0.01
+          type: 'text-subtitle',
+          placeholder: 'top',
+          classes: ['gradient'],
+          content: `
             I remember this sentence that the lady who made these sculptures, once full of colors and their feet in water, wrote.
-            <br> <br>
+            <br> <br>`,
+        },
+        {
+          time: 33.7, // 0.01
+          type: 'text-subtitle',
+          placeholder: 'top',
+          classes: ['gradient'],
+          content: `
             "I am blind, my sculptures are my eyes, imagination is the rainbow, happyness is the imagination, imagination exists."`,
         },
         {
@@ -1168,13 +1193,35 @@ const config = {
         {
           time: 86,
           type: 'text-subtitle',
-          placeholder: 'center',
-          content: `I turned around, walked two or three steps to breathe more easily. I looked up towards this part of the sky that is my own.`,
+          placeholder: 'top',
+          classes: ['gradient'],
+          content: `I turned around,`,
+        },
+        {
+          time: 88.7,
+          type: 'text-subtitle',
+          placeholder: 'top',
+          classes: ['gradient'],
+          content: `I walked two or three steps to breathe more easily. I looked up towards this part of the sky that is my own.`,
+        },
+        {
+          time: 93.7,
+          type: 'text-subtitle',
+          placeholder: 'top',
+          classes: ['gradient'],
+          content: `I looked up towards this part of the sky`,
+        },
+        {
+          time: 97.3,
+          type: 'text-subtitle',
+          placeholder: 'top',
+          classes: ['gradient'],
+          content: `that is my own.`,
         },
           {
           time: 103,
           type: 'text-subtitle',
-          placeholder: 'center',
+          placeholder: 'top',
           classes: ['gradient'],
           content: ``,
         },
