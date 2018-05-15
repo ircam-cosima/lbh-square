@@ -1,35 +1,23 @@
-# TODO
+# TODOS
 
-- remove audio files from repo
-- remove production config file from repo (!)
+## on `beaubourg` branch
 
-## refactoring
+- fix images display
+- refactor to have assets in dedicated place
+  + create a second mount point with `express.static` 
+  + dynamically load the app config file, do not build in js file
+- remove audio files and images from repo
 
-- panning / orientation - ok
-- - mise en veille -> à checker
-  + mettre un flag dans la config - ok
-https://css-tricks.com/design-considerations-text-images/
-- overlay linear gradient - ok
-- event trigger-audio - ok
-- preload images - ok
-- services instructions - ok
-- osc flag (won't have a max patch in most cases) - ok
-- end screen - ok
-- cleaned seek - ok
-- restart at state + event - ok
-- sync streams on underlying period - ok
-- event vibrate (same, needs user gesture) - ok
+## merge and redeploy
 
-## first page - ok
+- make a clean (manual) merge of `beaubourg` branch in `master`
+- update online versions
 
-- branche les ecouteurs - cf. icone plus claire ??
-- lock mode portrait => check problem avec compass ??
-- mode vibreur () - on vire - ok
-- son buité -> on vire - ok
+## clean / purge repository
 
-## new events
+- [https://blog.ostermiller.org/git-remove-from-history](https://blog.ostermiller.org/git-remove-from-history)
+- what to do with `src/maxmsp` ?
 
-- event video (use gifs, cannot start on iOS)
+## long term
 
-## 
-- reimplement all states
+- explore click problem

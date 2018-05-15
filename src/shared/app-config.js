@@ -14,15 +14,15 @@ const config = {
     home: {
       title: 'SQUARE#2',
       subtitle: 'by Lorenzo Bianchi Hoesch',
-      useHeadphones: 'EXPÉRIENCE À FAIRE AU CASQUE <br> (USE HEADPHONES)',
+      useHeadphones: 'Expérience à faire au casque<br />Use headphones',
 
       instructionsHeader: 'Merci de (Please):',
       instructions: {
-        wakeLock: 'désactiver la mise en veille <br> (disable sleep mode)',
+        wakeLock: 'désactiver la mise en veille<br />disable sleep mode',
         // headphones: 'brancher vos écouteurs',
         // volume: 'ajuster le volume',
       },
-      touchToStart: 'Toucher l\'écran pour commencer <br> (Touch the screen to start)',
+      touchToStart: 'Toucher l\'écran pour commencer<br />Touch the screen to start',
     },
     restartPage: {
       restart: 'Recommencer du début <br> (Start from beginning)',
@@ -106,11 +106,11 @@ const config = {
           placeholder: 'center',
           // classes: ['white', 'align-center'],
           content: `
-            De simples photos. 
+            De simples photos.
             Pour suivre le fil rouge de mes souvenirs, tu devras me suivre, et littéralement
             te mettre à l'endroit d'où j'ai pris ces photos.
             <br /><br />
-            A few pictures. 
+            A few pictures.
             To follow the thread of my memories, you'll have to follow me and literally adopt
             the viewpoint I had when I took these pictures.
           `,
@@ -249,23 +249,21 @@ const config = {
           time: 20,
           type: 'text-subtitle',
           placeholder: 'top',
-          content: `follow me! don't listen to the people around you! 
-          i want to show you something that is just here, fourth room to the right`
-                   
+          content: `follow me! don't listen to the people around you`,
         },
         {
           time: 93,
           type: 'text-subtitle',
           placeholder: 'center',
           content: ``
-                   
+
         },
         {
           time: 93,
           type: 'text',
           placeholder: 'bottom',
           classes: ['banner'],
-          content: `toucher l'écran une fois la position atteinte <br> (touch the screen once you reached this place)`
+          content: `toucher l'écran une fois la position atteinte <br> (touch the screen once you reached this place)`,
         },
         {
           time: 93,
@@ -509,18 +507,11 @@ const config = {
           placeholder: 'background-color',
           duration: 5,
         },
-         {
-          time: 37,
-          type: 'text',
-          placeholder: 'top', 
-          classes: ['gradient'],
-          content: 'here is something i would like to forget'
-        },
-         {
+        {
           time: 40,
           type: 'text',
           placeholder: 'top', 
-          content: ''
+          content: '',
         },
         {
           time: 40,
@@ -845,21 +836,21 @@ const config = {
           type: 'text-subtitle',
           placeholder: 'top',
           classes: ['gradient'],
-          content: `L’ironie consiste en avoir continué à appeler le 3eme monde ainsi, 
-          même si maintenant est troisième car le plus évolué, tandis que notre premier est 
+          content: `L’ironie consiste en avoir continué à appeler le 3eme monde ainsi,
+          même si maintenant est troisième car le plus évolué, tandis que notre premier est
           resté premier et primordial.
           <br /><br />,
-          The irony is that we kept calling the 3rd world like that 
+          The irony is that we kept calling the 3rd world like that
           even if now is third because is the most evolved, while our first is
           stayed first and primordial.`
-         }, 
+         },
          {
           time: 100,
           type: 'text-subtitle',
           placeholder: 'top',
           classes: ['gradient'],
           content: ``
-        }, 
+        },
         {
           time: 150.6,
           type: 'text',
@@ -945,7 +936,7 @@ const config = {
           placeholder: 'top',
           content: ``,
         },
-          
+
         {
           time: 70,
           type: 'text',
@@ -1002,7 +993,7 @@ const config = {
           placeholder: 'background-color',
           duration: 5,
         },
-        {     
+        {
           time: 2,
           type: 'text',
           placeholder: 'top',
@@ -1015,7 +1006,7 @@ const config = {
           placeholder: 'top',
           content: ``,
         },
-        {     
+        {
           time: 14,
           type: 'text',
           placeholder: 'top',
@@ -1247,7 +1238,7 @@ const config = {
     // ----------------------------------------------------------------------
     // STATE 12 - ciel
     // ----------------------------------------------------------------------
-      
+
       {
       title: '12-ciel',
 
@@ -1301,7 +1292,7 @@ const config = {
 
               <dt>Trompette et voix :</dt>
               <dd>Amir el Saffar</dd>
-              
+
             </dl>
           `,
         },
