@@ -15,7 +15,7 @@ To do that:
 
 - switch the `env` from `development` to `production` in the `src/server/config/your-config.js`.
 - retranspile `npm run transpile`
-- run the srever with such command `ENV=you-config node dist/server/index.js`
+- run the server with by setting the `ENV` global to your config file basename: `ENV=your-config node dist/server/index.js`
 
 
 # Useful Links
