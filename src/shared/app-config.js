@@ -252,6 +252,12 @@ const config = {
           content: `follow me! don't listen to the people around you`,
         },
         {
+          time: 40,
+          type: 'text-subtitle',
+          placeholder: 'top',
+          content: `it's the fourth corridor on the right`,
+        },
+        {
           time: 93,
           type: 'text-subtitle',
           placeholder: 'center',
@@ -387,7 +393,7 @@ const config = {
           time: 52,
           type: 'text-subtitle',
           placeholder: 'top',
-          content: `put your headphones`
+          content: `put your headphones on`
         },
            {
           time: 55.7, // 0.01
@@ -431,7 +437,7 @@ const config = {
           type: 'text-subtitle',
           placeholder: 'top',
           classes: ['gradient'],
-          content: `there's another object i would like to show you, we just go in the next room`
+          content: `there's another object i would like to show you, we’ll go in to the next room`
         },
         {
           time: 140,
@@ -487,7 +493,7 @@ const config = {
           time: 3,
           type: 'text',
           placeholder: 'top',
-          content: `when i say go, we enter, and i suggest you to put a hand on the wall during the corridor`,
+          content: `when i say go, we enter, and i suggest you put a hand on the wall as you go down the corridor`,
         },
         {
           time: 19.2,
@@ -511,7 +517,7 @@ const config = {
           time: 40,
           type: 'text',
           placeholder: 'top', 
-          content: '',
+          content: 'here\'something i would like to forget',
         },
         {
           time: 40,
@@ -587,7 +593,7 @@ const config = {
           type: 'text',
           placeholder: 'top',
           classes: ['gradient'],
-          content: `keep following me, there's a thing that you must see.
+          content: `Keep following me, there's a thing that you must see.
           let's go to the window, we are going to put our hand on the glass`,
         },
         {
@@ -653,7 +659,7 @@ const config = {
           type: 'text-subtitle',
           placeholder: 'top',
           classes: ['gradient'],
-          content: `I use to live here, in the little courtyard that you can see down on the left. My home`,
+          content: `I used to live here, in the little courtyard that you can see down on the left. My home`,
         },
         {
           time: 14, // 0.01
@@ -840,9 +846,8 @@ const config = {
           même si maintenant est troisième car le plus évolué, tandis que notre premier est
           resté premier et primordial.
           <br /><br />,
-          The irony is that we kept calling the 3rd world like that
-          even if now is third because is the most evolved, while our first is
-          stayed first and primordial.`
+           The irony is that we kept calling the 3rd world like that even if now is third 
+           because is the most evolved, while our first world remanied first and primitive.`
          },
          {
           time: 100,
