@@ -4,14 +4,15 @@ import PlayerExperience from './PlayerExperience';
 import serviceViews from '../shared/serviceViews';
 import ImagesLoader from '../shared/services/ImagesLoader';
 
-import appConfig from '../../shared/app-config';
+const config = Object.assign({ appContainer: '#container' }, window.soundworksConfig);
 
-function bootstrap() {
+function bootstrap(projectConfig) {
+  projectConfig = JSON.parse(projectConfig);
+  document.body.classList.remove('loading');
   // initialize the client with configuration received
   // from the server through the `index.html`
   // @see {~/src/server/index.js}
   // @see {~/html/default.ejs}
-  const config = Object.assign({ appContainer: '#container' }, window.soundworksConfig);
   soundworks.client.init(config.clientType, config);
 
   // configure views for the services
@@ -24,7 +25,7 @@ function bootstrap() {
       instance.view = serviceViews.get('service:audio-buffer-manager', config);
 
     if (id === 'service:platform')
-      instance.view = serviceViews.get('service:platform', appConfig.txt.home);
+      instance.view = serviceViews.get('service:platform', projectConfig.txt.home);
   });
 
   const vibrateHook = {
@@ -45,8 +46,12 @@ function bootstrap() {
   platform.addFeatureDefinition(vibrateHook);
 
   // create client side (player) experience and start the client
-  const experience = new PlayerExperience(config, appConfig);
+  const experience = new PlayerExperience(config, projectConfig);
   soundworks.client.start();
 }
 
-window.addEventListener('load', bootstrap);
+window.addEventListener('load', () => {
+  window.fetch(config.assetsDomain + '/project-config')
+    .then(response => response.json())
+    .then(bootstrap);
+});

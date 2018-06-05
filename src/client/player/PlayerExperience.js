@@ -3,6 +3,7 @@ import slugify from 'slugify';
 import SimplePlayer from './audio/SimplePlayer';
 import State from './State';
 import PlayerView from './PlayerView';
+import path from 'path';
 
 const audioContext = soundworks.audioContext;
 const client = soundworks.client;
@@ -11,15 +12,15 @@ const audio = soundworks.audio;
 const localStorageId = 'lbh-square';
 
 class PlayerExperience extends soundworks.Experience {
-  constructor(envConfig, appConfig) {
+  constructor(envConfig, projectConfig) {
     super();
 
     this.envConfig = envConfig;
-    this.appConfig = appConfig;
+    this.projectConfig = projectConfig;
 
     const features = ['web-audio', 'vibrate'];
 
-    if (appConfig.environment.wakeLock)
+    if (projectConfig.environment.wakeLock)
       features.push('wake-lock');
 
     // services
@@ -31,8 +32,10 @@ class PlayerExperience extends soundworks.Experience {
       descriptors: ['deviceorientation'],
     });
 
+    const assetsPath = `${this.envConfig.assetsDomain}/assets/`;
+
     this.audioStreamManager = this.require('audio-stream-manager', {
-      assetsDomain: this.envConfig.assetsDomain,
+      assetsDomain: assetsPath,
       monitorInterval: 1,
       requiredAdvanceThreshold: 10,
     });
@@ -40,25 +43,28 @@ class PlayerExperience extends soundworks.Experience {
     const triggerAudioBuffers = {};
     const backgroundImages = [];
 
-    this.appConfig.states.forEach(state => {
+    //
+    this.projectConfig.states.forEach(state => {
       state.events.forEach(event => {
         if (event.triggerAudio)
           triggerAudioBuffers[event.triggerAudio.id] = event.triggerAudio.file;
 
+        // background image domain or sub location are not abstracted by
+        // a service, so override the url
         if (event.type === 'background-image') {
-          event.url = this.envConfig.assetsDomain + event.url;
+          event.url = assetsPath + event.url;
           backgroundImages.push(event.url);
         }
       });
     });
 
     this.audioBufferManager = this.require('audio-buffer-manager', {
-      assetsDomain: this.envConfig.assetsDomain,
+      assetsDomain: assetsPath,
       files: triggerAudioBuffers,
     });
 
     this.imagesLoader = this.require('images-loader', {
-      assetsDomain: this.envConfig.assetsDomain,
+      // assetsDomain: assetsPath, // is already overriden...
       files: backgroundImages,
     });
   }
@@ -69,7 +75,7 @@ class PlayerExperience extends soundworks.Experience {
     this.simplePlayer = new SimplePlayer(this.audioBufferManager.data);
     this.view = new PlayerView({
       state: 'experience',
-      txt: this.appConfig.txt.restartPage,
+      txt: this.projectConfig.txt.restartPage,
     });
 
     this.show().then(() => {
@@ -86,7 +92,7 @@ class PlayerExperience extends soundworks.Experience {
         this.debugMode = value;
       });
 
-      this.appConfig.states.forEach((state, stateIndex) => {
+      this.projectConfig.states.forEach((state, stateIndex) => {
         const name = slugify(state.title);
 
         this.sharedParams.addParamListener(name, value => {
@@ -135,7 +141,7 @@ class PlayerExperience extends soundworks.Experience {
   // setup and start introduction (text + reading voice)
   setState(stateIndex, eventIndex = 0) {
     this.currentStateIndex = stateIndex;
-    const config = this.appConfig;
+    const config = this.projectConfig;
 
     if (this.state) {
       this.state.exit();

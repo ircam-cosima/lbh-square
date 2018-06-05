@@ -11,6 +11,8 @@ export default {
   // the `platform` service to populate its view
   appName: 'SQUARE',
 
+  projectName: 'beaubourg',
+
   // name of the environnement ('production' enable cache in express application)
   env: 'development',
 

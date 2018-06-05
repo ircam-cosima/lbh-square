@@ -2,7 +2,7 @@
 
 ## on `beaubourg` branch
 
-- fix images display
+- fix images display css media-query
 - refactor to have assets in dedicated place
   + create a second mount point with `express.static` 
   + dynamically load the app config file, do not build in js file
