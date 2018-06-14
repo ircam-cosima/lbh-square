@@ -3,6 +3,7 @@
 /public/js
 /public/css
 /dist
+.soundworks
 
 # ignore all config except default
 /src/server/config/*
