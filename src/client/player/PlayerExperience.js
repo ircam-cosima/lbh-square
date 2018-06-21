@@ -32,7 +32,7 @@ class PlayerExperience extends soundworks.Experience {
       descriptors: ['deviceorientation'],
     });
 
-    const assetsPath = `${this.envConfig.assetsDomain}/assets/`;
+    const assetsPath = `${this.envConfig.assetsDomain}assets/`;
 
     this.audioStreamManager = this.require('audio-stream-manager', {
       assetsDomain: assetsPath,

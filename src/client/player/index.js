@@ -51,7 +51,7 @@ function bootstrap(projectConfig) {
 }
 
 window.addEventListener('load', () => {
-  window.fetch(config.assetsDomain + '/project-config')
+  window.fetch(config.assetsDomain + 'project-config')
     .then(response => response.json())
     .then(bootstrap);
 });
