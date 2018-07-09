@@ -4,6 +4,7 @@ import * as soundworks from 'soundworks/client';
 import serviceViews from '../shared/serviceViews';
 
 function bootstrap() {
+  document.body.classList.remove('loading');
   // initialize the client with configuration received
   // from the server through the `index.html`
   // @see {~/src/server/index.js}

@@ -178,12 +178,10 @@ class State {
           this.experience.simplePlayer.trigger(event.id);
         break;
       case 'vibrate':
-        console.log(event);
         if (!silent) {
           // check for vibrate API (not in Safari)
-          if( window.navigator.vibrate !== undefined ) {
+          if (window.navigator.vibrate !== undefined)
             window.navigator.vibrate(event.pattern);
-          }
         }
         break;
     }

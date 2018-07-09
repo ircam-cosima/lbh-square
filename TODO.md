@@ -1,35 +1,19 @@
-# TODO
+# TODOS
 
-- remove audio files from repo
-- remove production config file from repo (!)
+## on `neomaster` branch
 
-## refactoring
+- recheck iOS crunchy mode
+- remove audio files and images from repo
+- fix images display css media-query
 
-- panning / orientation - ok
-- - mise en veille -> à checker
-  + mettre un flag dans la config - ok
-https://css-tricks.com/design-considerations-text-images/
-- overlay linear gradient - ok
-- event trigger-audio - ok
-- preload images - ok
-- services instructions - ok
-- osc flag (won't have a max patch in most cases) - ok
-- end screen - ok
-- cleaned seek - ok
-- restart at state + event - ok
-- sync streams on underlying period - ok
-- event vibrate (same, needs user gesture) - ok
+## merge and redeploy
 
-## first page - ok
+- merge neomaster to master 
+- delete all other branches 
+- recreate a new clean develop branch
+- update online versions
+- purge repo (cf. [https://blog.ostermiller.org/git-remove-from-history](https://blog.ostermiller.org/git-remove-from-history))
 
-- branche les ecouteurs - cf. icone plus claire ??
-- lock mode portrait => check problem avec compass ??
-- mode vibreur () - on vire - ok
-- son buité -> on vire - ok
+## long term
 
-## new events
-
-- event video (use gifs, cannot start on iOS)
-
-## 
-- reimplement all states
+- explore click problem
