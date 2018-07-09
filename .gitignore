@@ -22,5 +22,6 @@ Thumbs.db
 
 # exclude all project (should be kept somewhere else)
 projects/*
+!projects/default
 # but not the folder itself
 !projects/.gitkeep

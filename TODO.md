@@ -2,12 +2,8 @@
 
 ## on `neomaster` branch
 
-- refactor to have assets in dedicated place
-  + create a second mount point with `express.static` 
-  + dynamically load the app config file, do not build in js file
+- recheck iOS crunchy mode
 - remove audio files and images from repo
-=> confirm it works as expected
-
 - fix images display css media-query
 
 ## merge and redeploy
