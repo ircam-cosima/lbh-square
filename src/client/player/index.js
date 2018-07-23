@@ -1,4 +1,5 @@
 // import client side soundworks and player experience
+import 'whatwg-fetch';
 import * as soundworks from 'soundworks/client';
 import PlayerExperience from './PlayerExperience';
 import serviceViews from '../shared/serviceViews';
