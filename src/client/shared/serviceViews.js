@@ -618,22 +618,11 @@ const serviceViews = {
           </div>
           <div class="section-center flex-center">
             <div>
-              <ul class="instructions">
+              <ul class="instructions soft-blink">
                 <% for (var key in globals.instructions) { %>
                   <li class="instruction"><%= globals.instructions[key] %></li>
                 <% } %>
               </ul>
-              <p class="fa fa-headphones" aria-hidden="true"></p>
-              <!--
-              <p class="instructions-header">
-                <%= globals.instructionsHeader %>
-              </p>
-              <ul class="instructions">
-                <% for (var key in globals.instructions) { %>
-                  <li class="instruction"><%= globals.instructions[key] %></li>
-                <% } %>
-              </ul>
-              -->
               <p class="use-headphones"><%= globals.useHeadphones %></p>
             </div>
           </div>
@@ -654,6 +643,12 @@ const serviceViews = {
         checkingMessage: 'Please wait while checking compatiblity',
         errorCompatibleMessage: 'Sorry,<br />Your device is not compatible with the application.',
         errorHooksMessage: `Sorry,<br />The application didn't obtain the necessary authorizations.`,
+      };
+
+      this.ratios = {
+        '.section-top': 0.2,
+        '.section-center': 0.5,
+        '.section-bottom': 0.3,
       };
 
       this._touchstartCallback = noop;
@@ -692,6 +687,48 @@ const serviceViews = {
       this.render();
     }
   },
+
+  // ------------------------------------------------
+  // Sound-Check
+  // ------------------------------------------------
+  'service:sound-check': class SoundCheckView extends SegmentedView {
+    constructor() {
+      super();
+
+      this.template = `
+        <div class="section-top flex-middle">
+          <p class="small"><%= globals.question %></p>
+        </div>
+        <div class="section-center flex-center">
+          <button class="check-yes"><%= globals.yes %></button>
+        </div>
+        <div class="section-bottom flex-center">
+          <button class="check-no"><%= globals.no %></button>
+        </div>
+      `;
+
+      this.ratios = {
+        '.section-top': 0.3,
+        '.section-center': 0.35,
+        '.section-bottom': 0.35,
+      };
+    }
+
+    onRender() {
+      super.onRender();
+
+      this.installEvents({
+        'click .check-yes': () => this._checkCallback(true),
+        'click .check-no': () => this._checkCallback(false),
+      });
+    }
+
+    setCheckCallback(callback) {
+      console.log(callback)
+      this._checkCallback = callback;
+    }
+  },
+
 
   // ------------------------------------------------
   // Raw-Socket

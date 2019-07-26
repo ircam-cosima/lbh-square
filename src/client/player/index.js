@@ -4,6 +4,7 @@ import * as soundworks from 'soundworks/client';
 import PlayerExperience from './PlayerExperience';
 import serviceViews from '../shared/serviceViews';
 import ImagesLoader from '../shared/services/ImagesLoader';
+import SoundCheck from '../shared/services/SoundCheck';
 
 const config = Object.assign({ appContainer: '#container' }, window.soundworksConfig);
 
@@ -18,15 +19,22 @@ function bootstrap(projectConfig) {
 
   // configure views for the services
   soundworks.client.setServiceInstanciationHook((id, instance) => {
-    if (serviceViews.has(id))
+    if (serviceViews.has(id)) {
       instance.view = serviceViews.get(id, config);
+    }
 
     // use audio buffer manager view for images loader
-    if (id === 'service:images-loader')
+    if (id === 'service:images-loader') {
       instance.view = serviceViews.get('service:audio-buffer-manager', config);
+    }
 
-    if (id === 'service:platform')
+    if (id === 'service:platform') {
       instance.view = serviceViews.get('service:platform', projectConfig.txt.home);
+    }
+
+    if (id === 'service:sound-check') {
+      instance.view = serviceViews.get('service:sound-check', projectConfig.txt.soundCheck);
+    }
   });
 
   const vibrateHook = {

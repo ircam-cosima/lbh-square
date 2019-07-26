@@ -4,6 +4,7 @@ import slugify from 'slugify';
 import serveStatic from 'serve-static';
 import * as soundworks from 'soundworks/server';
 import PlayerExperience from './PlayerExperience';
+import SoundCheck from './services/SoundCheck';
 
 const configName = process.env.ENV || 'default';
 const configPath = path.join(__dirname, 'config', configName);

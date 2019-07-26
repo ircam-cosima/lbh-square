@@ -27,8 +27,11 @@ class PlayerExperience extends Experience {
       overlap: 0.1,
     });
 
-    if (this.projectConfig.environment.osc)
+    this.soundCheck = this.require('sound-check');
+
+    if (this.projectConfig.environment.osc) {
       this.osc = this.require('osc');
+    }
   }
 
   start() {

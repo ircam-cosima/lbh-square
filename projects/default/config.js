@@ -12,21 +12,26 @@ const config = {
 
   txt: {
     home: {
-      title: 'SQUARE#2',
-      subtitle: 'by Lorenzo Bianchi Hoesch',
-      useHeadphones: 'Expérience à faire au casque<br />Use headphones',
-
-      instructionsHeader: 'Merci de (Please):',
+      // title: 'SQUARE MILANO',
+      // subtitle: 'by Lorenzo Bianchi Hoesch',
+      // useHeadphones: 'Expérience à faire au casque<br />Use headphones',
+      // instructionsHeader: 'Merci de (Please):',
       instructions: {
-        wakeLock: 'désactiver la mise en veille<br />disable sleep mode',
+        wakeLock: 'Disattivare il blocco automatico del telefono e la connessione wifi <br /> dopo ritornare su questa pagina e toccare lo schermo per iniziare',
         // headphones: 'brancher vos écouteurs',
         // volume: 'ajuster le volume',
       },
-      touchToStart: 'Toucher l\'écran pour commencer<br />Touch the screen to start',
+      touchToStart: 'disable sleep mode and wifi connection, <br /> come back to this page <br /> then touch the screen to start',
+    },
+    soundCheck: {
+      question: 'Senti distintamente la mia voce? o ti sembra ci sia un problema ?<br>(tu entends distinctement ma voix ? ou tu crois qu’il y a un problème ?)',
+      yes: 'SI',
+      no: 'PROBLEMA',
+      testFile: 'sounds/check/SQ-BOL-test-inizio.wav',
     },
     restartPage: {
-      restart: 'Recommencer du début <br> (Start from beginning)',
-      continue: 'Reprendre la lecture <br> (Resume playback)',
+      restart: 'Ricominciare dall&#39;inizio <br> (Start from beginning)',
+      continue: 'Continuare la visita <br> (Resume playback)',
     },
   },
 
@@ -63,7 +68,7 @@ const config = {
           time: 0,
           type: 'background-color',
           placeholder: 'background-color',
-          color: '#272727',
+          color: '#000000',
         },
         {
           time: 0,
@@ -72,18 +77,24 @@ const config = {
           duration: 0.1,
         },
         {
-          time: 1.7, // 0.01
+          time: 0,
+          type: 'text',
+          placeholder: 'center',
+          classes: ['white', 'align-center'],
+          content: `
+                  <span class="title">SQUARE MILANO</span> <br />
+                  <span class="subtitle">by Lorenzo Bianchi Hoesch</span>
+            `,
+        },
+        {
+          time: 5.5, // 0.01
           type: 'text-subtitle',
           placeholder: 'center',
           // classes: ['color-red'],
           content: `
-            Mon histoire est vite racontée. Je suis née en Novembre 2331, ici à
-            Paris. Fille de parents anglais venus en France à la recherche d’une fortune
-            meilleure après la grande crise d’Angleterre,
-            <br /><br />
-            My story is short to tell. I was born in November 2331, here in Paris.
-            Daughter of English parents who came in France looking for a better
-            everyday fleeing the great depression,
+            <p class="use-headphones"> Esperienza da fare in cuffia </p>
+            <p class="fa fa-headphones" aria-hidden="true"></p>
+            <p class="use-headphones"> Use headphones </p>
           `,
         },
         {

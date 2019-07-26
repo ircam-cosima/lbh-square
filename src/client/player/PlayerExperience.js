@@ -20,8 +20,9 @@ class PlayerExperience extends soundworks.Experience {
 
     const features = ['web-audio', 'vibrate'];
 
-    if (projectConfig.environment.wakeLock)
+    if (projectConfig.environment.wakeLock) {
       features.push('wake-lock');
+    }
 
     // services
     this.platform = this.require('platform', { features: features });
@@ -58,6 +59,8 @@ class PlayerExperience extends soundworks.Experience {
       });
     });
 
+    triggerAudioBuffers.testFile = this.projectConfig.txt.soundCheck.testFile;
+
     this.audioBufferManager = this.require('audio-buffer-manager', {
       assetsDomain: assetsPath,
       files: triggerAudioBuffers,
@@ -67,6 +70,8 @@ class PlayerExperience extends soundworks.Experience {
       // assetsDomain: assetsPath, // is already overriden...
       files: backgroundImages,
     });
+
+    this.soundCheck = this.require('sound-check');
   }
 
   start() {
