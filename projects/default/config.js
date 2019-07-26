@@ -27,7 +27,7 @@ const config = {
       question: 'Senti distintamente la mia voce? o ti sembra ci sia un problema ?<br>(tu entends distinctement ma voix ? ou tu crois qu’il y a un problème ?)',
       yes: 'SI',
       no: 'PROBLEMA',
-      testFile: 'sounds/check/SQ-BOL-test-inizio.wav',
+      testFile: 'sounds/check/SQ-BOL-test-inizio.mp3',
     },
     restartPage: {
       restart: 'Ricominciare dall&#39;inizio <br> (Start from beginning)',

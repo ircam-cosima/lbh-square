@@ -28,6 +28,6 @@ projects/*
 
 package-lock.json
 
-projects/default/**/
+projects/default/assets/streams/**/*
 
 sound-check-results.txt
