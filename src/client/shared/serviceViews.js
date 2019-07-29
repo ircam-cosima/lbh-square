@@ -724,7 +724,6 @@ const serviceViews = {
     }
 
     setCheckCallback(callback) {
-      console.log(callback)
       this._checkCallback = callback;
     }
   },
